@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg3260"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="netalloy-home-icon.svg">
+  <title
+     id="title4311">netalloy home icon</title>
+  <defs
+     id="defs3262">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4267">
+      <stop
+         style="stop-color:#f2f2f2;stop-opacity:1;"
+         offset="0"
+         id="stop4269" />
+      <stop
+         style="stop-color:#f2f2f2;stop-opacity:0;"
+         offset="1"
+         id="stop4271" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 32 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="64 : 32 : 1"
+       inkscape:persp3d-origin="32 : 21.333333 : 1"
+       id="perspective3268" />
+    <inkscape:perspective
+       id="perspective3238"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4267"
+       id="linearGradient4294"
+       gradientUnits="userSpaceOnUse"
+       x1="42.25"
+       y1="18.5"
+       x2="39.690033"
+       y2="30.375" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="31.500001"
+     inkscape:cy="31.625003"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="712"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3265">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>netalloy home icon</dc:title>
+        <dc:date>07-April-2010</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>netalloy</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>netalloy.com</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>icon</rdf:li>
+            <rdf:li>home</rdf:li>
+            <rdf:li>house</rdf:li>
+            <rdf:li>cottage</rdf:li>
+            <rdf:li>building</rdf:li>
+            <rdf:li>realty</rdf:li>
+            <rdf:li>real estate</rdf:li>
+            <rdf:li>property</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>Real estate clipart by netalloy</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <g
+       id="g4298">
+      <g
+         transform="translate(1.25,0)"
+         id="g4283">
+        <path
+           style="fill:url(#linearGradient4294);fill-opacity:1;stroke:#828288;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 26.18629,32.25709 15.545895,-16.318469 11.46875,9.72164 -0.01776,22.651866 -27.004045,6.679888 0.0072,-22.734925 -4.5e-5,0 z"
+           id="path4257"
+           sodipodi:nodetypes="ccccccc"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-ydpi="178.64456" />
+        <path
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           sodipodi:nodetypes="ccccccc"
+           id="path4219"
+           d="m 26.18629,32.25709 15.545895,-16.318469 11.46875,9.72164 -0.01776,22.651866 -27.004045,6.679888 0.0072,-22.734925 -4.5e-5,0 z"
+           style="fill:#e6e6e6;fill-opacity:1;stroke:#d6d6e0;stroke-width:0.60000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           style="fill:#b3b3b3;fill-opacity:1;stroke:#ada7a7;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="M 26.23258,54.72495 26.14518,32.08742 21.0552,37.22391 8.39805,29.51074 8.60715,44.7514 26.23256,54.72495 z"
+           id="path4215"
+           sodipodi:nodetypes="cccccc" />
+        <path
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           id="path3628"
+           d="M 19.99349,35.79288 2.88787,25.11241 19.17503,9.72529 41.84611,13.5268 19.99349,35.79288 z"
+           style="fill:#ea0000;fill-opacity:1;stroke:#7e1515;stroke-width:0.073;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           id="path3630"
+           d="M 20.15718,35.79288 21.22116,37.06003 41.76426,15.6991 56.25082,28.55187 57.06926,27.10368 42.0098,13.5268 20.15718,35.79288 z"
+           style="fill:#c10402;fill-opacity:1;stroke:#c20000;stroke-width:0.63300002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           sodipodi:nodetypes="cccccc"
+           id="path3632"
+           d="m 38.81783,12.98372 -0.0819,-3.34895 4.33778,0.0906 -0.0819,4.61614 -1.22769,-0.99565 -2.94642,-0.36204 z"
+           style="fill:#ea0000;fill-opacity:1;stroke:#b00000;stroke-width:0.23338807;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           sodipodi:nodetypes="ccccc"
+           inkscape:export-ydpi="178.64456"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           id="path3634"
+           d="M 20.91274,37.37098 2.96972,26.28905 2.80604,25.2029 l 17.6785,10.49946 0.4282,1.66862 z"
+           style="fill:#c10402;fill-opacity:1;stroke:#ac0000;stroke-width:0.23338807;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           style="fill:#808080;fill-opacity:1;stroke:#767373;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           d="m 36.217972,37.624662 9.364271,-2.249661 -0.135165,14.435968 -8.958776,2.114495 -0.27033,-14.300802 z"
+           id="rect3685"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           style="fill:#ea0000;fill-opacity:1;stroke:#b00000;stroke-width:0.23338807;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 38.81783,12.98372 -0.0819,-3.34895 4.33778,0.0906 -0.0819,4.61614 -1.22769,-0.99565 -2.94642,-0.36204 z"
+           id="path4148"
+           sodipodi:nodetypes="cccccc"
+           inkscape:export-filename="C:\Documents and Settings\Fastallow\Desktop\logo.png"
+           inkscape:export-xdpi="178.64456"
+           inkscape:export-ydpi="178.64456" />
+      </g>
+      <rect
+         y="0.4415459"
+         x="0.43941051"
+         height="63.50769"
+         width="63.50769"
+         id="rect4296"
+         style="fill:#b3b3b3;fill-opacity:1;stroke:#ada7a7;stroke-width:0.49231142000000000;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;opacity:0" />
+    </g>
+  </g>
+</svg>

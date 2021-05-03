@@ -1,0 +1,276 @@
+{% extends 'base.html.twig' %}
+{% block title %}SeeISS{% endblock %}
+
+{% block javascriptsHead %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <main>
+
+        <img id="iss" src="images/iss.jpg" alt="">
+        <section>
+            <h2>Voici les passages de la station spatiale internationale : </h2>
+            <form action="{{ path('home') }}" method="POST" id="formLocation">
+                <input id="location" type="text" size="50" placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
+                <input type="hidden" id="name" name="city" />
+                <input type="hidden" id="lat" name="lat" />
+                <input type="hidden" id="lon" name="lon" />
+                <button id="buttonSumbit" type="submit" class="btn btn-primary" style="margin-left: 5px">Envoyer</button>
+            </form>
+
+            <div id="info">
+                <p>blabla</p>
+                <p>blabla</p>
+                <p>blabla</p>
+            </div>
+
+
+
+
+            {% if passes %}
+                <a class="pdf" target="_blank" rel="noopener noreferrer" href="/pdf" ><img src="images/pdf.svg" alt=""></a>
+            {% endif %}
+            <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
+                <input type="hidden" name="hosted_button_id" value="FG67TUU7DAZKA" />
+                <input type="image" src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                <img alt="" border="0" src="https://www.paypal.com/en_FR/i/scr/pixel.gif" width="1" height="1" />
+            </form>
+
+
+            <section style="margin: 15px 30px 0px 30px" >
+
+                {% if passes %}
+                    <div id="visibilty">
+                        <p class="bg-success">Bonne visibilité</p>
+                        <p class="bg-warning">Visibilité moyenne</p>
+                    </div>
+                    {% for key, passe in passes %}
+                        <h3>{{ key }}</h3>
+                        <div class="table-responsive">
+
+
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr class="head">
+                                    <th></th>
+                                    <th colspan="2">Début</th>
+                                    <th colspan="2">Max</th>
+                                    <th colspan="2">Fin</th>
+                                    <th colspan="2">Info</th>
+                                    <th colspan="1"></th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Azimut</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Az</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Az</th>
+                                    <th scope="col">Durée (s)</th>
+                                    <th scope="col">Magnitude</th>
+                                    <th scope="col">Voir sur la carte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for value in passe %}
+                                    <tr {% if value.mag <= -3  %} class="table-success" {% elseif value.mag <= -2 %} class="table-warning" {% endif %}>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ value.dateStart }}</td>
+                                        <td>{{ value.azStart }} ({{ value.azStartDegres }}°)</td>
+                                        <td>{{ value.dateMax }}</td>
+                                        <td>{{ value.azMax }} ({{ value.azMaxDegres }}°)</td>
+                                        <td>{{ value.dateEnd }}</td>
+                                        <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
+                                        <td>{{ value.duration }}</td>
+                                        <td>{{ value.mag }}</td>
+                                        <td><a href="#" class="linkMap" id="{{ value.index }}">Carte</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p id="noPassage">Pas de passage</p>
+                {% endif %}
+
+
+            </section>
+            <!-- ShareThis BEGIN --><div class="sharethis-inline-share-buttons share" ></div><!-- ShareThis END -->
+
+
+        </section>
+        </main>
+
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalMap">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title"></h5>
+                    <div id="grid">
+                        <div>
+                            <p id="start"></p>
+                            <p id="max"></p>
+                            <p id="end"></p>
+                            <p id="duration"></p>
+                        </div>
+                        <div>
+                            <p id="startAz"></p>
+                            <p id="maxAz"></p>
+                            <p id="endAz"></p>
+                            <p id="mag"></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                    <div style="height: 500px" id="map"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            {% if info.city %}
+            window.history.pushState("", "", '/?city={{ info.city }}');
+            {% else %}
+            window.history.pushState("", "", '/');
+            {% endif %}
+
+
+        });
+        $('#buttonSumbit').on("click", function (e) {
+
+            e.preventDefault();
+            var value = $('#location').val();
+
+            var url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
+            var request = new XMLHttpRequest();
+            request.open('GET', url);
+            request.responseType = "text";
+            request.send();
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 300) {
+                    var result = eval(request.responseText);
+                    if (result.length == 0){
+                        return;
+                    }
+                    var lon  = result[0].lon;  // lon, lat auf 3 Nachkommastellen beschneiden!
+                    var lat  = result[0].lat;
+                    var name = result[0].display_name;/*
+                var cIdx = name.indexOf(",");
+                if (cIdx >= 0){
+                    name = name.substring(0, cIdx);
+                }*/
+                    $('#lon').val(lon);
+                    $('#lat').val(lat);
+                    $('#name').val(name);
+                    $('#formLocation').submit();
+
+
+                }
+            };
+
+
+        });
+
+
+        var map = L.map('map',
+            {'worldCopyJump' : true}
+        ).setView([{{ info.lat }}, {{ info.lon }}], 4);
+        var homeIcon = L.icon({
+            iconUrl: 'images/home.svg',
+            iconSize:     [25, 25]
+        });
+        L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoic2VlaXNzIiwiYSI6ImNrZ3o2ZXkyejBsNGMyc252cGpncWYzenoifQ.hGTn1d_CBTHKYaRMpGrIwg'
+        }).addTo(map);
+
+        var p = L.control({position: 'bottomleft'});
+        p.onAdd = function(map){
+            var div = L.DomUtil.create('h1');
+            div.innerHTML= "www.seeiss.com";
+            div.style.color = "grey";
+            return div;
+        }
+        p.addTo(map);
+
+
+
+        var jsonPasses = {{ totalPasses | json_encode | raw }};
+
+        $('.linkMap').click(function(e) {
+            e.preventDefault();
+            var idLink = parseInt($(this).attr('id'));
+            var passes = jsonPasses[idLink];
+            var latLonpasse = [];
+            passes[0]['coord'].forEach(function (value){
+                latLonpasse.push([value.lat, value.lon]);
+            })
+            $('#modalMap h5.modal-title').text(passes[0]['date']);
+            $('#modalMap p#start').text("Début : " + passes[0]['dateStart']);
+            $('#modalMap p#max').text("Max : " + passes[0]['dateMax']);
+            $('#modalMap p#end').text("Fin : " + passes[0]['dateEnd']);
+            $('#modalMap p#duration').text("Durée : " + passes[0]['duration'] + " s");
+
+
+            $('#modalMap p#startAz').text("Début AZ : " + passes[0]['azStart'] + " ("+passes[0]['azStartDegres'] +"°)");
+            $('#modalMap p#maxAz').text("Max AZ : " + passes[0]['azMax'] + " ("+passes[0]['azMaxDegres'] +"°)");
+            $('#modalMap p#endAz').text("Fin }} AZ : " + passes[0]['azEnd'] + " ("+passes[0]['azEndDegres'] +"°)");
+            $('#modalMap p#mag').text("Mag : " + passes[0]['mag']);
+
+
+
+            $('#modalMap').modal('show');
+
+            var latlngs = latLonpasse;
+
+            var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 1);
+
+            $('#modalMap').on('hide.bs.modal', function (e) {
+                map.removeLayer(polyline);
+            });
+
+        });
+
+
+
+    </script>
+
+{% endblock %}

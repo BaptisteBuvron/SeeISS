@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block javascriptsHead %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <script src="https://unpkg.com/@joergdietrich/leaflet.terminator"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+
+        <main>
+            <h1>La Station Spatiale Internationale : </h1>
+            <div class="m-3" style="height: 500px" id="map"></div>
+
+        </main>
+    </div>
+{% endblock %}
+
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        var issLatLon = {{ latLon | json_encode | raw }};
+        var indexLatLon = Math.trunc(issLatLon.length / 3);
+        var map = L.map('map',
+            {
+                'worldCopyJump': true
+            }
+        ).setView([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], 2);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            minZoom: 1,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoic2VlaXNzIiwiYSI6ImNrZ3o2ZXkyejBsNGMyc252cGpncWYzenoifQ.hGTn1d_CBTHKYaRMpGrIwg'
+        }).addTo(map);
+        L.terminator().addTo(map)
+
+        var p = L.control({position: 'bottomleft'});
+        p.onAdd = function (map) {
+            var div = L.DomUtil.create('h1');
+            div.innerHTML = "www.seeiss.com";
+            div.style.color = "grey";
+            return div;
+        }
+        p.addTo(map);
+
+        var indexLatLonPrint = 0;
+        var issLatLonMap = [];
+        var lastLon = null;
+        var color;
+        var lastCoord;
+        issLatLon.forEach(function (e) {
+            if (indexLatLonPrint != null && indexLatLonPrint <= indexLatLon) {
+                color = 'red';
+            } else {
+                color = 'blue';
+            }
+            if ((lastLon != null && lastLon > e['lon']) || (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon)) {
+                var polyline = L.polyline(issLatLonMap, {color: color}).addTo(map);
+                issLatLonMap = [];
+                if (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon) {
+                    indexLatLonPrint = null;
+                }
+            }
+            issLatLonMap.push([e['lat'], e['lon']]);
+            lastLon = e['lon'];
+            if (indexLatLonPrint != null) {
+                indexLatLonPrint++;
+            }
+        });
+
+        var polyline = L.polyline(issLatLonMap, {color: 'blue'}).addTo(map);
+        var homeIcon = L.icon({
+            iconUrl: 'images/international-space-station.png',
+            iconSize: [100, 40]
+        });
+
+
+        var marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
+        map.addLayer(marker);
+        setInterval(function () {
+            indexLatLon++;
+            map.removeLayer(marker);
+            marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
+            map.addLayer(marker);
+        }, 10000);
+
+
+    </script>
+
+{% endblock %}

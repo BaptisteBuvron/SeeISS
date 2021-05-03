@@ -1,0 +1,202 @@
+body{
+    width: 100%;
+    height: 100%;
+    background-image: url("../../images/space.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    font-size: 1rem;
+}
+
+/** HEADER **/
+
+header .logo{
+    margin: auto;
+    text-align: center;
+}
+
+header .logo{
+    margin-top: 125px;
+}
+
+header .logo h1{
+    font-weight: 700;
+    line-height: 4rem;
+    font-size: 5rem;
+}
+
+header .logo p{
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    opacity: 0.65;
+}
+
+
+/** MAIN **/
+
+
+.container{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 75%;
+    }
+}
+
+main{
+    margin-top: 50px;
+    background-color: white;
+    color: black;
+}
+
+img#iss{
+    width: 100%;
+}
+
+h2{
+    font-weight: 500;
+    font-size: 2rem;
+    text-align: center;
+}
+
+
+.share{
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pdf img{
+    float: right;
+    width: 50px;
+    heigh: 50px;
+    margin-top: 5px;
+
+}
+
+section #visibilty{
+    display: flex;
+    text-align: center;
+    width: 400px;
+}
+
+section #visibilty p {
+    margin-left: 10px;
+}
+
+section h3{
+    margin-top: 15px;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+
+@media screen and (max-width: 800px) {
+    .pdf img {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        float: none;
+    }
+}
+
+
+section{
+    margin: 25px;
+}
+
+.table .head th{
+    text-align: center;
+}
+section form#formLocation{
+    width: 85%;
+    display: flex;
+    margin: 5px auto auto;
+}
+
+section form#formLocation input{
+    width: 85%;
+    background: rgba(144, 144, 144, 0.075);
+    border-width: 1px;
+    border-color: rgba(144, 144, 144, 0.25);
+    font-weight: 300;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+
+#info{
+    margin:30px;
+}
+
+
+/*
+@media screen and (max-width: 1000px){
+    .container{
+        width: 90%;
+    }
+}*/
+
+
+footer {
+    padding: 2rem 0 0.1rem 0 ;
+    text-align: center;
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+footer a:hover {
+    color: #FFF;
+}
+
+footer .copyright {
+    color: #bbb;
+    font-size: 0.9rem;
+    margin: 0 0 2rem 0;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+@media screen and (max-width: 736px) {
+
+    footer {
+        padding: 1rem 0 0.1rem 0 ;
+    }
+
+}
+
+
+/** Modal **/
+
+.modal{
+    color: black;
+}
+
+.modal-header{
+    display: initial;
+}
+
+.modal #grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.modal .modal-title{
+    margin-bottom: 10px;
+}
+#noPassage{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+@media screen and (min-width: 676px) {
+    .modal-dialog {
+        max-width: 90%; /* New width for default modal */
+        max-height: 50%;
+    }
+}
