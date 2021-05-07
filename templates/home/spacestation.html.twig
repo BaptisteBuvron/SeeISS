@@ -1,0 +1,544 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="main">
+            <div class="row">
+
+
+                <div class="col-md row-eq-height col-md-9-content">
+
+                    {# SpaceStation #}
+                    <div class="card" style="margin-bottom:1em;;">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <div class="d-none d-md-block"
+                                     style="height:100%;width:100%;background-image: url({{ spaceStation.imageUrl }});background-size: cover;background-position: center;">
+                                </div>
+                                <div class="d-md-none" style="overflow: hidden; text-align: center;">
+                                    <img src="{{ spaceStation.imageUrl }}"
+                                         style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <h3 class="card-title"
+                                        style="text-align:center;margin:0">{{ spaceStation.name }}</h3>
+                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
+                                        <div class="row">
+                                            <h6 class="text-center w-100">{{ spaceStation.type }}</h6>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md label-value">
+                                                <p>
+                                                    Height
+                                                    <span>
+                                     {{ spaceStation.height }} Metres
+                                </span>
+                                                </p>
+                                                <p>
+                                                    Width
+                                                    <span>
+                                    {{ spaceStation.width }} Metres
+                                </span>
+                                                </p>
+                                                <p>
+                                                    Mass
+                                                    <span>
+                                    {{ spaceStation.mass }} Tonnes
+                                </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-md label-value">
+                                                <p>
+                                                    Volume
+                                                    <span>
+                                    {{ spaceStation.volume }} m<sup>3</sup>
+                                </span>
+                                                </p>
+                                                <p>
+                                                    Orbit
+                                                    <span>
+                                    {{ spaceStation.orbit }}
+                                </span>
+                                                </p>
+                                                <p>
+                                                    Founded
+                                                    <span>
+                                    {{ spaceStation.founded | date }}
+                                </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {#
+                    SpaceStation Description
+                    #}
+                    <div class="card" style="margin-bottom:1em;;">
+                        <div class="row no-gutters">
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h3 class="card-title" style="text-align:center;margin:0">Mission Description</h3>
+                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
+                                        {{ spaceStation.description }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Astronauts #}
+                    <div class="row no-gutters">
+                        <div class="card w-100" style="margin-bottom:1em;">
+                            <div class="card-body">
+                                <h3 class="card-title" style="text-align:center;margin:0;">Crew</h3>
+                                <div class="row crew-card-deck" style="justify-content: center">
+
+                                    {# Template astronaut #}
+                                    {% for crew in spaceStation.crew %}
+                                        <div class="card astronaut-detail-card" style="margin:1em; width:100%">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-4">
+                                                    {#<div class="d-none d-md-block"
+                                                         style="height:100%;width:100%;background-image: url({{ crew.profileImg }});background-size: cover;background-position: center;">
+                                                    </div>#}
+                                                    <div class=""
+                                                         style="overflow: hidden; text-align: center;">
+                                                        <img src="{{ crew.profileImg }}"
+                                                             style="width: 70%">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title"
+                                                            style="text-align:center;">{{ crew.name }}</h3>
+                                                        <div class="card-text" style="text-align:left;">
+                                                            <div class="row">
+                                                                <h6 class="text-center w-100">A modifier</h6>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md label-value">
+                                                                    <p>
+                                                                        Nationality
+                                                                        <span> {{ crew.nationality }}</span>
+                                                                    </p>
+                                                                    <p>
+                                                                        Date Of Birth
+                                                                        <span>{{ crew.dateOfBirth | date }}</span>
+                                                                    </p>
+
+                                                                </div>
+                                                                <div class="col-md label-value">
+                                                                    <p>
+                                                                        Status
+                                                                        <span>{{ crew.status }}</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="d-flex flex-row justify-content-between"
+                                                                 style="margin-top: 1.25rem;">
+
+                                                                {% if crew.twitter %}
+
+                                                                    <a href="{{ crew.twitter }}" class="">
+                                                                        Twitter
+                                                                    </a>
+
+                                                                {% endif %}
+                                                                {% if crew.instagram %}
+
+                                                                    <a
+                                                                            href="{{ crew.instagram }}">
+                                                                        Instagram
+                                                                    </a>
+
+                                                                {% endif %}
+                                                                {% if crew.wiki %}
+
+                                                                    <a
+                                                                            href="{{ crew.wiki }}">
+                                                                        Wikipedia
+                                                                    </a>
+
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Docked vehicule #}
+                    <div class="row no-gutters">
+                        <div class="card w-100">
+                            <div class="card-body">
+                                <h3 class="card-title" style="text-align:center;margin: 0 0 1.25rem;">Docked
+                                    Vehicles</h3>
+
+                                <div class="card" style="margin-bottom:1em;">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <div class="d-none d-md-block"
+                                                 style="height:100%;width:100%;background-image: url(https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/crew2520dragon25202_image_20200117151409.jpeg);background-size: cover;background-position: center;">
+                                            </div>
+                                            <div class="d-md-none" style="overflow: hidden; text-align: center;">
+                                                <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/crew2520dragon25202_image_20200117151409.jpeg"
+                                                     style="width: 100%;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h3 class="card-title" style="text-align:center;margin:0">Crew Dragon
+                                                    Endeavour</h3>
+                                                <div class="card-text" style="text-align:left;margin-top:15px;">
+                                                    <p style="text-align:center;"><b>SpaceX</b></p>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Docking
+                                                                <span id="281-docking">24/04/2021 à 11:08:00</span>
+                                                            </p>
+                                                            <p>
+                                                                Docking Location
+                                                                <span>
+                                                Harmony forward
+                                            </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Human Rated
+                                                                <span>
+                                                 Yes
+                                            </span>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row cardButtons spaceEvenly"
+                                                         style="margin-top: 1.25rem">
+                                                        <div>
+                                                            <a href="/agency/spacex?returnURL=/spacestation/international-space-station?returnURL=%2Fspacestations"
+                                                               class="btn btn-g4l-blue btn-block" role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-agency"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Agency</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a class="btn btn-g4l-blue btn-block"
+                                                               href="/launch/falcon-9-block-5-spx-uscv-2-nasa-crew-flight-2?returnURL=%2Fspacestation%2Finternational-space-station%3FreturnURL%3D%252Fspacestations"
+                                                               role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-launch"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Launch</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    document.getElementById("281-docking").innerText = new Date("2021-04-24T09:08:00+0000").toLocaleString();
+                                </script>
+
+                                <div class="card" style="margin-bottom:1em;">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <div class="d-none d-md-block"
+                                                 style="height:100%;width:100%;background-image: url(https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/soyuz_image_20201015191152.jpg);background-size: cover;background-position: center;">
+                                            </div>
+                                            <div class="d-md-none" style="overflow: hidden; text-align: center;">
+                                                <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/soyuz_image_20201015191152.jpg"
+                                                     style="width: 100%;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h3 class="card-title" style="text-align:center;margin:0">Soyuz
+                                                    MS-18</h3>
+                                                <div class="card-text" style="text-align:left;margin-top:15px;">
+                                                    <p style="text-align:center;"><b>Russian Federal Space Agency
+                                                            (ROSCOSMOS)</b></p>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Docking
+                                                                <span id="280-docking">09/04/2021 à 13:05:00</span>
+                                                            </p>
+                                                            <p>
+                                                                Docking Location
+                                                                <span>
+                                                Rassvet nadir
+                                            </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Human Rated
+                                                                <span>
+                                                 Yes
+                                            </span>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row cardButtons spaceEvenly"
+                                                         style="margin-top: 1.25rem">
+                                                        <div>
+                                                            <a href="/agency/russian-federal-space-agency-roscosmos?returnURL=/spacestation/international-space-station?returnURL=%2Fspacestations"
+                                                               class="btn btn-g4l-blue btn-block" role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-agency"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Agency</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a class="btn btn-g4l-blue btn-block"
+                                                               href="/launch/soyuz-2-1a-soyuz-ms-18?returnURL=%2Fspacestation%2Finternational-space-station%3FreturnURL%3D%252Fspacestations"
+                                                               role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-launch"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Launch</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    document.getElementById("280-docking").innerText = new Date("2021-04-09T11:05:00+0000").toLocaleString();
+                                </script>
+
+                                <div class="card" style="margin-bottom:1em;">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <div class="d-none d-md-block"
+                                                 style="height:100%;width:100%;background-image: url(https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/cygnus2520enhanced_image_20190207032513.jpeg);background-size: cover;background-position: center;">
+                                            </div>
+                                            <div class="d-md-none" style="overflow: hidden; text-align: center;">
+                                                <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/cygnus2520enhanced_image_20190207032513.jpeg"
+                                                     style="width: 100%;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h3 class="card-title" style="text-align:center;margin:0">Cygnus CRS
+                                                    NG-15 (Katherine Johnson)</h3>
+                                                <div class="card-text" style="text-align:left;margin-top:15px;">
+                                                    <p style="text-align:center;"><b>Northrop Grumman Innovation
+                                                            Systems</b></p>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Docking
+                                                                <span id="245-docking">22/02/2021 à 10:38:00</span>
+                                                            </p>
+                                                            <p>
+                                                                Docking Location
+                                                                <span>
+                                                Unity nadir
+                                            </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Human Rated
+                                                                <span>
+                                                 No
+                                            </span>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row cardButtons spaceEvenly"
+                                                         style="margin-top: 1.25rem">
+                                                        <div>
+                                                            <a href="/agency/northrop-grumman-innovation-systems?returnURL=/spacestation/international-space-station?returnURL=%2Fspacestations"
+                                                               class="btn btn-g4l-blue btn-block" role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-agency"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Agency</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a class="btn btn-g4l-blue btn-block"
+                                                               href="/launch/antares-230-cygnus-crs-2-ng-15?returnURL=%2Fspacestation%2Finternational-space-station%3FreturnURL%3D%252Fspacestations"
+                                                               role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-launch"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Launch</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    document.getElementById("245-docking").innerText = new Date("2021-02-22T09:38:00+0000").toLocaleString();
+                                </script>
+
+                                <div class="card" style="">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <div class="d-none d-md-block"
+                                                 style="height:100%;width:100%;background-image: url(https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/progress_image_20190215222139.jpeg);background-size: cover;background-position: center;">
+                                            </div>
+                                            <div class="d-md-none" style="overflow: hidden; text-align: center;">
+                                                <img src="https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/orbiter_images/progress_image_20190215222139.jpeg"
+                                                     style="width: 100%;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h3 class="card-title" style="text-align:center;margin:0">Progress
+                                                    MS-16</h3>
+                                                <div class="card-text" style="text-align:left;margin-top:15px;">
+                                                    <p style="text-align:center;"><b>Russian Federal Space Agency
+                                                            (ROSCOSMOS)</b></p>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Docking
+                                                                <span id="244-docking">17/02/2021 à 07:27:00</span>
+                                                            </p>
+                                                            <p>
+                                                                Docking Location
+                                                                <span>
+                                                Pirs nadir
+                                            </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md label-value">
+                                                            <p>
+                                                                Human Rated
+                                                                <span>
+                                                 No
+                                            </span>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row cardButtons spaceEvenly"
+                                                         style="margin-top: 1.25rem">
+                                                        <div>
+                                                            <a href="/agency/russian-federal-space-agency-roscosmos?returnURL=/spacestation/international-space-station?returnURL=%2Fspacestations"
+                                                               class="btn btn-g4l-blue btn-block" role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-agency"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Agency</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a class="btn btn-g4l-blue btn-block"
+                                                               href="/launch/soyuz-2-1a-progress-ms-16-77p?returnURL=%2Fspacestation%2Finternational-space-station%3FreturnURL%3D%252Fspacestations"
+                                                               role="button">
+                                                                <div class="box"
+                                                                     style="display:flex;align-items:center;">
+                                                                    <i class="icon-launch"
+                                                                       style="padding-right: 0.25em;"></i>
+                                                                    <span class="card-btn">Launch</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    document.getElementById("244-docking").innerText = new Date("2021-02-17T06:27:00+0000").toLocaleString();
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                {#
+                <div class="col-md-3 row-eq-height right-panel-cards">
+                    <div class="card right-card div-link darkmode hideinfoimg"
+                         style="color:white;background-color:black;width:100%;">
+                        <img src="/static/images/dark.svg" style="width:100%">
+                    </div>
+                    <script>
+                        if ((document.documentElement.getAttribute("data-theme") == "dark")) {
+                            document.documentElement.querySelector(".darkmode").querySelector("img").src = "/static/images/dark.svg"
+                        } else {
+                            document.documentElement.querySelector(".darkmode").querySelector("img").src = "/static/images/light.svg"
+                        }
+                        const toggleSwitch = document.querySelector('.darkmode');
+                        toggleSwitch.addEventListener('click', switchTheme, false);
+
+                        function switchTheme() {
+                            if ((document.documentElement.getAttribute("data-theme") == "dark")) {
+                                localStorage.setItem('theme', 'light');
+                                document.documentElement.setAttribute('data-theme', 'light');
+                                document.documentElement.querySelector(".darkmode").querySelector("img").src = "/static/images/light.svg"
+                            } else {
+                                localStorage.setItem('theme', 'dark');
+                                document.documentElement.setAttribute('data-theme', 'dark');
+                                document.documentElement.querySelector(".darkmode").querySelector("img").src = "/static/images/dark.svg"
+                            }
+                        }
+                    </script>
+
+                </div>
+                #}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

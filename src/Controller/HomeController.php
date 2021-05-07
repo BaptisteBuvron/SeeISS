@@ -2,18 +2,14 @@
 
 namespace App\Controller;
 
-use App\Passes\Passe;
-use App\Predict\Predict;
-use App\Predict\PredictQTH;
-use App\Predict\PredictSat;
-use App\Predict\PredictTime;
-use App\Predict\PredictTLE;
+
+use App\Entity\SpaceStation;
 use App\Service\GetLocationService;
 use App\Service\IpInformation;
 use App\Service\SattelliteCalculation;
+use App\Service\UpdateDatabaseService;
 use App\TimezoneMapper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -93,7 +89,6 @@ class HomeController extends AbstractController
      */
     public function live()
     {
-
         $lat = 48.8534;
         $lon = 2.3488;
         // Only once per day
@@ -125,5 +120,25 @@ class HomeController extends AbstractController
 
 
         return $this->render('home/live.html.twig',['latLon' => $latLon]);
+    }
+
+    /**
+     * @Route("/spacestation/{idApi}", name="spacestation")
+     */
+    public function spaceStation(SpaceStation $spaceStation){
+        dump($spaceStation);
+        return $this->render('home/spacestation.html.twig',[
+            'spaceStation' => $spaceStation
+        ]);
+    }
+
+    /**
+     * @Route("/update", name="update")
+     */
+    public function updateDatabase(UpdateDatabaseService  $updateDataBase){
+
+        $updateDataBase->updateDatabaseISS();
+        return new Response("<h1>Bonjour</h1>");
+
     }
 }
