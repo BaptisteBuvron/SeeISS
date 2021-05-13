@@ -60,7 +60,7 @@ class UpdateDatabaseService
         }
     }
 
-    public function setAstronaut($astronautData): Astronaut
+    public function setAstronaut($astronautData,string $role = null): Astronaut
     {
 
 
@@ -88,6 +88,9 @@ class UpdateDatabaseService
                 ->setProfileImageThumbnail($astronautData["profile_image_thumbnail"])
                 ->setWiki($astronautData["wiki"]);
         }
+		if (!is_null($role)){
+			$astronaut->setRole($role);
+		}
         $astronaut->setAgency($agency);
         $this->manager->persist($astronaut);
         $this->manager->flush();
@@ -98,7 +101,6 @@ class UpdateDatabaseService
     {
         $spaceStationRepo = $this->manager->getRepository(SpaceStation::class);
         $spaceStation = $spaceStationRepo->findOneBy(array('idApi' => $spaceStationData["id"]));
-        $this->spaceStation = $spaceStation;
         if (is_null($spaceStation)) {
             $spaceStation = new SpaceStation();
             $spaceStation->setIdApi($spaceStationData["id"])
@@ -116,10 +118,15 @@ class UpdateDatabaseService
                 ->setOnboardCrew($spaceStationData["onboard_crew"])
                 ->setImageUrl($spaceStationData["image_url"]);
         }
+		$this->spaceStation = $spaceStation;
+		
 
         foreach ($spaceStationData["owners"] as $agency) {
             $spaceStation->addOwner($this->setAgency($agency));
         }
+		
+		$this->manager->persist($spaceStation);
+        $this->manager->flush();
 
         foreach ($spaceStationData["docking_location"] as $dock){
             $this->setDock($dock);
@@ -127,7 +134,8 @@ class UpdateDatabaseService
 
         foreach ($spaceStationData["active_expeditions"] as $expedition){
             foreach ($expedition["crew"] as $crew){
-                $this->spaceStation->addCrew($this->setAstronaut($crew["astronaut"]));
+                $spaceStation->addCrew($this->setAstronaut($crew["astronaut"], $crew["role"]["role"]));
+
             }
         }
         $this->manager->persist($spaceStation);

@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 
+use App\Entity\Agency;
+use App\Entity\Astronaut;
+use App\Entity\Launch;
 use App\Entity\SpaceStation;
 use App\Service\GetLocationService;
 use App\Service\IpInformation;
@@ -96,7 +99,7 @@ class HomeController extends AbstractController
         date_default_timezone_set($timeZone);
 
         $rootPath = $this->getParameter('kernel.project_dir');
-        require $rootPath.'/src/Predict/update_iss_tle.php';
+        //require $rootPath.'/src/Predict/update_iss_tle.php';*/
         $tleFile = file($rootPath . '/src/Predict/iss.tle');
 
         $latLon = $this->sattelliteCalculation->realTime($tleFile, $lat, $lon);
@@ -126,9 +129,38 @@ class HomeController extends AbstractController
      * @Route("/spacestation/{idApi}", name="spacestation")
      */
     public function spaceStation(SpaceStation $spaceStation){
-        dump($spaceStation);
         return $this->render('home/spacestation.html.twig',[
             'spaceStation' => $spaceStation
+        ]);
+    }
+
+    /**
+     * @param Agency $agency
+     * @Route("/agency/{idApi}", name="agency")
+     */
+    public function agency(Agency $agency){
+        return $this->render('home/agency.html.twig',[
+            'agency' => $agency        ]);
+    }
+
+
+    /**
+     * @param Launch $launch
+     * @Route("/launch/{slug}/{idApi}", name="launch")
+     */
+    public function launch(Launch $launch){
+        return $this->render('home/launch.html.twig', [
+            'launch' => $launch
+        ]);
+    }
+
+    /**
+     * @param Astronaut $astronaut
+     * @Route("/astronaut/{idApi}", name="astronaut")
+     */
+    public function astronaut(Astronaut $astronaut){
+        return $this->render('home/astronaut.html.twig', [
+            'astronaut' => $astronaut
         ]);
     }
 

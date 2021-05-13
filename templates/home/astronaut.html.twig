@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="main">
+            <div class="row">
+                <div class="col-md">
+
+                    <div class="card" style="margin-bottom:1em;;">
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <div style="overflow: hidden; text-align: center;">
+                                    <img src="{{ astronaut.profileImg }}" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h3 class="card-title" style="text-align:center;">{{ astronaut.name }}</h3>
+                                    <div class="card-text" style="text-align:left;">
+                                        <div class="row">
+                                            <h6 class="text-center w-100">{{ astronaut.agency.name }}</h6>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <p>
+                                                    Nationality
+                                                    <span>
+                                    {{ astronaut.nationality }}
+                                </span>
+                                                </p>
+                                                <p>
+                                                    Date Of Birth
+                                                    <span>
+                                    {{ astronaut.dateOfBirth | date }}
+                                </span>
+                                                </p>
+
+                                            </div>
+                                            <div class="col-md">
+                                                <p>
+                                                    Status
+                                                    <span>
+                                    {{ astronaut.status }}
+                                </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex flex-row"
+                                             style="margin-top: 1.25rem;">
+
+                                            {% if astronaut.twitter %}
+
+                                                <a class="btn btn-secondary" style="background-color: #55acee;" href="{{ astronaut.twitter }}" role="button"
+                                                ><i class="fab fa-twitter me-2"></i>Twitter</a
+                                                >
+
+
+
+
+                                            {% endif %}
+                                            {% if astronaut.instagram %}
+
+                                                <a class="btn btn-secondary ms-3" style="background-color: #ac2bac;" href="{{ astronaut.instagram }}" role="button"
+                                                ><i class="fab fa-instagram me-2"></i
+                                                    >Instagram</a>
+
+
+
+                                            {% endif %}
+                                            {% if astronaut.wiki %}
+
+                                                <a class="btn btn-secondary ms-3" style="background-color: #565e64;" href="{{ astronaut.wiki }}" role="button"
+                                                ><i class="fab fa-wikipedia-w me-2"></i
+                                                    >Wikipedia</a>
+
+                                            {% endif %}
+                                            <a href="/agency/{{ astronaut.agency.idApi }}"
+                                               class="btn btn-primary ms-3" role="button">
+                                                <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom:1em;;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h3 class="card-title" style="text-align:center;margin:0">Astronaut Biography</h3>
+                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
+                         {{ astronaut.bio }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom:1em;;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h3 class="card-title" style="text-align:center;margin:0">{{ astronaut.name }}'s Launches</h3>
+                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
+
+                                        <div class="card" style="">
+                                            {% for launch in astronaut.launches %}
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="d-md-block" style="height:100%;width:100%;">
+
+
+                                                        <div style="overflow: hidden; text-align: center;">
+                                                            <img src="{{ launch.image  }}" style="width: 100%;">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <div class="d-flex">
+                                                                <h3 class="card-title" style="text-align:center;margin:0;">{{ launch.name }}</h3>
+
+                                                        </div>
+                                                        <div class="card-text" style="text-align:center;margin-top:1.25rem;">
+                                                            <h6>{{ launch.launchServiceProvider.name }}<br></h6>
+                                                        </div>
+
+                                                        <div class="row d-flex justify-content-center" style="text-align:center;margin-bottom:1em;;">
+                                                            <h5>{{ launch.windowStart | date }}</h5>
+                                                        </div>
+
+
+                                                        <div class="d-flex flex-row"
+                                                             style="margin-top: 1.25rem">
+
+                                                            <a href="/agency/{{ launch.launchServiceProvider.idApi }}"
+                                                               class="btn btn-primary ms-3" role="button">
+                                                                <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
+                                                            </a>
+
+
+                                                            <a class="btn btn-primary ms-3"
+                                                               href="/launch/{{ launch.slug }}/{{ launch.idApi }}">
+                                                                <i class="fas fa-rocket me-2"></i><span class="ms-1">Launch</span>
+                                                            </a>
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

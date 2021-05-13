@@ -1,0 +1,249 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+    <div class="main">
+        <div class="row">
+
+
+            <div class="col-md">
+
+
+                <div class="card" style="margin-bottom:1em;;">
+                    <div class="row">
+                        <div class="col-md-4 d-flex">
+                            <div class="d-md-flex" style="height:100%;width:100%;align-items: center;justify-content: center;">
+                                <div  style="overflow: hidden; padding: 2%; text-align: center;">
+                                    <img src="{{ agency.logoUrl }}" style="width: 80%;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title" style="text-align:center;margin:0">{{ agency.name }}</h3>
+                                <div class="card-text" style="text-align:left;">
+                                    <div class="row">
+                                        <h6 class="text-center w-100">{{ agency.type }}</h6>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="label-value col">
+                                            <p>
+                                                CEO: {{ agency.administrator }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md label-value">
+                                            <p>
+                                                Founding years
+                                                <span>
+                                    {{ agency.foundingYear }}
+                                </span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1em;;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <h3 class="card-title" style="text-align:center;margin: 0 0 1.25rem;">Agency Description</h3>
+                                <div class="card-text" style="text-align:left;">{{ agency.description }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                {% if agency.launchers.count > 0 %}
+                <div class="card" style="margin-bottom:1em;;">
+                    <div class="card-body">
+                        <h3 class="card-title" style="text-align:center;margin-bottom: 1.25rem;">Rocket Configs</h3>
+
+                        {% for launcher in agency.launchers %}
+                            <div class="card" style="margin-bottom:1em;">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <div class="d-md-block" style="height:100%;width:100%;">
+
+                                            <div style="overflow: hidden; text-align: center;">
+                                                <img src="{{ launcher.imageUrl }}" style="width: 100%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <div class="row" style="margin-bottom:1.25rem;">
+                                                <h3 class="card-title text-center w-100" style="margin:0;">{{ launcher.name }}</h3>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md label-value">
+                                                    <p>
+                                                        Height
+                                                        <span>
+                                         {{ launcher.length}} Meters
+                                    </span>
+                                                    </p>
+                                                    <p>
+                                                        Max Stages
+                                                        <span>
+                                        {{ launcher.maxStage }}
+                                    </span>
+                                                    </p>
+
+
+                                                </div>
+                                                <div class="col-md label-value">
+                                                    <p>
+                                                        Diameter
+                                                        <span>
+                                          {{ launcher.diameter}} Meters
+                                    </span>
+                                                    </p>
+
+
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md label-value">
+                                                    <p>
+                                                        Launch Success
+                                                        <span>
+                                        {{ launcher.successfulLaunches }}
+                                    </span>
+                                                    </p>
+                                                    <p>
+                                                        Consecutive Success
+                                                        <span>
+                                        {{ launcher.consecutiveSuccessfulLaunches }}
+                                    </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md">
+                                                    <p>
+                                                        Launch Failures
+                                                        <span>
+                                        {{ launcher.failedLaunch }}
+                                    </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row cardButtonsSmallMargin spaceEvenly" style="margin-top: 1.25rem;">
+                                                <div>
+                                                    <a class="btn btn-g4l-blue btn-block" href="/launches?upcoming=false&amp;rocketconfig=116" role="button">
+                                                        <div class="box" style="display:flex;align-items:center;">
+                                                            <i class="icon-launch" style="padding-right: 0.25em;"></i>
+                                                            <span class="card-btn">View Launches</span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-g4l-blue btn-block" role="button" href="{{ launcher.wikiUrl }}">
+                                                            <span class="card-btn">Wiki</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if agency.spaceCraftConfigs.count > 0 %}
+                <div class="card" style="margin-bottom:1em;;">
+                    <div class="card-body">
+                        <h3 class="card-title" style="text-align:center;margin-bottom: 1.25rem;">Spacecraft Configs</h3>
+
+                        {% for spacecraft in agency.spaceCraftConfigs %}
+                        <div class="card" style="">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <div class="d-md-block" style="height:100%;width:100%;">
+
+                                        <div class="" style="overflow: hidden; text-align: center;">
+                                            <img src="{{ spacecraft.imageUrl }}" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="row" style="margin-bottom:1.25rem;">
+                                            <h3 class="card-title text-center w-100" style="margin:0;">{{ spacecraft.name }}</h3>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md label-value">
+
+
+                                                <p>
+                                                    Human Rated
+                                                    <span>
+                                        {% if spacecraft.crewCapacity > 0 %}
+                                                        Yes
+                                                        {% else %}
+                                                            No
+                                                            {% endif %}
+                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-md label-value">
+                                                <p>
+                                                    Height
+                                                    <span>
+                                         {{ spacecraft.height}} Metres
+                                    </span>
+                                                </p>
+                                                <p>
+                                                    Diameter
+                                                    <span>
+                                          {{ spacecraft.diameter}} Metres
+                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr>
+
+
+
+                                        {% if spacecraft.wikiLink %}
+
+                                            <a class="btn btn-secondary ms-3" style="background-color: #565e64;" href="{{ spacecraft.wikiLink }}" role="button"
+                                            ><i class="fab fa-wikipedia-w me-2"></i
+                                                >Wikipedia</a>
+
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+{% endblock %}

@@ -101,6 +101,11 @@ class Astronaut
      */
     private $launches;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $role;
+
     public function __construct()
     {
         $this->launches = new ArrayCollection();
@@ -321,6 +326,18 @@ class Astronaut
     public function setIdApi($idApi): self
     {
         $this->idApi = $idApi;
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(?string $role): self
+    {
+        $this->role = $role;
+
         return $this;
     }
 }
