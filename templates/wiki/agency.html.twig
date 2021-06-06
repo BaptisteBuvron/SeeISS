@@ -36,7 +36,7 @@
                                     <div class="row">
                                         <div class="col-md label-value">
                                             <p>
-                                                Founding years
+                                                Founding years :
                                                 <span>
                                     {{ agency.foundingYear }}
                                 </span>
@@ -55,7 +55,9 @@
                         <div class="col-md-12">
                             <div class="card-body">
                                 <h3 class="card-title" style="text-align:center;margin: 0 0 1.25rem;">Agency Description</h3>
-                                <div class="card-text" style="text-align:left;">{{ agency.description }}</div>
+                                <div class="card-text">
+                                    <p style="text-align: justify">{{ agency.description }}</p>
+
                             </div>
                         </div>
                     </div>
@@ -90,13 +92,13 @@
                                             <div class="row">
                                                 <div class="col-md label-value">
                                                     <p>
-                                                        Height
+                                                        Height :
                                                         <span>
                                          {{ launcher.length}} Meters
                                     </span>
                                                     </p>
                                                     <p>
-                                                        Max Stages
+                                                        Max Stages :
                                                         <span>
                                         {{ launcher.maxStage }}
                                     </span>
@@ -106,7 +108,7 @@
                                                 </div>
                                                 <div class="col-md label-value">
                                                     <p>
-                                                        Diameter
+                                                        Diameter :
                                                         <span>
                                           {{ launcher.diameter}} Meters
                                     </span>
@@ -119,13 +121,13 @@
                                             <div class="row">
                                                 <div class="col-md label-value">
                                                     <p>
-                                                        Launch Success
+                                                        Launch Success :
                                                         <span>
                                         {{ launcher.successfulLaunches }}
                                     </span>
                                                     </p>
                                                     <p>
-                                                        Consecutive Success
+                                                        Consecutive Success :
                                                         <span>
                                         {{ launcher.consecutiveSuccessfulLaunches }}
                                     </span>
@@ -133,7 +135,7 @@
                                                 </div>
                                                 <div class="col-md">
                                                     <p>
-                                                        Launch Failures
+                                                        Launch Failures :
                                                         <span>
                                         {{ launcher.failedLaunch }}
                                     </span>
@@ -196,7 +198,7 @@
 
 
                                                 <p>
-                                                    Human Rated
+                                                    Human Rated :
                                                     <span>
                                         {% if spacecraft.crewCapacity > 0 %}
                                                         Yes
@@ -208,13 +210,13 @@
                                             </div>
                                             <div class="col-md label-value">
                                                 <p>
-                                                    Height
+                                                    Height :
                                                     <span>
                                          {{ spacecraft.height}} Metres
                                     </span>
                                                 </p>
                                                 <p>
-                                                    Diameter
+                                                    Diameter :
                                                     <span>
                                           {{ spacecraft.diameter}} Metres
                                     </span>

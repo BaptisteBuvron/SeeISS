@@ -28,7 +28,7 @@
                                             style="text-align:center;margin:0;">{{ launch.name }}</h3>
 
 
-                                        <div class="badge bg-success ms-3">{{ launch.status }}</div>
+                                        <span class="badge rounded-pill bg-success ms-3">{{ launch.status }}</span>
 
 
 
@@ -113,7 +113,7 @@
                                         <div class="col-md label-value">
 
                                             <p>
-                                                Launch Crew Count
+                                                Launch Crew Count :
                                                 <span>
                                 {{ launch.launchCrew.count }}
                             </span>
@@ -121,7 +121,7 @@
                                         </div>
                                         <div class="col-md label-value">
                                             <p>
-                                                Status
+                                                Status :
                                                 <span>
                                 {{ launch.status }}
                             </span>
@@ -183,13 +183,13 @@
                                     <div class="row">
                                         <div class="col-md label-value">
                                             <p>
-                                                Height
+                                                Height :
                                                 <span>
                                  {{ launch.launcher.length }} Meters
                             </span>
                                             </p>
                                             <p>
-                                                Max Stages
+                                                Max Stages :
                                                 <span>
                                 {{ launch.launcher.maxStage }}
                             </span>
@@ -197,7 +197,7 @@
                                         </div>
                                         <div class="col-md label-value">
                                             <p>
-                                                Diameter
+                                                Diameter :
                                                 <span>
                                   {{ launch.launcher.diameter }} Meters
                             </span>
@@ -208,13 +208,13 @@
                                     <div class="row">
                                         <div class="col-md label-value">
                                             <p>
-                                                Launch Success
+                                                Launch Success :
                                                 <span>
                                 {{ launch.launcher.successfulLaunches }}
                             </span>
                                             </p>
                                             <p>
-                                                Consecutive Success
+                                                Consecutive Success :
                                                 <span>
                                 {{ launch.launcher.consecutiveSuccessfulLaunches }}
                             </span>
@@ -223,7 +223,7 @@
                                         <div class="col-md label-value">
 
                                             <p>
-                                                Launch Failures
+                                                Launch Failures :
                                                 <span>
                                 {{ launch.launcher.failedLaunch }}
                             </span>

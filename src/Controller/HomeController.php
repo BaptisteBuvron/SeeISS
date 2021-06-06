@@ -129,7 +129,7 @@ class HomeController extends AbstractController
      * @Route("/spacestation/{idApi}", name="spacestation")
      */
     public function spaceStation(SpaceStation $spaceStation){
-        return $this->render('home/spacestation.html.twig',[
+        return $this->render('wiki/spacestation.html.twig',[
             'spaceStation' => $spaceStation
         ]);
     }
@@ -139,7 +139,7 @@ class HomeController extends AbstractController
      * @Route("/agency/{idApi}", name="agency")
      */
     public function agency(Agency $agency){
-        return $this->render('home/agency.html.twig',[
+        return $this->render('wiki/agency.html.twig',[
             'agency' => $agency        ]);
     }
 
@@ -149,7 +149,7 @@ class HomeController extends AbstractController
      * @Route("/launch/{slug}/{idApi}", name="launch")
      */
     public function launch(Launch $launch){
-        return $this->render('home/launch.html.twig', [
+        return $this->render('wiki/launch.html.twig', [
             'launch' => $launch
         ]);
     }
@@ -159,7 +159,7 @@ class HomeController extends AbstractController
      * @Route("/astronaut/{idApi}", name="astronaut")
      */
     public function astronaut(Astronaut $astronaut){
-        return $this->render('home/astronaut.html.twig', [
+        return $this->render('wiki/astronaut.html.twig', [
             'astronaut' => $astronaut
         ]);
     }

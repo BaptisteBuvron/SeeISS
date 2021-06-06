@@ -32,19 +32,19 @@
                         <div class="row">
                             <div class="col-md label-value">
                                 <p>
-                                    Height
+                                    Height :
                                     <span>
                                      {{ spaceStation.height }} Metres
                                 </span>
                                 </p>
                                 <p>
-                                    Width
+                                    Width :
                                     <span>
                                     {{ spaceStation.width }} Metres
                                 </span>
                                 </p>
                                 <p>
-                                    Mass
+                                    Mass :
                                     <span>
                                     {{ spaceStation.mass }} Tonnes
                                 </span>
@@ -52,19 +52,19 @@
                             </div>
                             <div class="col-md label-value">
                                 <p>
-                                    Volume
+                                    Volume :
                                     <span>
                                     {{ spaceStation.volume }} m<sup>3</sup>
                                 </span>
                                 </p>
                                 <p>
-                                    Orbit
+                                    Orbit :
                                     <span>
                                     {{ spaceStation.orbit }}
                                 </span>
                                 </p>
                                 <p>
-                                    Founded
+                                    Founded :
                                     <span>
                                     {{ spaceStation.founded | date }}
                                 </span>
@@ -85,8 +85,9 @@
             <div class="col-md-12">
                 <div class="card-body">
                     <h3 class="card-title" style="text-align:center;margin:0">Mission Description</h3>
-                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
-                        {{ spaceStation.description }}
+                    <div class="card-text">
+                        <p style="text-align: justify">    {{ spaceStation.description }}</p>
+
                     </div>
                 </div>
             </div>

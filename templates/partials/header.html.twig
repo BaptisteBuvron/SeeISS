@@ -1,22 +1,28 @@
+{% set route_name = app.request.attributes.get('_route') %}
 <header>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ path('home') }}">SeeISS</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand ms-1" href="{{ path('home') }}">SeeISS</a>
+            <button class="navbar-toggler me-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
+                {#Margin until the end#}
+                <ul class="navbar-nav mb-2 mb-lg-0 me-auto ms-2">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Les Passages</a>
+                        <a class="nav-link{% if route_name == "home" %} active {% endif %}" aria-current="page" href="{{ path('home') }}">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('live') }}">Track ISS</a>
+                        <a class="nav-link {% if route_name == "live" %} active {% endif %}" href="{{ path('live') }}">Live ISS</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if route_name == "spacestation" %} active {% endif %}" href="{{ path('spacestation',{'idApi' : 4}) }}">About the ISS</a>
+                    </li>
+
                 </ul>
-                <ul class="navbar-nav mb-2 mb-lg-0 ml-auto">
-                    <li class="nav-item dropdown ms-auto">
+                <ul class="navbar-nav mb-2 mb-lg-0 ml-auto ms-2">
+                    <li class="nav-item dropdown">
                         {% if app.request.locale == "fr" %}
                             <a class="nav-link dropdown-toggle" href="{{ path('language_selector', {'lang' : 'fr'}) }}" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="flag-icon flag-icon-fr"> </span> Français</a>
                         {% else %}
