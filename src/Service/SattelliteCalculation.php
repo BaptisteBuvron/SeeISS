@@ -14,9 +14,25 @@ use App\Predict\PredictTLE;
 use App\TimezoneMapper;
 use DateInterval;
 use DateTime;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * Class SattelliteCalculation
+ * Calculate data of a sattelite
+ * @package App\Service
+ */
 class SattelliteCalculation
 {
+
+    private Request|null $request;
+
+    public function __construct(RequestStack $requestStack)
+    {
+
+        $this->request = $requestStack->getCurrentRequest();
+    }
 
     /**
      * Function that return an array, one with all the passes, and one with all the passes sort by date
@@ -47,7 +63,11 @@ class SattelliteCalculation
 
         $format = 'H:i:s';
         $fomatExact = 'm/d/y H:i:s';
-        $formatDate = 'fr';
+        if ($this->request->getLocale() == "fr") {
+            $formatDate = 'fr';
+        } else {
+            $formatDate = 'l j F Y';
+        }
 
         $passes = array();
         $totalPasses = array();
@@ -82,9 +102,8 @@ class SattelliteCalculation
             }
 
 
-            $detailsPasseSort = array();
             if ($duration > 0) {
-                $detailsPasseSort[] = [
+                $totalPasses[] = [
                     'date' => $date,
                     'dateStart' => $dateStart,
                     'dateMax' => $dateMax,
@@ -100,20 +119,20 @@ class SattelliteCalculation
                     'coord' => $coord
                 ];
 
-                $totalPasses[] = $detailsPasseSort;
                 $passes[$date][] = new Passe($dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag, $coord, $index);
                 $index++;
             }
         }
 
         return [
-            'totalPasses' =>$totalPasses,
+            'totalPasses' => $totalPasses,
             'passes' => $passes
         ];
     }
 
 
-    public function realTime(array $tleFile, float $lat, float $lon): array
+    public
+    function realTime(array $tleFile, float $lat, float $lon): array
     {
         $latLon = array();
         $qth = new PredictQTH();
@@ -128,7 +147,7 @@ class SattelliteCalculation
         $date->sub($intervalHourAndHalf);
         $predict = new Predict();
 
-        for ($i = 0; $i < 810; $i++){
+        for ($i = 0; $i < 810; $i++) {
             $now = PredictTime::getCurrentDaynumFromUnix($date->format('U')); // get the current time as Julian Date (daynum)
             $predict->predict_calc($sat, $qth, $now);
             $latLon[$i] = [
@@ -140,7 +159,6 @@ class SattelliteCalculation
 
 
         return $latLon;
-
 
 
     }

@@ -40,7 +40,7 @@
 
 
             {% if passes %}
-                <a class="pdf" target="_blank" rel="noopener noreferrer" href="/pdf" ><img src="images/pdf.svg" alt=""></a>
+                <a class="pdf" target="_blank" rel="noopener noreferrer" href="{{ path('pdf') }}" ><img src="images/pdf.svg" alt=""></a>
             {% endif %}
             <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
                 <input type="hidden" name="hosted_button_id" value="FG67TUU7DAZKA" />
@@ -117,15 +117,12 @@
 
     </div>
 
-
-    <div class="modal" tabindex="-1" role="dialog" id="modalMap">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal" tabindex="-1" id="modalMap">
+        <div class="modal-dialog">
             <div class="modal-content">
+                <h5 class="modal-title m-4"></h5>
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div id="grid">
                         <div>
                             <p id="start"></p>
@@ -140,17 +137,18 @@
                             <p id="mag"></p>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-body">
                     <div style="height: 500px" id="map"></div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 
@@ -231,26 +229,29 @@
 
 
         var jsonPasses = {{ totalPasses | json_encode | raw }};
+        var arrayPasses;
+
+
 
         $('.linkMap').click(function(e) {
             e.preventDefault();
             var idLink = parseInt($(this).attr('id'));
             var passes = jsonPasses[idLink];
             var latLonpasse = [];
-            passes[0]['coord'].forEach(function (value){
+            passes['coord'].forEach(function (value){
                 latLonpasse.push([value.lat, value.lon]);
             })
-            $('#modalMap h5.modal-title').text(passes[0]['date']);
-            $('#modalMap p#start').text("Début : " + passes[0]['dateStart']);
-            $('#modalMap p#max').text("Max : " + passes[0]['dateMax']);
-            $('#modalMap p#end').text("Fin : " + passes[0]['dateEnd']);
-            $('#modalMap p#duration').text("Durée : " + passes[0]['duration'] + " s");
+            $('#modalMap h5.modal-title').text(passes['date']);
+            $('#modalMap p#start').text("Début : " + passes['dateStart']);
+            $('#modalMap p#max').text("Max : " + passes['dateMax']);
+            $('#modalMap p#end').text("Fin : " + passes['dateEnd']);
+            $('#modalMap p#duration').text("Durée : " + passes['duration'] + " s");
 
 
-            $('#modalMap p#startAz').text("Début AZ : " + passes[0]['azStart'] + " ("+passes[0]['azStartDegres'] +"°)");
-            $('#modalMap p#maxAz').text("Max AZ : " + passes[0]['azMax'] + " ("+passes[0]['azMaxDegres'] +"°)");
-            $('#modalMap p#endAz').text("Fin }} AZ : " + passes[0]['azEnd'] + " ("+passes[0]['azEndDegres'] +"°)");
-            $('#modalMap p#mag').text("Mag : " + passes[0]['mag']);
+            $('#modalMap p#startAz').text("Début AZ : " + passes['azStart'] + " ("+passes['azStartDegres'] +"°)");
+            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMax'] + " ("+passes['azMaxDegres'] +"°)");
+            $('#modalMap p#endAz').text("Fin AZ : " + passes['azEnd'] + " ("+passes['azEndDegres'] +"°)");
+            $('#modalMap p#mag').text("Mag : " + passes['mag']);
 
 
 

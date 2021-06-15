@@ -1,4 +1,21 @@
 by: par
+passesText: Les passages visibles de l'ISS
+
+#tableInformation
+
+hour: Heure
+duration: Durée
+map:  Carte
+send: Envoyer
+start:  Début
+end: Fin
+goodVisibility: Bonne visibilité
+mediumVisibility: Moyenne visibilité
+noPasse: Aucun passage de l'ISS
+seeonmap: Voir sur la carte"
+azimuth: Azimut
+
+
 messageRealTime: La vidéo en direct de la Station spatiale internationale comprend des vues internes
   lorsque l'équipage est en service et des vues de la Terre à d'autres moments. La vidéo est
   accompagnée de l'audio des conversations entre l'équipage et le contrôle de mission. Cette vidéo

@@ -8,6 +8,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * Class IpInformation
+ * GET information from the IP of the User
+ * @package App\Service
+ */
 class IpInformation
 {
 

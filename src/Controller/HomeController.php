@@ -2,19 +2,14 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Agency;
-use App\Entity\Astronaut;
-use App\Entity\Launch;
-use App\Entity\SpaceStation;
 use App\Service\GetLocationService;
 use App\Service\IpInformation;
 use App\Service\SattelliteCalculation;
 use App\Service\UpdateDatabaseService;
 use App\TimezoneMapper;
+use Mpdf\Mpdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -47,7 +42,7 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(Session $session): Response
+    public function index(): Response
     {
 
 
@@ -66,11 +61,14 @@ class HomeController extends AbstractController
             'city' => $cityName
         ];
         if (!is_null($lat) && !is_null($lon)){
+
+            //TODO create commande to update TLE
             $rootPath = $this->getParameter('kernel.project_dir');
             // Only once per day
             require $rootPath.'/src/Predict/update_iss_tle.php';
-            $tleFile = file($rootPath . '/src/Predict/iss.tle');
 
+
+            $tleFile = file($rootPath . '/src/Predict/iss.tle');
             $res = $this->sattelliteCalculation->getVisiblePasses($tleFile,floatval($lat), floatval($lon));
             $totalPasses = $res['totalPasses'];
             $passes = $res['passes'];
@@ -98,11 +96,12 @@ class HomeController extends AbstractController
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
         date_default_timezone_set($timeZone);
 
+
         $rootPath = $this->getParameter('kernel.project_dir');
         //require $rootPath.'/src/Predict/update_iss_tle.php';*/
         $tleFile = file($rootPath . '/src/Predict/iss.tle');
 
-        $latLon = $this->sattelliteCalculation->realTime($tleFile, $lat, $lon);
+        $latLonArray = $this->sattelliteCalculation->realTime($tleFile, $lat, $lon);
 
 /*
         $kph = $sat->velo * 60 * 60;
@@ -122,47 +121,50 @@ class HomeController extends AbstractController
         echo "    Date/Time: " . $time . "\n";*/
 
 
-        return $this->render('home/live.html.twig',['latLon' => $latLon]);
+        return $this->render('home/live.html.twig',['latLon' => $latLonArray]);
     }
 
     /**
-     * @Route("/spacestation/{idApi}", name="spacestation")
+     * Route that return the passes of the ISS in a PDF file.
+     * @Route("/pdf", name="pdf")
+     * @throws \Mpdf\MpdfException
      */
-    public function spaceStation(SpaceStation $spaceStation){
-        return $this->render('wiki/spacestation.html.twig',[
-            'spaceStation' => $spaceStation
-        ]);
+    public function pdf(){
+        //Rechercher la latitude et longitude
+        $coord = $this->locationService->getLatLonCity();
+        $lat = $coord['lat'];
+        $lon = $coord['lon'];
+        $cityName = $coord['cityName'];
+
+        $passes = null;
+        $totalPasses = null;
+        $info = [
+            'lat' => $lat,
+            'lon' => $lon,
+            'city' => $cityName
+        ];
+
+
+        if (!is_null($lat) && !is_null($lon)){
+
+            $rootPath = $this->getParameter('kernel.project_dir');
+            $tleFile = file($rootPath . '/src/Predict/iss.tle');
+            $res = $this->sattelliteCalculation->getVisiblePasses($tleFile,floatval($lat), floatval($lon));
+            $passes = $res['passes'];
+        }
+
+        $mpdf = new Mpdf();
+        $mpdf->WriteHTML($this->render('home/pdf.html.twig',[
+            'info' => $info,
+            'passes' => $passes
+        ]));
+        $mpdf->Output('seeiss-'.$info['city'], 'I');
+
+
+
     }
 
-    /**
-     * @param Agency $agency
-     * @Route("/agency/{idApi}", name="agency")
-     */
-    public function agency(Agency $agency){
-        return $this->render('wiki/agency.html.twig',[
-            'agency' => $agency        ]);
-    }
 
-
-    /**
-     * @param Launch $launch
-     * @Route("/launch/{slug}/{idApi}", name="launch")
-     */
-    public function launch(Launch $launch){
-        return $this->render('wiki/launch.html.twig', [
-            'launch' => $launch
-        ]);
-    }
-
-    /**
-     * @param Astronaut $astronaut
-     * @Route("/astronaut/{idApi}", name="astronaut")
-     */
-    public function astronaut(Astronaut $astronaut){
-        return $this->render('wiki/astronaut.html.twig', [
-            'astronaut' => $astronaut
-        ]);
-    }
 
     /**
      * @Route("/update", name="update")
