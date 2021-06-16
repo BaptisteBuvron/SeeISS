@@ -128,16 +128,37 @@ class UpdateDatabaseService
 		$this->manager->persist($spaceStation);
         $this->manager->flush();
 
+
+        $dockInISS = array();
         foreach ($spaceStationData["docking_location"] as $dock){
             $this->setDock($dock);
+            if (!is_null($dock["docked"])){
+                $dockInISS[] = $dock["docked"]["id"];
+            }
         }
+
+        foreach ($spaceStation->getDockingLocation() as $docking){
+            if (!in_array($docking->getIdApi(), $dockInISS)){
+                $spaceStation->removeDockingLocation($docking);
+            }
+        }
+
+        $astronautInISS = array();
 
         foreach ($spaceStationData["active_expeditions"] as $expedition){
             foreach ($expedition["crew"] as $crew){
                 $spaceStation->addCrew($this->setAstronaut($crew["astronaut"], $crew["role"]["role"]));
-
+                $astronautInISS[] = $crew["astronaut"]['id'];
             }
         }
+
+        //Remove Astronaut not in the ISS.
+        foreach ($spaceStation->getCrew() as $astronaut){
+            if (!in_array($astronaut->getIdApi(),$astronautInISS)){
+                $spaceStation->removeCrew($astronaut);
+            }
+        }
+
         $this->manager->persist($spaceStation);
         $this->manager->flush();
 
