@@ -63,13 +63,8 @@ class HomeController extends AbstractController
         if (!is_null($lat) && !is_null($lon)){
 
             //TODO create commande to update TLE
-            $rootPath = $this->getParameter('kernel.project_dir');
-            // Only once per day
-            require $rootPath.'/src/Predict/update_iss_tle.php';
 
-
-            $tleFile = file($rootPath . '/src/Predict/iss.tle');
-            $res = $this->sattelliteCalculation->getVisiblePasses($tleFile,floatval($lat), floatval($lon));
+            $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
             $totalPasses = $res['totalPasses'];
             $passes = $res['passes'];
         }
@@ -101,7 +96,7 @@ class HomeController extends AbstractController
         //require $rootPath.'/src/Predict/update_iss_tle.php';*/
         $tleFile = file($rootPath . '/src/Predict/iss.tle');
 
-        $latLonArray = $this->sattelliteCalculation->realTime($tleFile, $lat, $lon);
+        $latLonArray = $this->sattelliteCalculation->realTime($lat, $lon);
 
 /*
         $kph = $sat->velo * 60 * 60;
@@ -137,7 +132,6 @@ class HomeController extends AbstractController
         $cityName = $coord['cityName'];
 
         $passes = null;
-        $totalPasses = null;
         $info = [
             'lat' => $lat,
             'lon' => $lon,
@@ -146,10 +140,7 @@ class HomeController extends AbstractController
 
 
         if (!is_null($lat) && !is_null($lon)){
-
-            $rootPath = $this->getParameter('kernel.project_dir');
-            $tleFile = file($rootPath . '/src/Predict/iss.tle');
-            $res = $this->sattelliteCalculation->getVisiblePasses($tleFile,floatval($lat), floatval($lon));
+            $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
             $passes = $res['passes'];
         }
 

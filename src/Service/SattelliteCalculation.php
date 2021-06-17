@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Passes\Passe;
+use App\Entity\Passe;
 use App\Predict\Predict;
 use App\Predict\PredictException;
 use App\Predict\PredictQTH;
@@ -14,9 +14,10 @@ use App\Predict\PredictTLE;
 use App\TimezoneMapper;
 use DateInterval;
 use DateTime;
+use JetBrains\PhpStorm\ArrayShape;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class SattelliteCalculation
@@ -27,38 +28,45 @@ class SattelliteCalculation
 {
 
     private Request|null $request;
+    private ParameterBagInterface $params;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ParameterBagInterface $params)
     {
 
         $this->request = $requestStack->getCurrentRequest();
+        $this->params = $params;
     }
 
     /**
      * Function that return an array, one with all the passes, and one with all the passes sort by date
-     * @param array $tleFile
      * @param float $lat
      * @param float $lon
+     * @param int $maxdt
+     * @param array|null $tleFile
      * @return array[]
      * @throws PredictException
      */
-    public function getVisiblePasses(array $tleFile, float $lat, float $lon): array
+    #[ArrayShape(['totalPasses' => "array", 'passes' => "array"])] public function getVisiblePasses(float $lat, float $lon, int $maxdt = 15, array $tleFile = null): array
     {
+
+        if (is_null($tleFile)) {
+            $tleFile = $this->getIssTleFile();
+        }
 
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
         date_default_timezone_set($timeZone);
         $predict = new Predict();
         $qth = new PredictQTH();
         $qth->alt = 0;
-        $qth->lat = floatval($lat);
-        $qth->lon = floatval($lon);
+        $qth->lat = $lat;
+        $qth->lon = $lon;
 
 
         $tle = new PredictTLE($tleFile[0], $tleFile[1], $tleFile[2]);
 
         $sat = new PredictSat($tle);
         $now = PredictTime::get_current_daynum();
-        $results = $predict->get_passes($sat, $qth, $now, 15);
+        $results = $predict->get_passes($sat, $qth, $now, $maxdt);
         $filtered = $predict->filterVisiblePasses($results);
 
         $format = 'H:i:s';
@@ -119,10 +127,11 @@ class SattelliteCalculation
                     'coord' => $coord
                 ];
 
-                $passes[$date][] = new Passe($dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag, $coord, $index);
+                $passes[$date][] = new Passe($index, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag, $coord);
                 $index++;
             }
         }
+
 
         return [
             'totalPasses' => $totalPasses,
@@ -131,13 +140,25 @@ class SattelliteCalculation
     }
 
 
+    /**
+     * @param array $tleFile
+     * @param float $lat
+     * @param float $lon
+     * @return array
+     * @throws PredictException
+     */
     public
-    function realTime(array $tleFile, float $lat, float $lon): array
+    function realTime(float $lat, float $lon, array $tleFile = null): array
     {
+        if (is_null($tleFile)) {
+            $tleFile = $this->getIssTleFile();
+
+        }
+
         $latLon = array();
         $qth = new PredictQTH();
-        $qth->lat = floatval($lat);
-        $qth->lon = floatval($lon);
+        $qth->lat = $lat;
+        $qth->lon = $lon;
 
         $tle = new PredictTLE($tleFile[0], $tleFile[1], $tleFile[2]); // Instantiate it
         $sat = new PredictSat($tle); // Load up the satellite data
@@ -161,6 +182,16 @@ class SattelliteCalculation
         return $latLon;
 
 
+    }
+
+    /**
+     * Get the ISS Tle File
+     * @return bool|array
+     */
+    private function getIssTleFile(): bool|array
+    {
+        $rootPath = $this->params->get('kernel.project_dir');
+        return file($rootPath . '/src/Predict/iss.tle');
     }
 
 
