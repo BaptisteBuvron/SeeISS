@@ -43,12 +43,6 @@ header .logo p{
 /** MAIN **/
 
 
-.container{
-    padding-right: 0px;
-    padding-left: 0px;
-}
-
-
 main{
     margin-top: 50px;
     background-color: white;
