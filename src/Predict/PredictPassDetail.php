@@ -3,7 +3,7 @@
 namespace App\Predict;
 
 
-require_once 'PredictVector.php';
+
 
 /** Pass detail entry.
  *
