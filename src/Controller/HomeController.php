@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Service\GetLocationService;
 use App\Service\IpInformation;
 use App\Service\SattelliteCalculation;
-use App\Service\UpdateDatabaseService;
 use App\TimezoneMapper;
 use Mpdf\Mpdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,9 +49,6 @@ class HomeController extends AbstractController
         $lat = $coord['lat'];
         $lon = $coord['lon'];
         $cityName = $coord['cityName'];
-
-
-
         $passes = null;
         $totalPasses = null;
         $info = [
@@ -61,9 +57,6 @@ class HomeController extends AbstractController
             'city' => $cityName
         ];
         if (!is_null($lat) && !is_null($lon)){
-
-            //TODO create commande to update TLE
-
             $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
             $totalPasses = $res['totalPasses'];
             $passes = $res['passes'];
@@ -82,19 +75,17 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/live", name="live")
+     * @throws \App\Predict\PredictException
      */
     public function live()
     {
-        $lat = 48.8534;
-        $lon = 2.3488;
+        $coord = $this->locationService->getLatLonCity();
+        $lat = $coord['lat'];
+        $lon = $coord['lon'];
         // Only once per day
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
         date_default_timezone_set($timeZone);
 
-
-        $rootPath = $this->getParameter('kernel.project_dir');
-        //require $rootPath.'/src/Predict/update_iss_tle.php';*/
-        $tleFile = file($rootPath . '/src/Predict/iss.tle');
 
         $latLonArray = $this->sattelliteCalculation->realTime($lat, $lon);
 
@@ -123,6 +114,7 @@ class HomeController extends AbstractController
      * Route that return the passes of the ISS in a PDF file.
      * @Route("/pdf", name="pdf")
      * @throws \Mpdf\MpdfException
+     * @throws \App\Predict\PredictException
      */
     public function pdf(){
         //Rechercher la latitude et longitude
@@ -131,7 +123,6 @@ class HomeController extends AbstractController
         $lon = $coord['lon'];
         $cityName = $coord['cityName'];
 
-        $passes = null;
         $info = [
             'lat' => $lat,
             'lon' => $lon,
@@ -139,9 +130,15 @@ class HomeController extends AbstractController
         ];
 
 
+
+
         if (!is_null($lat) && !is_null($lon)){
             $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
             $passes = $res['passes'];
+        }
+        else{
+            //TODO ADD FLASHES
+            return $this->redirectToRoute('home');
         }
 
         $mpdf = new Mpdf();
@@ -155,15 +152,12 @@ class HomeController extends AbstractController
 
     }
 
-
-
     /**
-     * @Route("/update", name="update")
+     * Route that return the privacy page.
+     * @Route("/privacy", name="privacy")
      */
-    public function updateDatabase(UpdateDatabaseService  $updateDataBase){
-
-        $updateDataBase->updateDatabaseISS();
-        return new Response("<h1>Bonjour</h1>");
-
+    public function privacy(): Response
+    {
+        return $this->render('home/privacy.html.twig');
     }
 }

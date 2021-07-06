@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\command;
+namespace App\Command;
 
 
 use App\Service\UpdateDatabaseService;

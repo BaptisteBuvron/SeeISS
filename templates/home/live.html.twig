@@ -23,11 +23,11 @@
     <div class="container">
 
 
-        <main class="px-4">
-            <h1>La Station Spatiale Internationale : </h1>
+        <main class="p-4">
+            <h2 class="text-align">{% trans %}positionIss{% endtrans %}</h2>
             <div style="height: 500px" id="map"></div>
 
-            <h2>Caméra de l'iss en Direct</h2>
+            <h2>{% trans %}cameraIss{% endtrans %}</h2>
             <div class="row">
                 <div class="col-xl mb-4">
                     <div class="ratio ratio-16x9">
@@ -60,7 +60,11 @@
     <script>
 
         var issLatLon = {{ latLon | json_encode | raw }};
+
+        //Get the index of the next location of the ISS, were is the iss now.
         var indexLatLon = Math.trunc(issLatLon.length / 3);
+
+        //Create the map
         var map = L.map('map',
             {
                 'worldCopyJump': true
@@ -77,6 +81,7 @@
         }).addTo(map);
         L.terminator().addTo(map)
 
+        //Set the seeiss mark
         var p = L.control({position: 'bottomleft'});
         p.onAdd = function (map) {
             var div = L.DomUtil.create('h1');
@@ -86,24 +91,31 @@
         }
         p.addTo(map);
 
+
+
         var indexLatLonPrint = 0;
         var issLatLonMap = [];
         var lastLon = null;
         var color;
-        var lastCoord;
+
+        //Print the line of the location of the iss. Blue line are the next passes.
         issLatLon.forEach(function (e) {
+            //for the past passages, set the color in red, else in blue
             if (indexLatLonPrint != null && indexLatLonPrint <= indexLatLon) {
                 color = 'red';
             } else {
                 color = 'blue';
             }
+
+            //Check we have to change the side of the map, so if the last lon is > of the actual lon
             if ((lastLon != null && lastLon > e['lon']) || (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon)) {
-                var polyline = L.polyline(issLatLonMap, {color: color}).addTo(map);
+                L.polyline(issLatLonMap, {color: color}).addTo(map);
                 issLatLonMap = [];
                 if (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon) {
                     indexLatLonPrint = null;
                 }
             }
+
             issLatLonMap.push([e['lat'], e['lon']]);
             lastLon = e['lon'];
             if (indexLatLonPrint != null) {
@@ -111,20 +123,30 @@
             }
         });
 
-        var polyline = L.polyline(issLatLonMap, {color: 'blue'}).addTo(map);
+        L.polyline(issLatLonMap, {color: 'blue'}).addTo(map);
+
+
+
         var homeIcon = L.icon({
             iconUrl: 'images/international-space-station.png',
             iconSize: [100, 40]
         });
 
-
+        //Add the marker with the picture of the iss
         var marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
         map.addLayer(marker);
+
+
+        //Each 10 seconds update the marker of the iss
         setInterval(function () {
+            if ((indexLatLon -1) >= issLatLon.length){
+                document.location.reload();
+            }
             indexLatLon++;
             map.removeLayer(marker);
             marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
             map.addLayer(marker);
+
         }, 10000);
 
 

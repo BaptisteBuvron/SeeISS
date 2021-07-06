@@ -86,6 +86,11 @@ class GetLocationService
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
         }
+        else{
+            $lat = 48;
+            $lon = 2.33;
+            $cityName = "Paris";
+        }
 
         return [
             'lat' => $lat,

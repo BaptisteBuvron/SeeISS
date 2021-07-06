@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\command;
+namespace App\Command;
 
 
+use App\Predict\UpdateIssTle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,7 +31,7 @@ class UpdateTLEISSCommand extends Command
         $rootPath = $this->params->get('kernel.project_dir');
 
         // Only once per day
-        require $rootPath.'/src/Predict/update_iss_tle.php';
+        UpdateIssTle::updateIssTleFile();
         $output->writeln('Succes of the update of the ISS TLE');
 
         return Command::SUCCESS;

@@ -1,0 +1,11 @@
+api_platform:
+    title: 'SeeISS API'
+    description: 'API of the SeeISS website, get all the passages of the ISS.'
+    version: '0.0.1'
+    show_webby: false
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]

@@ -33,6 +33,13 @@ use phpDocumentor\Reflection\Types\Integer;
                     "description" => "How many day will be calculated ?",
                     "required" => false,
                     "type" => "integer"
+                ],
+                [
+                    "name" => "lang",
+                    "in" => "query",
+                    "description" => "Choose the lang of the date",
+                    "required" => false,
+                    "type" => "string"
                 ]
             ]
         ]
@@ -50,6 +57,7 @@ class Passe
 
     #[ApiProperty(identifier: true)]
     private int $index;
+    private string $date;
     private string $dateStart;
     private string $dateMax;
     private string $dateEnd;
@@ -84,8 +92,9 @@ class Passe
      * @param $duration //Duration in seconds
      * @param $mag
      */
-    public function __construct(int $index, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,  array $detailsPasseTotal = null)
+    public function __construct(int $index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,  array $detailsPasseTotal = null)
     {
+        $this->date = $date;
         $this->dateStart = $dateStart;
         $this->dateStartExact = $dateStartExact;
         $this->dateMax = $dateMax;
@@ -102,6 +111,14 @@ class Passe
 
         $this->detailsPasseTotal = $detailsPasseTotal;
         $this->index = $index;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->date;
     }
 
     /**

@@ -27,13 +27,13 @@
                 <input type="hidden" id="name" name="city" />
                 <input type="hidden" id="lat" name="lat" />
                 <input type="hidden" id="lon" name="lon" />
-                <button id="buttonSumbit" type="submit" class="btn btn-primary" style="margin-left: 5px">Envoyer</button>
+                <button id="buttonSumbit" type="submit" class="btn btn-primary" style="margin-left: 5px">{% trans %}send{% endtrans %}</button>
             </form>
 
             <div id="info">
-                <p>blabla</p>
-                <p>blabla</p>
-                <p>blabla</p>
+                <p>{% trans %}issVisible{% endtrans %}</p>
+                <p>{% trans %}visiblePoint{% endtrans %}</p>
+                <p>{% trans %}timeIss{% endtrans %}</p>
             </div>
 
 
@@ -42,19 +42,16 @@
             {% if passes %}
                 <a class="pdf" target="_blank" rel="noopener noreferrer" href="{{ path('pdf') }}" ><img src="images/pdf.svg" alt=""></a>
             {% endif %}
-            <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
-                <input type="hidden" name="hosted_button_id" value="FG67TUU7DAZKA" />
-                <input type="image" src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                <img alt="" border="0" src="https://www.paypal.com/en_FR/i/scr/pixel.gif" width="1" height="1" />
-            </form>
+
+            <p>Soutenez l'hébergement et le développement du site internet :  <a href="https://paypal.me/pools/c/8A7kXAZxtb"><img src="{{ asset('images/btn_donateCC_LG.webp') }}" alt=""></a></p>
 
 
             <section style="margin: 15px 30px 0px 30px" >
 
                 {% if passes %}
                     <div id="visibilty">
-                        <p class="bg-success">Bonne visibilité</p>
-                        <p class="bg-warning">Visibilité moyenne</p>
+                        <p class="bg-success">{% trans %}goodVisibility{% endtrans %}</p>
+                        <p class="bg-warning">{% trans %}mediumVisibility{% endtrans %}</p>
                     </div>
                     {% for key, passe in passes %}
                         <h3>{{ key }}</h3>
@@ -65,23 +62,23 @@
                                 <thead>
                                 <tr class="head">
                                     <th></th>
-                                    <th colspan="2">Début</th>
+                                    <th colspan="2">{% trans %}start{% endtrans %}</th>
                                     <th colspan="2">Max</th>
-                                    <th colspan="2">Fin</th>
+                                    <th colspan="2">{% trans %}end{% endtrans %}</th>
                                     <th colspan="2">Info</th>
                                     <th colspan="1"></th>
                                 </tr>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Heure</th>
-                                    <th scope="col">Azimut</th>
-                                    <th scope="col">Heure</th>
+                                    <th scope="col">{% trans %}start{% endtrans %}</th>
+                                    <th scope="col">{% trans %}azimuth{% endtrans %}</th>
+                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
                                     <th scope="col">Az</th>
-                                    <th scope="col">Heure</th>
+                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
                                     <th scope="col">Az</th>
-                                    <th scope="col">Durée (s)</th>
+                                    <th scope="col">{% trans %}duration{% endtrans %} (s)</th>
                                     <th scope="col">Magnitude</th>
-                                    <th scope="col">Voir sur la carte</th>
+                                    <th scope="col">{% trans %}seeonmap{% endtrans %}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -96,7 +93,7 @@
                                         <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
                                         <td>{{ value.duration }}</td>
                                         <td>{{ value.mag }}</td>
-                                        <td><a href="#" class="linkMap" id="{{ value.index }}">Carte</a></td>
+                                        <td><a href="#" class="linkMap" id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -104,7 +101,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p id="noPassage">Pas de passage</p>
+                    <p id="noPassage">{% trans %}noPasse{% endtrans %}</p>
                 {% endif %}
 
 
@@ -120,9 +117,9 @@
     <div class="modal" tabindex="-1" id="modalMap">
         <div class="modal-dialog">
             <div class="modal-content">
+                <button type="button" class="btn-close ms-auto p-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h5 class="modal-title m-4"></h5>
                 <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div id="grid">
                         <div>
                             <p id="start"></p>
@@ -242,15 +239,15 @@
                 latLonpasse.push([value.lat, value.lon]);
             })
             $('#modalMap h5.modal-title').text(passes['date']);
-            $('#modalMap p#start').text("Début : " + passes['dateStart']);
+            $('#modalMap p#start').text("{% trans %}start{% endtrans %} : " + passes['dateStart']);
             $('#modalMap p#max').text("Max : " + passes['dateMax']);
-            $('#modalMap p#end').text("Fin : " + passes['dateEnd']);
-            $('#modalMap p#duration').text("Durée : " + passes['duration'] + " s");
+            $('#modalMap p#end').text("{% trans %}end{% endtrans %} : " + passes['dateEnd']);
+            $('#modalMap p#duration').text("{% trans %}duration{% endtrans %} : " + passes['duration'] + " s");
 
 
-            $('#modalMap p#startAz').text("Début AZ : " + passes['azStart'] + " ("+passes['azStartDegres'] +"°)");
+            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStart'] + " ("+passes['azStartDegres'] +"°)");
             $('#modalMap p#maxAz').text("Max AZ : " + passes['azMax'] + " ("+passes['azMaxDegres'] +"°)");
-            $('#modalMap p#endAz').text("Fin AZ : " + passes['azEnd'] + " ("+passes['azEndDegres'] +"°)");
+            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEnd'] + " ("+passes['azEndDegres'] +"°)");
             $('#modalMap p#mag').text("Mag : " + passes['mag']);
 
 
