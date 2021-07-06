@@ -68,7 +68,7 @@ h2{
 .pdf img{
     float: right;
     width: 50px;
-    heigh: 50px;
+    height: 50px;
     margin-top: 5px;
 
 }
@@ -76,7 +76,6 @@ h2{
 section #visibilty{
     display: flex;
     text-align: center;
-    width: 400px;
 }
 
 section #visibilty p {
@@ -178,10 +177,11 @@ footer .copyright {
     margin-bottom: 20px;
 }
 
+/*
 
 @media screen and (min-width: 676px) {
     .modal-dialog {
-        max-width: 90%; /* New width for default modal */
+        max-width: 90%; !* New width for default modal *!
         max-height: 50%;
     }
-}
+}*/

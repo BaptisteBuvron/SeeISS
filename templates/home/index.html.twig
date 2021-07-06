@@ -18,98 +18,104 @@
 {% block body %}
     <div class="container-lg">
         <main>
-        <img id="iss" src="images/iss.jpg" alt="">
 
-        <section class="px-1">
-            <h2>Voici les passages de la station spatiale internationale : </h2>
-            <form action="{{ path('home') }}" method="POST" id="formLocation">
-                <input id="location" type="text" size="50" placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
-                <input type="hidden" id="name" name="city" />
-                <input type="hidden" id="lat" name="lat" />
-                <input type="hidden" id="lon" name="lon" />
-                <button id="buttonSumbit" type="submit" class="btn btn-primary" style="margin-left: 5px">{% trans %}send{% endtrans %}</button>
-            </form>
+            <img id="iss" src="images/iss.jpg" alt="">
 
-            <div id="info">
-                <p>{% trans %}issVisible{% endtrans %}</p>
-                <p>{% trans %}visiblePoint{% endtrans %}</p>
-                <p>{% trans %}timeIss{% endtrans %}</p>
-            </div>
+            <section>
+                <h2 class="h3">Voici les passages de la station spatiale internationale : </h2>
 
+                <form action="{{ path('home') }}" method="POST" id="formLocation">
+                    <input id="location" type="text" size="50"
+                           placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
+                    <input type="hidden" id="name" name="city"/>
+                    <input type="hidden" id="lat" name="lat"/>
+                    <input type="hidden" id="lon" name="lon"/>
+                    <button id="buttonSumbit" type="submit" class="btn btn-primary"
+                            style="margin-left: 5px">{% trans %}send{% endtrans %}</button>
+                </form>
 
+                <div id="info">
+                    <p>{% trans %}issVisible{% endtrans %}</p>
+                    <p>{% trans %}visiblePoint{% endtrans %}</p>
+                    <p>{% trans %}timeIss{% endtrans %}</p>
+                </div>
 
-
-            {% if passes %}
-                <a class="pdf" target="_blank" rel="noopener noreferrer" href="{{ path('pdf') }}" ><img src="images/pdf.svg" alt=""></a>
-            {% endif %}
-
-            <p>Soutenez l'hébergement et le développement du site internet :  <a href="https://paypal.me/pools/c/8A7kXAZxtb"><img src="{{ asset('images/btn_donateCC_LG.webp') }}" alt=""></a></p>
-
-
-            <section style="margin: 15px 30px 0px 30px" >
 
                 {% if passes %}
-                    <div id="visibilty">
-                        <p class="bg-success">{% trans %}goodVisibility{% endtrans %}</p>
-                        <p class="bg-warning">{% trans %}mediumVisibility{% endtrans %}</p>
-                    </div>
-                    {% for key, passe in passes %}
-                        <h3>{{ key }}</h3>
-                        <div class="table-responsive">
-
-
-                            <table class="table table-bordered table-responsive">
-                                <thead>
-                                <tr class="head">
-                                    <th></th>
-                                    <th colspan="2">{% trans %}start{% endtrans %}</th>
-                                    <th colspan="2">Max</th>
-                                    <th colspan="2">{% trans %}end{% endtrans %}</th>
-                                    <th colspan="2">Info</th>
-                                    <th colspan="1"></th>
-                                </tr>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{% trans %}start{% endtrans %}</th>
-                                    <th scope="col">{% trans %}azimuth{% endtrans %}</th>
-                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
-                                    <th scope="col">Az</th>
-                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
-                                    <th scope="col">Az</th>
-                                    <th scope="col">{% trans %}duration{% endtrans %} (s)</th>
-                                    <th scope="col">Magnitude</th>
-                                    <th scope="col">{% trans %}seeonmap{% endtrans %}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for value in passe %}
-                                    <tr {% if value.mag <= -3  %} class="table-success" {% elseif value.mag <= -2 %} class="table-warning" {% endif %}>
-                                        <th scope="row">{{ loop.index }}</th>
-                                        <td>{{ value.dateStart }}</td>
-                                        <td>{{ value.azStart }} ({{ value.azStartDegres }}°)</td>
-                                        <td>{{ value.dateMax }}</td>
-                                        <td>{{ value.azMax }} ({{ value.azMaxDegres }}°)</td>
-                                        <td>{{ value.dateEnd }}</td>
-                                        <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
-                                        <td>{{ value.duration }}</td>
-                                        <td>{{ value.mag }}</td>
-                                        <td><a href="#" class="linkMap" id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p id="noPassage">{% trans %}noPasse{% endtrans %}</p>
+                    <a class="pdf" target="_blank" rel="noopener noreferrer" href="{{ path('pdf') }}"><img
+                                src="images/pdf.svg" alt=""></a>
                 {% endif %}
+
+                <p>Soutenez l'hébergement et le développement du site internet : <a
+                            href="https://paypal.me/pools/c/8A7kXAZxtb"><img
+                                src="{{ asset('images/btn_donateCC_LG.webp') }}" alt=""></a></p>
+
+
+                <section>
+
+                    {% if passes %}
+                      <div id="visibilty">
+                            <p class="bg-success">{% trans %}goodVisibility{% endtrans %}</p>
+                            <p class="bg-warning">{% trans %}mediumVisibility{% endtrans %}</p>
+                        </div>
+
+                        {% for key, passe in passes %}
+                            <h3>{{ key }}</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr class="head">
+                                        <th></th>
+                                        <th colspan="2">{% trans %}start{% endtrans %}</th>
+                                        <th colspan="2">Max</th>
+                                        <th colspan="2">{% trans %}end{% endtrans %}</th>
+                                        <th colspan="2">Info</th>
+                                        <th colspan="1"></th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">{% trans %}start{% endtrans %}</th>
+                                        <th scope="col">{% trans %}azimuth{% endtrans %}</th>
+                                        <th scope="col">{% trans %}hour{% endtrans %}</th>
+                                        <th scope="col">Az</th>
+                                        <th scope="col">{% trans %}hour{% endtrans %}</th>
+                                        <th scope="col">Az</th>
+                                        <th scope="col">{% trans %}duration{% endtrans %} (s)</th>
+                                        <th scope="col">Magnitude</th>
+                                        <th scope="col">{% trans %}seeonmap{% endtrans %}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for value in passe %}
+                                        <tr {% if value.mag <= -3 %} class="table-success" {% elseif value.mag <= -2 %} class="table-warning" {% endif %}>
+                                            <th scope="row">{{ loop.index }}</th>
+                                            <td>{{ value.dateStart }}</td>
+                                            <td>{{ value.azStart }} ({{ value.azStartDegres }}°)</td>
+                                            <td>{{ value.dateMax }}</td>
+                                            <td>{{ value.azMax }} ({{ value.azMaxDegres }}°)</td>
+                                            <td>{{ value.dateEnd }}</td>
+                                            <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
+                                            <td>{{ value.duration }}</td>
+                                            <td>{{ value.mag }}</td>
+                                            <td><a href="#" class="linkMap"
+                                                   id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p id="noPassage">{% trans %}noPasse{% endtrans %}</p>
+                    {% endif %}
+
+
+                </section>
+                <!-- ShareThis BEGIN -->
+                <div class="sharethis-inline-share-buttons share"></div><!-- ShareThis END -->
 
 
             </section>
-            <!-- ShareThis BEGIN --><div class="sharethis-inline-share-buttons share" ></div><!-- ShareThis END -->
-
-
-        </section>
         </main>
 
     </div>
@@ -152,7 +158,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             {% if info.city %}
             window.history.pushState("", "", '/?city={{ info.city }}');
             {% else %}
@@ -171,14 +177,14 @@
             request.open('GET', url);
             request.responseType = "text";
             request.send();
-            request.onload = function() {
+            request.onload = function () {
                 if (request.status >= 200 && request.status < 300) {
                     var result = eval(request.responseText);
-                    if (result.length == 0){
+                    if (result.length == 0) {
                         return;
                     }
-                    var lon  = result[0].lon;  // lon, lat auf 3 Nachkommastellen beschneiden!
-                    var lat  = result[0].lat;
+                    var lon = result[0].lon;  // lon, lat auf 3 Nachkommastellen beschneiden!
+                    var lat = result[0].lat;
                     var name = result[0].display_name;/*
                 var cIdx = name.indexOf(",");
                 if (cIdx >= 0){
@@ -198,11 +204,11 @@
 
 
         var map = L.map('map',
-            {'worldCopyJump' : true}
+            {'worldCopyJump': true}
         ).setView([{{ info.lat }}, {{ info.lon }}], 4);
         var homeIcon = L.icon({
             iconUrl: 'images/home.svg',
-            iconSize:     [25, 25]
+            iconSize: [25, 25]
         });
         L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -215,27 +221,25 @@
         }).addTo(map);
 
         var p = L.control({position: 'bottomleft'});
-        p.onAdd = function(map){
+        p.onAdd = function (map) {
             var div = L.DomUtil.create('h1');
-            div.innerHTML= "www.seeiss.com";
+            div.innerHTML = "www.seeiss.com";
             div.style.color = "grey";
             return div;
         }
         p.addTo(map);
 
 
-
         var jsonPasses = {{ totalPasses | json_encode | raw }};
         var arrayPasses;
 
 
-
-        $('.linkMap').click(function(e) {
+        $('.linkMap').click(function (e) {
             e.preventDefault();
             var idLink = parseInt($(this).attr('id'));
             var passes = jsonPasses[idLink];
             var latLonpasse = [];
-            passes['coord'].forEach(function (value){
+            passes['coord'].forEach(function (value) {
                 latLonpasse.push([value.lat, value.lon]);
             })
             $('#modalMap h5.modal-title').text(passes['date']);
@@ -245,11 +249,10 @@
             $('#modalMap p#duration').text("{% trans %}duration{% endtrans %} : " + passes['duration'] + " s");
 
 
-            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStart'] + " ("+passes['azStartDegres'] +"°)");
-            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMax'] + " ("+passes['azMaxDegres'] +"°)");
-            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEnd'] + " ("+passes['azEndDegres'] +"°)");
+            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStart'] + " (" + passes['azStartDegres'] + "°)");
+            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMax'] + " (" + passes['azMaxDegres'] + "°)");
+            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEnd'] + " (" + passes['azEndDegres'] + "°)");
             $('#modalMap p#mag').text("Mag : " + passes['mag']);
-
 
 
             $('#modalMap').modal('show');
@@ -257,7 +260,7 @@
             var latlngs = latLonpasse;
 
             var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
-            setTimeout(function() {
+            setTimeout(function () {
                 map.invalidateSize();
             }, 1);
 
@@ -266,7 +269,6 @@
             });
 
         });
-
 
 
     </script>
