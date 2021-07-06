@@ -48,11 +48,6 @@ header .logo p{
     padding-left: 0px;
 }
 
-@media (min-width: 1200px) {
-    .container{
-        max-width: 75%;
-    }
-}
 
 main{
     margin-top: 50px;
