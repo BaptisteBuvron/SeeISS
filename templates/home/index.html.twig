@@ -18,9 +18,9 @@
 {% block body %}
     <div class="container-lg">
         <main>
-
         <img id="iss" src="images/iss.jpg" alt="">
-        <section>
+
+        <section class="px-1">
             <h2>Voici les passages de la station spatiale internationale : </h2>
             <form action="{{ path('home') }}" method="POST" id="formLocation">
                 <input id="location" type="text" size="50" placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>

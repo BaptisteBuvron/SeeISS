@@ -99,9 +99,7 @@ section h3{
 }
 
 
-section{
-    margin: 25px;
-}
+
 
 .table .head th{
     text-align: center;
@@ -122,17 +120,7 @@ section form#formLocation input{
     font-size: 1.2rem;
 }
 
-#info{
-    margin:30px;
-}
 
-
-/*
-@media screen and (max-width: 1000px){
-    .container{
-        width: 90%;
-    }
-}*/
 
 
 footer {
