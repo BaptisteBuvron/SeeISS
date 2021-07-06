@@ -177,11 +177,11 @@ footer .copyright {
     margin-bottom: 20px;
 }
 
-/*
+
 
 @media screen and (min-width: 676px) {
     .modal-dialog {
-        max-width: 90%; !* New width for default modal *!
+        max-width: 90%;
         max-height: 50%;
     }
-}*/
+}
