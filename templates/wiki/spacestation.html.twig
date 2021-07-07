@@ -163,14 +163,14 @@
                                         <div class="d-flex flex-row"
                                              style="margin-top: 1.25rem">
 
-                                                <a href="/agency/{{ docking.spaceCraft.spaceCraftConfig.agency.idApi }}"
+                                                <a href="{{ path('agency', {'nameSlug' : docking.spaceCraft.spaceCraftConfig.agency.name | slug | lower, 'idApi' : docking.spaceCraft.spaceCraftConfig.agency.idApi }) }}"
                                                    class="btn btn-primary ms-3" role="button">
                                                     <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
                                                 </a>
 
 
                                                 <a class="btn btn-primary ms-3"
-                                                   href="/launch/{{ docking.spaceCraft.launch.slug }}/{{ docking.spaceCraft.launch.idApi }}">
+                                                   href="{{ path('launch', {'slug' : docking.spaceCraft.launch.slug, 'idApi': docking.spaceCraft.launch.idApi}) }}">
                                                     <i class="fas fa-rocket me-2"></i><span class="ms-1">Launch</span>
                                                 </a>
 

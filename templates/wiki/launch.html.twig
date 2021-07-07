@@ -79,7 +79,7 @@
                                                 >Wikipedia</a>
 
                                         {% endif %}
-                                        <a href="/agency/{{ launch.launchServiceProvider.idApi }}"
+                                        <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' : launch.launchServiceProvider.idApi}) }}"
                                            class="btn btn-primary ms-3" role="button">
                                             <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
                                         </a>

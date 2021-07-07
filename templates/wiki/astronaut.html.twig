@@ -78,7 +78,7 @@
                                                     >Wikipedia</a>
 
                                             {% endif %}
-                                            <a href="/agency/{{ astronaut.agency.idApi }}"
+                                            <a href="{{ path('agency', {'nameSlug' : astronaut.agency.name | slug | lower, 'idApi' : astronaut.agency.idApi}) }}"
                                                class="btn btn-primary ms-3" role="button">
                                                 <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
                                             </a>
