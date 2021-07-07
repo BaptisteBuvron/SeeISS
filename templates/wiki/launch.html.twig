@@ -26,10 +26,7 @@
                                     <div class="d-flex">
                                         <h3 class="card-title"
                                             style="text-align:center;margin:0;">{{ launch.name }}</h3>
-
-
-                                        <span class="badge rounded-pill bg-success ms-3">{{ launch.status }}</span>
-
+                                        <p class="btn bg-success ms-3">{{ launch.status }}</p>
 
 
                                     </div>
@@ -47,8 +44,9 @@
                     </div>
 
                     <div class="ratio ratio-16x9">
-                        <iframe src="{{ launch.video.url }}" title="YouTube video" allowfullscreen></iframe>
+                        <iframe width="560" height="315" src="{{ launch.video.url | iframe }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
+
                     <div class="card" style="margin-bottom:1em;">
                         <div class="row">
                             <div class="col-md-4">
