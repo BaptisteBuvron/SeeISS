@@ -10,8 +10,6 @@ use App\Entity\Passe;
 use App\Exception\Api\InvalidParametersException;
 use App\Service\SattelliteCalculation;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Validation;
 
 class PasseDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
