@@ -25,7 +25,7 @@
                 <h2 class="h3">{% trans %}passesText{% endtrans %}</h2>
 
                 <form action="{{ path('home') }}" method="POST" id="formLocation">
-                    <input class="form-control" type="text" size="50"
+                    <input id="location" class="form-control" type="text" size="50"
                            placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
                     <input type="hidden" id="name" name="city"/>
                     <input type="hidden" id="lat" name="lat"/>
@@ -171,7 +171,6 @@
 
             e.preventDefault();
             var value = $('#location').val();
-
             var url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
             var request = new XMLHttpRequest();
             request.open('GET', url);
