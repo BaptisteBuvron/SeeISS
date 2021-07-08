@@ -63,6 +63,7 @@ class GetLocationService
             $lat = $request->get('lat');
             $lon = $request->get('lon');
             $cityName = $request->get('city');
+
             $this->session->set('lat', $lat);
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
