@@ -19,13 +19,13 @@
     <div class="container-lg">
         <main>
 
-            <img id="iss" src="images/iss.jpg" alt="">
+            <img id="iss" src="{{ asset('/images/iss.webp') }}" alt="">
 
-            <section>
-                <h2 class="h3">Voici les passages de la station spatiale internationale : </h2>
+            <section class="px-3">
+                <h2 class="h3">{% trans %}passesText{% endtrans %}</h2>
 
                 <form action="{{ path('home') }}" method="POST" id="formLocation">
-                    <input id="location" type="text" size="50"
+                    <input class="form-control" type="text" size="50"
                            placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
                     <input type="hidden" id="name" name="city"/>
                     <input type="hidden" id="lat" name="lat"/>

@@ -28,11 +28,11 @@
                     <li class="nav-item dropdown">
                         {% if app.request.locale == "fr" %}
                             <a class="nav-link dropdown-toggle" href="{{ path('language_selector', {'lang' : 'fr'}) }}"
-                               id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+                               id="dropdown09" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
                                         class="flag-icon flag-icon-fr"> </span> Français</a>
                         {% else %}
                             <a class="nav-link dropdown-toggle" href="{{ path('language_selector', {'lang' : 'en'}) }}"
-                               id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+                               id="dropdown09" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
                                         class="flag-icon flag-icon-us"> </span> English</a>
                         {% endif %}
                         <div class="dropdown-menu" aria-labelledby="dropdown09">
@@ -50,7 +50,7 @@
         </div>
     </nav>
 
-    <div class="logo">
+    <div class="logo mt-5">
         <h1>See ISS</h1>
         <p>{% trans %}by {% endtrans %} Baptiste BUVRON</p>
     </div>
