@@ -129,7 +129,7 @@ class UpdateDatabaseService
         $this->manager->flush();
 
 
-        $dockInISS = array();
+        /*$dockInISS = array();
         foreach ($spaceStationData["docking_location"] as $dock){
             $this->setDock($dock);
             if (!is_null($dock["docked"])){
@@ -141,10 +141,21 @@ class UpdateDatabaseService
             if (!in_array($docking->getIdApi(), $dockInISS)){
                 $spaceStation->removeDockingLocation($docking);
             }
+        }*/
+
+        //TODO CHange this method
+
+        //Delete all the docking location :
+        foreach ($spaceStation->getDockingLocation() as $docking){
+                $spaceStation->removeDockingLocation($docking);
+        }
+
+        //Set all the docking location
+        foreach ($spaceStationData["docking_location"] as $dock){
+            $this->setDock($dock);
         }
 
         $astronautInISS = array();
-
         foreach ($spaceStationData["active_expeditions"] as $expedition){
             foreach ($expedition["crew"] as $crew){
                 $spaceStation->addCrew($this->setAstronaut($crew["astronaut"], $crew["role"]["role"]));

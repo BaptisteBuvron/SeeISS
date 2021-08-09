@@ -31,10 +31,10 @@ class PasseDataProvider implements CollectionDataProviderInterface, RestrictedDa
    {
        $query = $this->requestStack->getCurrentRequest()->query;
 
-       $lat = floatval($query->get('lat'));
-       $lon = floatval($query->get('lon'));
-       $day = intval($query->get('day',1));
-       $lang = strval($query->get('lang'));
+       $lat = (float)$query->get('lat');
+       $lon = (float)$query->get('lon');
+       $day = (int)$query->get('day', 1);
+       $lang = (string)$query->get('lang');
        $this->requestStack->getCurrentRequest()->setLocale($lang);
        if ($day <= 0 || $day > 15){
            throw new InvalidParametersException("Number of day incorrect.");

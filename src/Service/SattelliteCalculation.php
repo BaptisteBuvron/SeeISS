@@ -127,7 +127,7 @@ class SattelliteCalculation
                     'coord' => $coord
                 ];
 
-                $passes[$date][] = new Passe($index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag, $coord);
+                $passes[$date][] = new Passe($index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,$timeZone, $coord);
                 $index++;
             }
         }

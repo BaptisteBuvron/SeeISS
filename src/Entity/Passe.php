@@ -69,6 +69,7 @@ class Passe
     private string $azEndDegres;
     private int $duration;
     private float $mag;
+    private string $timeZone;
     private string $dateStartExact;
     private string $dateEndExact;
     private ?array $detailsPasseTotal;
@@ -92,7 +93,7 @@ class Passe
      * @param $duration //Duration in seconds
      * @param $mag
      */
-    public function __construct(int $index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,  array $detailsPasseTotal = null)
+    public function __construct(int $index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,$timeZone,  array $detailsPasseTotal = null)
     {
         $this->date = $date;
         $this->dateStart = $dateStart;
@@ -111,6 +112,7 @@ class Passe
 
         $this->detailsPasseTotal = $detailsPasseTotal;
         $this->index = $index;
+        $this->timeZone = $timeZone;
     }
 
     /**
@@ -239,6 +241,22 @@ class Passe
     public function getIndex(): int
     {
         return $this->index;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param string $timeZone
+     */
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
     }
 
 
