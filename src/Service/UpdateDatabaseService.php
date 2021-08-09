@@ -149,6 +149,8 @@ class UpdateDatabaseService
         foreach ($spaceStation->getDockingLocation() as $docking){
                 $spaceStation->removeDockingLocation($docking);
         }
+        $this->manager->persist($spaceStation);
+        $this->manager->flush();
 
         //Set all the docking location
         foreach ($spaceStationData["docking_location"] as $dock){
