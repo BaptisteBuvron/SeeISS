@@ -19,6 +19,15 @@
     <title>{% block title %}SeeISS{% endblock %}</title>
 
     {% block javascriptsHead %}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-D4JYXK25GT"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-D4JYXK25GT');
+        </script>
 
         <script src="https://kit.fontawesome.com/67913222db.js" crossorigin="anonymous"></script>
         <script type='text/javascript'
