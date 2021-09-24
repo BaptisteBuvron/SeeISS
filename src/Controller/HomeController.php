@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Predict\PredictException;
 use App\Service\GetLocationService;
-use App\Service\IpInformation;
 use App\Service\SattelliteCalculation;
 use App\TimezoneMapper;
 use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,11 +18,8 @@ class HomeController extends AbstractController
     /**
      * @var SattelliteCalculation
      */
-    private $sattelliteCalculation;
-    /**
-     * @var IpInformation
-     */
-    private IpInformation $ipInformation;
+    private SattelliteCalculation $sattelliteCalculation;
+
     /**
      * @var GetLocationService
      */
@@ -29,17 +28,18 @@ class HomeController extends AbstractController
     /**
      * HomeController constructor.
      */
-    public function __construct(SattelliteCalculation $sattelliteCalculation, IpInformation $ipInformation, GetLocationService $locationService)
+    public function __construct(SattelliteCalculation $sattelliteCalculation, GetLocationService $locationService)
     {
 
         $this->sattelliteCalculation = $sattelliteCalculation;
-        $this->ipInformation = $ipInformation;
         $this->locationService = $locationService;
     }
 
 
     /**
      * @Route("/", name="home")
+     * @return Response
+     * @throws PredictException
      */
     public function index(): Response
     {
@@ -57,7 +57,7 @@ class HomeController extends AbstractController
             'city' => $cityName
         ];
         if (!is_null($lat) && !is_null($lon)){
-            $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
+            $res = $this->sattelliteCalculation->getVisiblePasses((float)$lat, (float)$lon);
             $totalPasses = $res['totalPasses'];
             $passes = $res['passes'];
         }
@@ -72,9 +72,10 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/live", name="live")
-     * @throws \App\Predict\PredictException
+     * @return Response
+     * @throws PredictException
      */
-    public function live()
+    public function live(): Response
     {
         $coord = $this->locationService->getLatLonCity();
         $lat = $coord['lat'];
@@ -110,8 +111,9 @@ class HomeController extends AbstractController
     /**
      * Route that return the passes of the ISS in a PDF file.
      * @Route("/pdf", name="pdf")
-     * @throws \Mpdf\MpdfException
-     * @throws \App\Predict\PredictException
+     * @return RedirectResponse|void
+     * @throws PredictException
+     * @throws MpdfException
      */
     public function pdf(){
         //Rechercher la latitude et longitude
@@ -130,7 +132,7 @@ class HomeController extends AbstractController
 
 
         if (!is_null($lat) && !is_null($lon)){
-            $res = $this->sattelliteCalculation->getVisiblePasses(floatval($lat), floatval($lon));
+            $res = $this->sattelliteCalculation->getVisiblePasses((float)$lat, (float)$lon);
             $passes = $res['passes'];
         }
         else{
@@ -152,6 +154,7 @@ class HomeController extends AbstractController
     /**
      * Route that return the privacy page.
      * @Route("/privacy", name="privacy")
+     * @return Response
      */
     public function privacy(): Response
     {

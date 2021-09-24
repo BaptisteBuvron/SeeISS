@@ -55,16 +55,16 @@ class DateTimeFrench extends \DateTime{
         /**
          * Traduire;
          */
-        if( strstr($format, 'l') ){
+        if(str_contains($format, 'l')){
             $display = str_replace(array_keys($days_full), array_values($days_full), $display);
         }
-        if( strstr($format, 'D') ){
+        if(str_contains($format, 'D')){
             $display = str_replace(array_keys($days_small), array_values($days_small), $display);
         }
-        if( strstr($format, 'F') ){
+        if(str_contains($format, 'F')){
             $display = str_replace(array_keys($months_full), array_values($months_full), $display);
         }
-        if( strstr($format, 'M') ){
+        if( str_contains($format, 'M') ){
             $display = str_replace(array_keys($months_small), array_values($months_small), $display);
         }
 

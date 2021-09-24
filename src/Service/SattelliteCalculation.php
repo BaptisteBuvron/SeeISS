@@ -141,9 +141,9 @@ class SattelliteCalculation
 
 
     /**
-     * @param array $tleFile
      * @param float $lat
      * @param float $lon
+     * @param array|null $tleFile
      * @return array
      * @throws PredictException
      */

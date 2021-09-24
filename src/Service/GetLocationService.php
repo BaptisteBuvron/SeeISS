@@ -51,6 +51,7 @@ class GetLocationService
     /**
      * Recupère la latitude , lontitude et cityName dans un array
      * @return array
+     * @throws TransportExceptionInterface
      */
     public function getLatLonCity(): array
     {
@@ -78,7 +79,7 @@ class GetLocationService
 
         //On regarde les valeurs en GET.
         if (!is_null($request->get('city'))) {
-            return $this->callApiCity(strval($request->get('city')));
+            return $this->callApiCity((string) ($request->get('city')));
         }
 
         //On regarde les valeurs en session

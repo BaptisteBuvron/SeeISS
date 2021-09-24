@@ -12,6 +12,10 @@ class LanguageController extends AbstractController
 {
     /**
      * @Route("/lang/{lang}", name="language_selector")
+     * @param String $lang
+     * @param Request $request
+     * @param Session $session
+     * @return Response
      */
     public function index(String $lang, Request $request ,Session $session): Response
     {

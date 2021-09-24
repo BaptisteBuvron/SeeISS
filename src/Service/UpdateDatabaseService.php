@@ -12,6 +12,11 @@ use App\Entity\SpaceCraftConfig;
 use App\Entity\SpaceStation;
 use App\Entity\Video;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UpdateDatabaseService
@@ -167,7 +172,7 @@ class UpdateDatabaseService
 
         //Remove Astronaut not in the ISS.
         foreach ($spaceStation->getCrew() as $astronaut){
-            if (!in_array($astronaut->getIdApi(),$astronautInISS)){
+            if (!in_array($astronaut->getIdApi(), $astronautInISS, true)){
                 $spaceStation->removeCrew($astronaut);
             }
         }
@@ -205,7 +210,10 @@ class UpdateDatabaseService
 
     }
 
-    public function setDock(array $dock)
+    /**
+     * @throws \Exception
+     */
+    public function setDock(array $dock): void
     {
         if (!is_null($dock["docked"])) {
             $dockingObject = $this->manager->getRepository(Docking::class)->findOneBy(array('idApi' => $dock["docked"]["id"]));
@@ -243,14 +251,17 @@ class UpdateDatabaseService
         return $spaceCraft;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setLaunch(array $launchData): Launch
     {
         $launchRepo = $this->manager->getRepository(Launch::class);
-        $lauch = $launchRepo->findOneBy(array('idApi' => $launchData['id']));
-        if (is_null($lauch)){
+        $launch = $launchRepo->findOneBy(array('idApi' => $launchData['id']));
+        if (is_null($launch)){
             $launchData = $this->requestTo($launchData["url"]);
-            $lauch = new Launch();
-            $lauch->setIdApi($launchData["id"])
+            $launch = new Launch();
+            $launch->setIdApi($launchData["id"])
                 ->setName($launchData["name"])
                 ->setUrl($launchData["url"])
                 ->setSlug($launchData["slug"])
@@ -262,15 +273,15 @@ class UpdateDatabaseService
                 ->setImage($launchData["image"])
                 ->setInfographic($launchData["infographic"]);
             if (count($launchData["vidURLs"]) > 0){
-                $lauch->setVideo($this->setVideo($launchData["vidURLs"][0]));
+                $launch->setVideo($this->setVideo($launchData["vidURLs"][0]));
             }
             foreach ($launchData["rocket"]["spacecraft_stage"]["launch_crew"] as $crew){
-                $lauch->addLaunchCrew($this->setAstronaut($crew["astronaut"]));
+                $launch->addLaunchCrew($this->setAstronaut($crew["astronaut"]));
             }
-            $this->manager->persist($lauch);
+            $this->manager->persist($launch);
             $this->manager->flush();
         }
-        return $lauch;
+        return $launch;
     }
 
     public function setVideo(array $videoData):Video
@@ -347,10 +358,17 @@ class UpdateDatabaseService
 
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function requestTo(string $url): array
     {
         $request = $this->client->request('GET', $url);
-        if ($request->getStatusCode() == 429) {
+        if ($request->getStatusCode() === 429) {
             ini_set('max_execution_time', 920);
             sleep(900);
             return $this->requestTo($url);
