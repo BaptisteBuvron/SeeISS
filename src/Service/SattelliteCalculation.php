@@ -71,7 +71,7 @@ class SattelliteCalculation
 
         $format = 'H:i:s';
         $fomatExact = 'm/d/y H:i:s';
-        if ($this->request->getLocale() == "fr") {
+        if ($this->request->getLocale() === "fr") {
             $formatDate = 'fr';
         } else {
             $formatDate = 'l j F Y';

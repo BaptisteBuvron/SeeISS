@@ -27,8 +27,8 @@ class PasseDataProvider implements CollectionDataProviderInterface, RestrictedDa
      * @throws InvalidParametersException
      * @throws \App\Predict\PredictException
      */
-    public function getCollection(string $resourceClass, string $operationName = null)
-   {
+    public function getCollection(string $resourceClass, string $operationName = null): array
+    {
        $query = $this->requestStack->getCurrentRequest()->query;
 
        $lat = (float)$query->get('lat');

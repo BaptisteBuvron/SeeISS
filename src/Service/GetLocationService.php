@@ -4,8 +4,10 @@
 namespace App\Service;
 
 
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -67,55 +69,77 @@ class GetLocationService
             $this->session->set('lat', $lat);
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
-        } //On regarde les valeurs en GET.
-        else if (!is_null($request->get('city'))) {
-            $this->callApiCity(strval($request->get('city')));
+            return [
+                'lat' => (float) $lat,
+                'lon' => (float) $lon,
+                'cityName' => $cityName
+            ];
+        }
+
+        //On regarde les valeurs en GET.
+        if (!is_null($request->get('city'))) {
+            return $this->callApiCity(strval($request->get('city')));
+        }
+
+        //On regarde les valeurs en session
+        if (!is_null($this->session->get('lat')) && !is_null($this->session->get('lon')) && $this->session->get('cityName')) {
             $lat = $this->session->get('lat');
             $lon = $this->session->get('lon');
             $cityName = $this->session->get('cityName');
-        } //On regarde les valeurs en session
-        else if (!is_null($this->session->get('lat')) && !is_null($this->session->get('lon')) && $this->session->get('cityName')) {
-            $lat = $this->session->get('lat');
-            $lon = $this->session->get('lon');
-            $cityName = $this->session->get('cityName');
-        } //On regarde la latitude correspondant à l'addresse ip
-        else if (isset($ipInformation->ip)) {
+            return [
+                'lat' => (float) $lat,
+                'lon' => (float) $lon,
+                'cityName' => $cityName
+            ];
+        }
+
+        //On regarde la latitude correspondant à l'addresse ip
+       if (isset($ipInformation->ip)) {
             $lat = $this->ipInformation->lat;
             $lon = $this->ipInformation->lon;
             $cityName = $this->ipInformation->city . '-' . $this->ipInformation->region;
             $this->session->set('lat', $lat);
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
-        }
-        else{
-            $lat = 48;
-            $lon = 2.33;
-            $cityName = "Paris";
+           return [
+               'lat' => (float) $lat,
+               'lon' => (float) $lon,
+               'cityName' => $cityName
+           ];
         }
 
         return [
-            'lat' => $lat,
-            'lon' => $lon,
-            'cityName' => $cityName
+            'lat' => (float) 48,
+            'lon' => 2.33,
+            'cityName' => "Paris"
         ];
     }
 
     /**
      * Appel d'une api pour récupérer la latitude, lontitude depuis le nom d'une ville.
      * @param string $city
+     * @throws TransportExceptionInterface
      */
-    public function callApiCity(string $city)
+    #[ArrayShape(['lat' => "mixed", 'lon' => "mixed", 'cityName' => "mixed"])] public function callApiCity(string $city): array
     {
         $response = $this->client->request('GET', "https://nominatim.openstreetmap.org/search?format=json&q=" . $city);
-        if ($response->getStatusCode() != 500 && sizeof($response->toArray()) != 0) {
-            $cityInfo = $response->toArray()[0];
-            $lat = $cityInfo['lat'];
-            $lon = $cityInfo['lon'];
-            $cityName = $cityInfo['display_name'];
-            $this->session->set('lat', $lat);
-            $this->session->set('lon', $lon);
-            $this->session->set('cityName', $cityName);
-        }
+
+            if ($response->getStatusCode() !== 500 && count($response->toArray()) !== 0) {
+                $cityInfo = $response->toArray()[0];
+                $lat = $cityInfo['lat'];
+                $lon = $cityInfo['lon'];
+                $cityName = $cityInfo['display_name'];
+
+                $this->session->set('lat', $lat);
+                $this->session->set('lon', $lon);
+                $this->session->set('cityName', $cityName);
+            }
+
+        return [
+            'lat' => (float) $lat,
+            'lon' => (float) $lon,
+            'cityName' => $cityName
+        ];
 
     }
 
