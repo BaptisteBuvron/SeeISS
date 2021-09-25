@@ -46,9 +46,12 @@
                                 src="images/pdf.svg" alt=""></a>
                 {% endif %}
 
-                <p>Soutenez l'hébergement et le développement du site internet : <a
-                            href="https://paypal.me/pools/c/8A7kXAZxtb"><img
-                                src="{{ asset('images/btn_donateCC_LG.webp') }}" alt=""></a></p>
+                <p>Soutenez l'hébergement et le développement du site internet :</p>
+                <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
+                    <input type="hidden" name="hosted_button_id" value="FG67TUU7DAZKA" />
+                    <input type="image" src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                    <img alt="" border="0" src="https://www.paypal.com/en_FR/i/scr/pixel.gif" width="1" height="1" />
+                </form>
 
 
                 <section class="px-1">
