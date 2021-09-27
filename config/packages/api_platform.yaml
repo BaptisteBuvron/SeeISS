@@ -9,11 +9,6 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-
     formats:
         json:
             mime_types: [ 'application/json' ]
-        jsonld:
-            mime_types: [ 'application/ld+json' ]
-        html:
-            mime_types: [ 'text/html' ]
