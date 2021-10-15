@@ -90,16 +90,16 @@
                                     </thead>
                                     <tbody>
                                     {% for value in passe %}
-                                        <tr {% if value.mag <= -3 %} class="table-success" {% elseif value.mag <= -2 %} class="table-warning" {% endif %}>
+                                        <tr {% if value.magnitude <= -3 %} class="table-success" {% elseif value.magnitude <= -2 %} class="table-warning" {% endif %}>
                                             <th scope="row">{{ loop.index }}</th>
                                             <td>{{ value.dateStart }}</td>
-                                            <td>{{ value.azStart }} ({{ value.azStartDegres }}°)</td>
+                                            <td>{{ value.azStartDirection }} ({{ value.azStartDegres }}°)</td>
                                             <td>{{ value.dateMax }}</td>
-                                            <td>{{ value.azMax }} ({{ value.azMaxDegres }}°)</td>
+                                            <td>{{ value.azMaxDirection }} ({{ value.azMaxDegres }}°)</td>
                                             <td>{{ value.dateEnd }}</td>
-                                            <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
+                                            <td>{{ value.azEndDirection }} ({{ value.azEndDegres }}°)</td>
                                             <td>{{ value.duration }}</td>
-                                            <td>{{ value.mag }}</td>
+                                            <td>{{ value.magnitude }}</td>
                                             <td><a href="#" class="linkMap"
                                                    id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
                                         </tr>
@@ -251,10 +251,10 @@
             $('#modalMap p#duration').text("{% trans %}duration{% endtrans %} : " + passes['duration'] + " s");
 
 
-            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStart'] + " (" + passes['azStartDegres'] + "°)");
-            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMax'] + " (" + passes['azMaxDegres'] + "°)");
-            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEnd'] + " (" + passes['azEndDegres'] + "°)");
-            $('#modalMap p#mag').text("Mag : " + passes['mag']);
+            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStartDirection'] + " (" + passes['azStartDegres'] + "°)");
+            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMaxDirection'] + " (" + passes['azMaxDegres'] + "°)");
+            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEndDirection'] + " (" + passes['azEndDegres'] + "°)");
+            $('#modalMap p#mag').text("Mag : " + passes['magnitude']);
 
 
             $('#modalMap').modal('show');

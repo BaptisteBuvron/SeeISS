@@ -6,8 +6,10 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\PasseDisplay;
 use App\Entity\Passe;
 use App\Exception\Api\InvalidParametersException;
+use App\Predict\PredictException;
 use App\Service\SattelliteCalculation;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -25,7 +27,7 @@ class PasseDataProvider implements CollectionDataProviderInterface, RestrictedDa
 
     /**
      * @throws InvalidParametersException
-     * @throws \App\Predict\PredictException
+     * @throws PredictException
      */
     public function getCollection(string $resourceClass, string $operationName = null): array
     {

@@ -81,13 +81,13 @@
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ value.dateStart }}</td>
-                    <td>{{ value.azStart }} ({{ value.azStartDegres }}°)</td>
+                    <td>{{ value.azStartDirection }} ({{ value.azStartDegres }}°)</td>
                     <td>{{ value.dateMax }}</td>
-                    <td>{{ value.azMax }} ({{ value.azMaxDegres }}°)</td>
+                    <td>{{ value.azMaxDirection }} ({{ value.azMaxDegres }}°)</td>
                     <td>{{ value.dateEnd }}</td>
-                    <td>{{ value.azEnd }} ({{ value.azEndDegres }}°)</td>
+                    <td>{{ value.azEndDirection }} ({{ value.azEndDegres }}°)</td>
                     <td>{{ value.duration }}</td>
-                    <td>{{ value.mag }}</td>
+                    <td>{{ value.magnitude }}</td>
                 </tr>
             {% endfor %}
             </tbody>

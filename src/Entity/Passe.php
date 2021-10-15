@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+
+
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use phpDocumentor\Reflection\Types\Integer;
+
 
 #[ApiResource(
     description: "Return a list of all visible passes of the ISS",
@@ -43,197 +45,57 @@ use phpDocumentor\Reflection\Types\Integer;
                 ]
             ]
         ]
-]],
+    ]],
     itemOperations: [
-    'get' => [
-        'controller' => NotFoundAction::class,
-        'read' => false,
-        'output' => false,
-    ],
-], paginationEnabled: false
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'read' => false,
+            'output' => false,
+        ],
+    ], paginationEnabled: false
 )]
 class Passe
 {
 
     #[ApiProperty(identifier: true)]
     private int $index;
-    private string $date;
-    private string $dateStart;
-    private string $dateMax;
-    private string $dateEnd;
-    private string $azStart;
-    private string $azMax;
-    private string $azEnd;
-    private string $azStartDegres;
-    private string $azMaxDegres;
-    private string $azEndDegres;
+    private float $UTCstart;
+    private float $UTCmax;
+    private float $UTCend;
+    private string $AzStartDegres;
+    private string $AzMaxDegres;
+    private string $AzEndDegres;
+    private float $magnitude;
     private int $duration;
-    private float $mag;
-    private string $timeZone;
-    private string $dateStartExact;
-    private string $dateEndExact;
-    private ?array $detailsPasseTotal;
-
-
-
+    private array $PasseDetails;
 
     /**
-     * Passe constructor. Create a passe
-     * @param $dateStart
-     * @param $dateStartExact
-     * @param $dateMax
-     * @param $dateEnd
-     * @param $dateEndExact
-     * @param $azStart
-     * @param $azMax
-     * @param $azEnd
-     * @param $azStartDegres
-     * @param $azMaxDegres
-     * @param $azEndDegres
-     * @param $duration //Duration in seconds
-     * @param $mag
+     * @param int $index
+     * @param float $UTCstart
+     * @param float $UTCmax
+     * @param float $UTCend
+     * @param string $AzStartDegres
+     * @param string $AzMaxDegres
+     * @param string $AzEndDegres
+     * @param float $magnitude
+     * @param int $duration
+     * @param array $passeDetails
      */
-    public function __construct(int $index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,$timeZone,  array $detailsPasseTotal = null)
+    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, float $magnitude, int $duration, array $passeDetails)
     {
-        $this->date = $date;
-        $this->dateStart = $dateStart;
-        $this->dateStartExact = $dateStartExact;
-        $this->dateMax = $dateMax;
-        $this->dateEnd = $dateEnd;
-        $this->dateEndExact = $dateEndExact;
-        $this->azStart = $azStart;
-        $this->azMax = $azMax;
-        $this->azEnd = $azEnd;
-        $this->azStartDegres = $azStartDegres;
-        $this->azMaxDegres = $azMaxDegres;
-        $this->azEndDegres = $azEndDegres;
-        $this->duration = $duration;
-        $this->mag = $mag;
-
-        $this->detailsPasseTotal = $detailsPasseTotal;
         $this->index = $index;
-        $this->timeZone = $timeZone;
+        $this->UTCstart = $UTCstart;
+        $this->UTCmax = $UTCmax;
+        $this->UTCend = $UTCend;
+        $this->AzStartDegres = $AzStartDegres;
+        $this->AzMaxDegres = $AzMaxDegres;
+        $this->AzEndDegres = $AzEndDegres;
+        $this->magnitude = $magnitude;
+        $this->duration = $duration;
+        $this->PasseDetails = $passeDetails;
     }
 
-    /**
-     * @return string
-     */
-    public function getDate(): string
-    {
-        return $this->date;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDateStart(): string
-    {
-        return $this->dateStart;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateMax(): string
-    {
-        return $this->dateMax;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateEnd(): string
-    {
-        return $this->dateEnd;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzStart(): string
-    {
-        return $this->azStart;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzMax(): string
-    {
-        return $this->azMax;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzEnd(): string
-    {
-        return $this->azEnd;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzStartDegres(): string
-    {
-        return $this->azStartDegres;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzMaxDegres(): string
-    {
-        return $this->azMaxDegres;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzEndDegres(): string
-    {
-        return $this->azEndDegres;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getDuration(): int
-    {
-        return $this->duration;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMag(): float
-    {
-        return $this->mag;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateStartExact(): string
-    {
-        return $this->dateStartExact;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateEndExact(): string
-    {
-        return $this->dateEndExact;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getDetailsPasseTotal(): ?array
-    {
-        return $this->detailsPasseTotal;
-    }
 
     /**
      * @return int
@@ -244,20 +106,159 @@ class Passe
     }
 
     /**
-     * @return string
+     * @param int $index
      */
-    public function getTimeZone(): string
+    public function setIndex(int $index): void
     {
-        return $this->timeZone;
+        $this->index = $index;
     }
 
     /**
-     * @param string $timeZone
+     * @return float
      */
-    public function setTimeZone(string $timeZone): void
+    public function getUTCstart(): float
     {
-        $this->timeZone = $timeZone;
+        return $this->UTCstart;
     }
+
+    /**
+     * @param float $UTCstart
+     */
+    public function setUTCstart(float $UTCstart): void
+    {
+        $this->UTCstart = $UTCstart;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUTCmax(): float
+    {
+        return $this->UTCmax;
+    }
+
+    /**
+     * @param float $UTCmax
+     */
+    public function setUTCmax(float $UTCmax): void
+    {
+        $this->UTCmax = $UTCmax;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUTCend(): float
+    {
+        return $this->UTCend;
+    }
+
+    /**
+     * @param float $UTCend
+     */
+    public function setUTCend(float $UTCend): void
+    {
+        $this->UTCend = $UTCend;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAzStartDegres(): string
+    {
+        return $this->AzStartDegres;
+    }
+
+    /**
+     * @param string $AzStartDegres
+     */
+    public function setAzStartDegres(string $AzStartDegres): void
+    {
+        $this->AzStartDegres = $AzStartDegres;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAzMaxDegres(): string
+    {
+        return $this->AzMaxDegres;
+    }
+
+    /**
+     * @param string $AzMaxDegres
+     */
+    public function setAzMaxDegres(string $AzMaxDegres): void
+    {
+        $this->AzMaxDegres = $AzMaxDegres;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAzEndDegres(): string
+    {
+        return $this->AzEndDegres;
+    }
+
+    /**
+     * @param string $AzEndDegres
+     */
+    public function setAzEndDegres(string $AzEndDegres): void
+    {
+        $this->AzEndDegres = $AzEndDegres;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMagnitude(): float
+    {
+        return $this->magnitude;
+    }
+
+    /**
+     * @param float $magnitude
+     */
+    public function setMagnitude(float $magnitude): void
+    {
+        $this->magnitude = $magnitude;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param int $duration
+     */
+    public function setDuration(int $duration): void
+    {
+        $this->duration = $duration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPasseDetails(): array
+    {
+        return $this->PasseDetails;
+    }
+
+    /**
+     * @param array $PasseDetails
+     */
+    public function setPasseDetails(array $PasseDetails): void
+    {
+        $this->PasseDetails = $PasseDetails;
+    }
+
+
+
 
 
 }

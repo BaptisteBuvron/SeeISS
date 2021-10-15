@@ -4,7 +4,8 @@
 namespace App\Service;
 
 
-use App\Entity\Passe;
+use App\Entity\PasseDetails;
+use App\Entity\PasseDisplay;
 use App\Predict\Predict;
 use App\Predict\PredictException;
 use App\Predict\PredictQTH;
@@ -81,34 +82,47 @@ class SattelliteCalculation
         $totalPasses = array();
         $index = 0;
         foreach ($filtered as $pass) {
+
+
+
             $date = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $formatDate);
+
             $dateStart = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $format);
+
             $dateStartExact = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $fomatExact);
+
             $dateMax = PredictTime::daynum2readable($pass->visible_tca, $timeZone, $format);
             $dateEnd = PredictTime::daynum2readable($pass->visible_los, $timeZone, $format);
-            $dateEndExact = PredictTime::daynum2readable($pass->visible_los, $timeZone, $fomatExact);
 
-            $azStart = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_aos_az));
-            $azMax = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_max_el_az));
-            $azEnd = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_los_az));
+
+
+            $azStartDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_aos_az));
+            $azMaxDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_max_el_az));
+            $azEndDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_los_az));
+
 
 
             $azStartDegres = floor($pass->visible_aos_az);
             $azMaxDegres = floor($pass->visible_max_el_az);
             $azEndDegres = floor($pass->visible_los_az);
 
+
+
+
+
             $duration = floor(($pass->visible_los - $pass->visible_aos) * 86400);
+
             $mag = number_format($pass->max_apparent_magnitude, 1);
 
             $detailsPasse = $pass->details;
             $coord = array();
             foreach ($detailsPasse as $detail) {
-                $coord[] = [
-                    "lat" => $detail->lat,
-                    "lon" => $detail->lon
-                ];
+                $coord[] = new PasseDetails($detail->lat, $detail->lon);
             }
 
+
+
+            $passeDisplay = new PasseDisplay($index, $pass->visible_aos,$pass->visible_tca, $pass->visible_los, $azStartDegres,$azMaxDegres, $azEndDegres, $mag, $duration, $detailsPasse,$azStartDirection, $azMaxDirection, $azEndDirection, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
@@ -116,9 +130,9 @@ class SattelliteCalculation
                     'dateStart' => $dateStart,
                     'dateMax' => $dateMax,
                     'dateEnd' => $dateEnd,
-                    'azStart' => $azStart,
-                    'azMax' => $azMax,
-                    'azEnd' => $azEnd,
+                    'azStart' => $azStartDirection,
+                    'azMax' => $azMaxDirection,
+                    'azEnd' => $azEndDirection,
                     'azStartDegres' => $azStartDegres,
                     'azMaxDegres' => $azMaxDegres,
                     'azEndDegres' => $azEndDegres,
@@ -127,10 +141,11 @@ class SattelliteCalculation
                     'coord' => $coord
                 ];
 
-                $passes[$date][] = new Passe($index, $date, $dateStart, $dateStartExact, $dateMax, $dateEnd, $dateEndExact, $azStart, $azMax, $azEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $duration, $mag,$timeZone, $coord);
+                $passes[$date][] = $passeDisplay;
                 $index++;
             }
         }
+
 
 
         return [
