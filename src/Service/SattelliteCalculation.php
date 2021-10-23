@@ -130,14 +130,14 @@ class SattelliteCalculation
                     'dateStart' => $dateStart,
                     'dateMax' => $dateMax,
                     'dateEnd' => $dateEnd,
-                    'azStart' => $azStartDirection,
-                    'azMax' => $azMaxDirection,
-                    'azEnd' => $azEndDirection,
+                    'azStartDirection' => $azStartDirection,
+                    'azMaxDirection' => $azMaxDirection,
+                    'azEndDirection' => $azEndDirection,
                     'azStartDegres' => $azStartDegres,
                     'azMaxDegres' => $azMaxDegres,
                     'azEndDegres' => $azEndDegres,
                     'duration' => $duration,
-                    'mag' => $mag,
+                    'magnitude' => $mag,
                     'coord' => $coord
                 ];
 

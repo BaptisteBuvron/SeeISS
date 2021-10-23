@@ -16,8 +16,23 @@
 {% endblock %}
 
 {% block body %}
+
+
     <div class="container-lg">
+        <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            <div>
+                <p>Le site seeiss.com est accessible gratuitement et sans publicité afin de garantir une expérience utilisateur optimale.</p>
+                <p>Après un an d'activité, il devient compliqué pour moi de continuer à financer par moi-même les frais d'hébergement du site internet et du bot (50 € par an).</p>
+                <p>Si vous le souhaitez, vous pouvez donc participer à cette cagnotte afin de me soutenir financièrement dans ce projet.</p>
+                <a class="leetchi-widget-btn" href="http://www.leetchi.com/fr/c/rEJVbLNl"><img src="https://asset.leetchi.com/Content/Quenette/img/culture/fr/view/wizard/embed-btn.png?v=c329012b596c40ec8c480af43a4f7b7f"></a>
+
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <main>
+
+
 
             <img id="iss" src="{{ asset('/images/iss.webp') }}" alt="">
 
@@ -46,12 +61,12 @@
                                 src="images/pdf.svg" alt=""></a>
                 {% endif %}
 
-                <p>Soutenez l'hébergement et le développement du site internet :</p>
-                <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
+
+            {#    <form id="paypal" action="https://www.paypal.com/donate" method="post" target="_top">
                     <input type="hidden" name="hosted_button_id" value="FG67TUU7DAZKA" />
                     <input type="image" src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
                     <img alt="" border="0" src="https://www.paypal.com/en_FR/i/scr/pixel.gif" width="1" height="1" />
-                </form>
+                </form>#}
 
 
                 <section class="px-1">
@@ -116,7 +131,6 @@
                 </section>
                 <!-- ShareThis BEGIN -->
                 <div class="sharethis-inline-share-buttons share"></div><!-- ShareThis END -->
-
 
             </section>
         </main>
