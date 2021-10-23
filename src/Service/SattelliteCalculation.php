@@ -129,7 +129,7 @@ class SattelliteCalculation
 
 
 
-            $passeDisplay = new PasseDisplay($index, $pass->visible_aos,$pass->visible_tca, $pass->visible_los, $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
+            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
