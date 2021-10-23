@@ -65,6 +65,9 @@ class Passe
     private string $AzStartDegres;
     private string $AzMaxDegres;
     private string $AzEndDegres;
+    private string $azStartDirection;
+    private string $azMaxDirection;
+    private string $azEndDirection;
     private float $magnitude;
     private int $duration;
     private array $PasseDetails;
@@ -81,7 +84,7 @@ class Passe
      * @param int $duration
      * @param array $passeDetails
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, float $magnitude, int $duration, array $passeDetails)
+    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $magnitude, int $duration, array $passeDetails)
     {
         $this->index = $index;
         $this->UTCstart = $UTCstart;
@@ -93,6 +96,9 @@ class Passe
         $this->magnitude = $magnitude;
         $this->duration = $duration;
         $this->PasseDetails = $passeDetails;
+        $this->azStartDirection = $azStartDirection;
+        $this->azMaxDirection = $azMaxDirection;
+        $this->azEndDirection = $azEndDirection;
     }
 
 
@@ -256,6 +262,57 @@ class Passe
     {
         $this->PasseDetails = $PasseDetails;
     }
+
+    /**
+     * @return string
+     */
+    public function getAzStartDirection(): string
+    {
+        return $this->azStartDirection;
+    }
+
+    /**
+     * @param string $azStartDirection
+     */
+    public function setAzStartDirection(string $azStartDirection): void
+    {
+        $this->azStartDirection = $azStartDirection;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAzMaxDirection(): string
+    {
+        return $this->azMaxDirection;
+    }
+
+    /**
+     * @param string $azMaxDirection
+     */
+    public function setAzMaxDirection(string $azMaxDirection): void
+    {
+        $this->azMaxDirection = $azMaxDirection;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAzEndDirection(): string
+    {
+        return $this->azEndDirection;
+    }
+
+    /**
+     * @param string $azEndDirection
+     */
+    public function setAzEndDirection(string $azEndDirection): void
+    {
+        $this->azEndDirection = $azEndDirection;
+    }
+
+
+
 
 
 

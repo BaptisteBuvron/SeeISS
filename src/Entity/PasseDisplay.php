@@ -17,9 +17,7 @@ class PasseDisplay extends Passe
     private string $dateEnd;
     private string $timeZone;
     private string $dateStartExact;
-    private string $azStartDirection;
-    private string $azMaxDirection;
-    private string $azEndDirection;
+
 
 
     /**
@@ -31,12 +29,9 @@ class PasseDisplay extends Passe
      * @param string $dateStartExact
      * @param string $dateEndExact
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, float $magnitude, int $duration, array $detailsPasse, string $azStartDirection, string $azMaxDirection, string $azEndDirection, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
+    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,  string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
     {
-        parent::__construct( $index,  $UTCstart,  $UTCmax,  $UTCend,  $AzStartDegres,  $AzMaxDegres,  $AzEndDegres,  $magnitude,  $duration,  $detailsPasse);
-        $this->azStartDirection = $azStartDirection;
-        $this->azMaxDirection = $azMaxDirection;
-        $this->azEndDirection = $azEndDirection;
+        parent::__construct( $index,  $UTCstart,  $UTCmax,  $UTCend,  $AzStartDegres,  $AzMaxDegres,  $AzEndDegres, $azStartDirection, $azMaxDirection,$azEndDirection , $magnitude,  $duration,  $detailsPasse);
 
         $this->date = $date;
         $this->dateStart = $dateStart;
@@ -158,55 +153,6 @@ class PasseDisplay extends Passe
     {
         $this->dateEndExact = $dateEndExact;
     }
-
-    /**
-     * @return string
-     */
-    public function getAzStartDirection(): string
-    {
-        return $this->azStartDirection;
-    }
-
-    /**
-     * @param string $azStartDirection
-     */
-    public function setAzStartDirection(string $azStartDirection): void
-    {
-        $this->azStartDirection = $azStartDirection;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzMaxDirection(): string
-    {
-        return $this->azMaxDirection;
-    }
-
-    /**
-     * @param string $azMaxDirection
-     */
-    public function setAzMaxDirection(string $azMaxDirection): void
-    {
-        $this->azMaxDirection = $azMaxDirection;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAzEndDirection(): string
-    {
-        return $this->azEndDirection;
-    }
-
-    /**
-     * @param string $azEndDirection
-     */
-    public function setAzEndDirection(string $azEndDirection): void
-    {
-        $this->azEndDirection = $azEndDirection;
-    }
-
 
 
 

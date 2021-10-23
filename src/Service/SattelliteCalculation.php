@@ -95,10 +95,17 @@ class SattelliteCalculation
             $dateEnd = PredictTime::daynum2readable($pass->visible_los, $timeZone, $format);
 
 
+            if ($this->request->getLocale() === "fr") {
+                $azStartDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_aos_az));
+                $azMaxDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_max_el_az));
+                $azEndDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_los_az));
+            } else {
+                $azStartDirection = $predict->azDegreesToDirection($pass->visible_aos_az);
+                $azMaxDirection = $predict->azDegreesToDirection($pass->visible_max_el_az);
+                $azEndDirection = $predict->azDegreesToDirection($pass->visible_los_az);
+            }
 
-            $azStartDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_aos_az));
-            $azMaxDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_max_el_az));
-            $azEndDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_los_az));
+
 
 
 
@@ -122,7 +129,7 @@ class SattelliteCalculation
 
 
 
-            $passeDisplay = new PasseDisplay($index, $pass->visible_aos,$pass->visible_tca, $pass->visible_los, $azStartDegres,$azMaxDegres, $azEndDegres, $mag, $duration, $detailsPasse,$azStartDirection, $azMaxDirection, $azEndDirection, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
+            $passeDisplay = new PasseDisplay($index, $pass->visible_aos,$pass->visible_tca, $pass->visible_los, $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
