@@ -52,6 +52,7 @@ class IpInformation
                 $ip = $_SERVER['REMOTE_ADDR'];
             }
             if ($ip !== "::1" && !str_starts_with($ip, '192.168') && $ip !== "127.0.0.1") {
+                //TOTO Test this part
                 $apiKey = $containerBag->get('IP_INFORMATION_KEY');
                 $urlIp = "http://ipinfo.io/" . $ip . "?token=" . $apiKey;
                 $response = $client->request('GET', $urlIp);

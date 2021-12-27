@@ -3,10 +3,6 @@
 namespace App\Entity;
 
 
-use phpDocumentor\Reflection\Types\Integer;
-
-
-
 class PasseDisplay extends Passe
 {
 
@@ -19,7 +15,6 @@ class PasseDisplay extends Passe
     private string $dateStartExact;
 
 
-
     /**
      * @param string $date
      * @param string $dateStart
@@ -29,9 +24,9 @@ class PasseDisplay extends Passe
      * @param string $dateStartExact
      * @param string $dateEndExact
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,  string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
+    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
     {
-        parent::__construct( $index,  $UTCstart,  $UTCmax,  $UTCend,  $AzStartDegres,  $AzMaxDegres,  $AzEndDegres, $azStartDirection, $azMaxDirection,$azEndDirection , $magnitude,  $duration,  $detailsPasse);
+        parent::__construct($index, $UTCstart, $UTCmax, $UTCend, $AzStartDegres, $AzMaxDegres, $AzEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse);
 
         $this->date = $date;
         $this->dateStart = $dateStart;
@@ -153,10 +148,6 @@ class PasseDisplay extends Passe
     {
         $this->dateEndExact = $dateEndExact;
     }
-
-
-
-
 
 
 }

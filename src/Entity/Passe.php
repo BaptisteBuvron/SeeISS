@@ -68,6 +68,9 @@ class Passe
     private string $azStartDirection;
     private string $azMaxDirection;
     private string $azEndDirection;
+    private float $startEl;
+    private float $maxEl;
+    private float $endEl;
     private float $magnitude;
     private int $duration;
     private array $PasseDetails;
@@ -80,11 +83,17 @@ class Passe
      * @param string $AzStartDegres
      * @param string $AzMaxDegres
      * @param string $AzEndDegres
+     * @param string $azStartDirection
+     * @param string $azMaxDirection
+     * @param string $azEndDirection
+     * @param float $startEl
+     * @param float $maxEl
+     * @param float $endEl
      * @param float $magnitude
      * @param int $duration
      * @param array $passeDetails
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $magnitude, int $duration, array $passeDetails)
+    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
     {
         $this->index = $index;
         $this->UTCstart = $UTCstart;
@@ -93,6 +102,9 @@ class Passe
         $this->AzStartDegres = $AzStartDegres;
         $this->AzMaxDegres = $AzMaxDegres;
         $this->AzEndDegres = $AzEndDegres;
+        $this->startEl = $startEl;
+        $this->maxEl = $maxEl;
+        $this->endEl = $endEl;
         $this->magnitude = $magnitude;
         $this->duration = $duration;
         $this->PasseDetails = $passeDetails;
@@ -310,6 +322,58 @@ class Passe
     {
         $this->azEndDirection = $azEndDirection;
     }
+
+    /**
+     * @return float
+     */
+    public function getStartEl(): float
+    {
+        return $this->startEl;
+    }
+
+    /**
+     * @param float $startEl
+     */
+    public function setStartEl(float $startEl): void
+    {
+        $this->startEl = $startEl;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMaxEl(): float
+    {
+        return $this->maxEl;
+    }
+
+    /**
+     * @param float $maxEl
+     */
+    public function setMaxEl(float $maxEl): void
+    {
+        $this->maxEl = $maxEl;
+    }
+
+    /**
+     * @return float
+     */
+    public function getEndEl(): float
+    {
+        return $this->endEl;
+    }
+
+    /**
+     * @param float $endEl
+     */
+    public function setEndEl(float $endEl): void
+    {
+        $this->endEl = $endEl;
+    }
+
+
+
+
 
 
 

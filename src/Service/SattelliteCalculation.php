@@ -38,6 +38,8 @@ class SattelliteCalculation
         $this->params = $params;
     }
 
+
+
     /**
      * Function that return an array, one with all the passes, and one with all the passes sort by date
      * @param float $lat
@@ -105,6 +107,11 @@ class SattelliteCalculation
                 $azEndDirection = $predict->azDegreesToDirection($pass->visible_los_az);
             }
 
+            //TODO ADD ELEVATION IN API
+
+            $startEl = $pass->visible_aos_el;
+            $maxEl = $pass->max_el;
+            $endEl = $pass->visible_los_el;
 
 
 
@@ -112,6 +119,7 @@ class SattelliteCalculation
             $azStartDegres = floor($pass->visible_aos_az);
             $azMaxDegres = floor($pass->visible_max_el_az);
             $azEndDegres = floor($pass->visible_los_az);
+
 
 
 
@@ -129,7 +137,7 @@ class SattelliteCalculation
 
 
 
-            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
+            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection,  $startEl,  $maxEl,  $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
@@ -215,6 +223,9 @@ class SattelliteCalculation
         $rootPath = $this->params->get('kernel.project_dir');
         return file($rootPath . '/src/Predict/iss.tle');
     }
+
+
+
 
 
 }
