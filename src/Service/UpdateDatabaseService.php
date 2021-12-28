@@ -10,7 +10,10 @@ use App\Entity\Launcher;
 use App\Entity\SpaceCraft;
 use App\Entity\SpaceCraftConfig;
 use App\Entity\SpaceStation;
+use App\Entity\Starlink;
+use App\Entity\StarlinkGroup;
 use App\Entity\Video;
+use App\Predict\PredictTLE;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -58,14 +61,51 @@ class UpdateDatabaseService
 
     }
 
-    public function setAstronauts(array $astronauts)
+    /**
+     * @throws \App\Predict\PredictException
+     */
+    public function updateDatabaseStarlink(){
+        $starlinkRepo = $this->manager->getRepository(Starlink::class);
+        $starlinkGroupRepo = $this->manager->getRepository(StarlinkGroup::class);
+        $url = "http://celestrak.com/NORAD/elements/starlink.txt";
+        $content = file_get_contents($url) or die('Could not updated tle get file');
+        $lines = explode("\n", $content);
+
+        for ($i = 0, $iMax = count($lines); $i < $iMax; $i+=3) {
+            if (str_contains($lines[$i], 'STARLINK')) {
+                $starlink = $starlinkRepo->findOneBy(['name' => trim($lines[$i])]) ?: new Starlink();
+                $starlink->setName(trim($lines[$i]));
+                //regex get number in the title
+                preg_match('/\d+/', trim($lines[$i]), $matches);
+                $starlink->setNumber((int)$matches[0]);
+                $starlink->setLine1(trim($lines[$i+1]));
+                $starlink->setLine2(trim($lines[$i+2]));
+
+                $predictTLE = new PredictTLE($starlink->getName(), $starlink->getLine1(), $starlink->getLine2());
+                $starlinkGroup = $starlinkGroupRepo->findOneBy(['yearLaunch' => $predictTLE->yearLaunch, 'numberLaunch' => $predictTLE->numberLaunch]) ?: new StarlinkGroup();
+
+                $starlinkGroup->setYearLaunch($predictTLE->yearLaunch);
+                $starlinkGroup->setNumberLaunch($predictTLE->numberLaunch);
+                $starlinkGroup->addStarkink($starlink);
+
+                //GROUP Starlink
+                $this->manager->persist($starlinkGroup);
+                $this->manager->persist($starlink);
+            }
+            $this->manager->flush();
+        }
+
+
+    }
+
+    private function setAstronauts(array $astronauts)
     {
         foreach ($astronauts as $astronaut) {
             $this->setAstronaut($astronaut["astronaut"]);
         }
     }
 
-    public function setAstronaut($astronautData,string $role = null): Astronaut
+    private function setAstronaut($astronautData,string $role = null): Astronaut
     {
 
 
@@ -102,7 +142,7 @@ class UpdateDatabaseService
         return $astronaut;
     }
 
-    public function setSpaceStation(array $spaceStationData)
+    private function setSpaceStation(array $spaceStationData)
     {
         $spaceStationRepo = $this->manager->getRepository(SpaceStation::class);
         $spaceStation = $spaceStationRepo->findOneBy(array('idApi' => $spaceStationData["id"]));
@@ -182,7 +222,7 @@ class UpdateDatabaseService
 
     }
 
-    public function setAgency(array $agencyData): Agency
+    private function setAgency(array $agencyData): Agency
     {
         $agencyRepo = $this->manager->getRepository(Agency::class);
         $agency = $agencyRepo->findOneBy(array('idApi' => $agencyData["id"]));
@@ -213,7 +253,7 @@ class UpdateDatabaseService
     /**
      * @throws \Exception
      */
-    public function setDock(array $dock): void
+    private function setDock(array $dock): void
     {
         if (!is_null($dock["docked"])) {
             $dockingObject = $this->manager->getRepository(Docking::class)->findOneBy(array('idApi' => $dock["docked"]["id"]));
@@ -233,7 +273,7 @@ class UpdateDatabaseService
 
     }
 
-    public function setSpaceCraft(array $flightVehicule)
+    private function setSpaceCraft(array $flightVehicule)
     {
         $spaceCraftData = $flightVehicule["spacecraft"];
         $spaceCraftRepo = $this->manager->getRepository(SpaceCraft::class);
@@ -254,7 +294,7 @@ class UpdateDatabaseService
     /**
      * @throws \Exception
      */
-    public function setLaunch(array $launchData): Launch
+    private function setLaunch(array $launchData): Launch
     {
         $launchRepo = $this->manager->getRepository(Launch::class);
         $launch = $launchRepo->findOneBy(array('idApi' => $launchData['id']));
@@ -284,7 +324,7 @@ class UpdateDatabaseService
         return $launch;
     }
 
-    public function setVideo(array $videoData):Video
+    private function setVideo(array $videoData):Video
     {
         $videoRepo = $this->manager->getRepository(Video::class);
         $video = $videoRepo->findOneBy(array('url' => $videoData['url']));
@@ -300,7 +340,7 @@ class UpdateDatabaseService
         return $video;
     }
 
-    public function setLauncher(array $launcherData):Launcher
+    private function setLauncher(array $launcherData):Launcher
     {
         $launcherRepo = $this->manager->getRepository(Launcher::class);
         $launcher = $launcherRepo->findOneBy(array('idApi' => $launcherData['id']));
@@ -331,7 +371,7 @@ class UpdateDatabaseService
         return $launcher;
     }
 
-    public function setSpaceCraftConfig(array $spaceCraftConfigData): SpaceCraftConfig
+    private function setSpaceCraftConfig(array $spaceCraftConfigData): SpaceCraftConfig
     {
         $spaceCraftConfigRepo = $this->manager->getRepository(SpaceCraftConfig::class);
         $spaceCraftConfig = $spaceCraftConfigRepo->findOneBy(array('idApi' => $spaceCraftConfigData['id']));
@@ -365,7 +405,7 @@ class UpdateDatabaseService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function requestTo(string $url): array
+    private function requestTo(string $url): array
     {
         $request = $this->client->request('GET', $url);
         if ($request->getStatusCode() === 429) {

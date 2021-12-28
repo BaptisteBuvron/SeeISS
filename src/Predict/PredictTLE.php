@@ -18,6 +18,8 @@ class PredictTLE
     public $header;     /* Header line of TLE file */
     public $line1;      /* Line 1 of TLE */
     public $line2;      /* Line 2 of TLE */
+    public $yearLaunch; /* Year of launch */
+    public $numberLaunch; /* Launch number */
     public $epoch;      /*!< Epoch Time in NORAD TLE format YYDDD.FFFFFFFF */
     public $epoch_year; /*!< Epoch: year */
     public $epoch_day;  /*!< Epoch: day of year */
@@ -67,6 +69,10 @@ class PredictTLE
         /* International Designator for satellite */
         $this->idesg = substr($line1, 9, 8);
 
+        $this->yearLaunch = (int) substr($line1, 9, 2);
+        $this->numberLaunch = (int) substr($line1, 11, 3);
+
+
         /* Epoch time; this is the complete, unconverted epoch. */
         /* Replace spaces with 0 before casting, as leading spaces are allowed */
         $this->epoch = (float) str_replace(' ', '0', substr($line1, 18, 14));
@@ -80,9 +86,11 @@ class PredictTLE
         // Adjust for 2 digit year through 2056
         $this->epoch_year = (int) substr($line1, 18, 2);
         if ($this->epoch_year > 56) {
-            $this->epoch_year = $this->epoch_year + 1900;
+            $this->epoch_year += 1900;
+            $this->yearLaunch += 1900;
         } else {
-            $this->epoch_year = $this->epoch_year + 2000;
+            $this->epoch_year += 2000;
+            $this->yearLaunch += 2000;
         }
 
         /* Epoch day */

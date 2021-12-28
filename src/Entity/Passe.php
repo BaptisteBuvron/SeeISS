@@ -58,7 +58,7 @@ class Passe
 {
 
     #[ApiProperty(identifier: true)]
-    private int $index;
+    private string $index;
     private float $UTCstart;
     private float $UTCmax;
     private float $UTCend;
@@ -93,7 +93,7 @@ class Passe
      * @param int $duration
      * @param array $passeDetails
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
+    public function __construct(string $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
     {
         $this->index = $index;
         $this->UTCstart = $UTCstart;
@@ -116,17 +116,17 @@ class Passe
 
 
     /**
-     * @return int
+     * @return string
      */
-    public function getIndex(): int
+    public function getIndex(): string
     {
         return $this->index;
     }
 
     /**
-     * @param int $index
+     * @param string $index
      */
-    public function setIndex(int $index): void
+    public function setIndex(string $index): void
     {
         $this->index = $index;
     }
@@ -370,6 +370,7 @@ class Passe
     {
         $this->endEl = $endEl;
     }
+
 
 
 

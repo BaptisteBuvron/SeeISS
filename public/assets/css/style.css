@@ -100,10 +100,7 @@ section h3{
 .table .head th{
     text-align: center;
 }
-section form#formLocation{
-    display: flex;
-    margin: 5px auto auto;
-}
+
 
 section form#formLocation input{
     background: rgba(144, 144, 144, 0.075);

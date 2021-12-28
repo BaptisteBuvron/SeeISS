@@ -199,13 +199,11 @@
                     if (result.length == 0) {
                         return;
                     }
-                    var lon = result[0].lon;  // lon, lat auf 3 Nachkommastellen beschneiden!
+                    var lon = result[0].lon;  // lon, lat
                     var lat = result[0].lat;
-                    var name = result[0].display_name;/*
-                var cIdx = name.indexOf(",");
-                if (cIdx >= 0){
-                    name = name.substring(0, cIdx);
-                }*/
+                    var name = result[0].display_name;
+
+
                     $('#lon').val(lon);
                     $('#lat').val(lat);
                     $('#name').val(name);

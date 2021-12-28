@@ -5,6 +5,8 @@ namespace App\Service;
 
 
 use JetBrains\PhpStorm\ArrayShape;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -35,10 +37,10 @@ class GetLocationService
      */
     private SessionInterface $session;
 
-    public function __construct(IpInformation $ipInformation,
-                                RequestStack $requestStack,
+    public function __construct(IpInformation       $ipInformation,
+                                RequestStack        $requestStack,
                                 HttpClientInterface $client,
-                                SessionInterface $session
+                                SessionInterface    $session
     )
     {
         $this->ipInformation = $ipInformation;
@@ -53,15 +55,32 @@ class GetLocationService
      * @return array
      * @throws TransportExceptionInterface
      */
-    public function getLatLonCity(): array
+    public function getLatLonCity(FormInterface $form = null): array
     {
         $request = $this->requestStack->getCurrentRequest();
         $lat = null;
         $lon = null;
         $cityName = null;
 
-        //On regarde les valeurs en post
 
+        //On regarde le formulaire
+        if ($form !== null) {
+            $cityName = $form->get('city')->getData();
+            $lat = $form->get('lat')->getData();
+            $lon = $form->get('lon')->getData();
+            if (!is_null($lat) || !is_null($lon) || !is_null($cityName)) {
+                $this->session->set('lat', $lat);
+                $this->session->set('lon', $lon);
+                $this->session->set('cityName', $cityName);
+                return [
+                    'lat' => (float)$lat,
+                    'lon' => (float)$lon,
+                    'cityName' => $cityName
+                ];
+            }
+
+
+        } //On regarde les valeurs en post
         if ($request->isMethod('POST') && !is_null($request->get('lat')) && !is_null($request->get('lon')) && !is_null($request->get('city'))) {
             $lat = $request->get('lat');
             $lon = $request->get('lon');
@@ -71,15 +90,15 @@ class GetLocationService
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
             return [
-                'lat' => (float) $lat,
-                'lon' => (float) $lon,
+                'lat' => (float)$lat,
+                'lon' => (float)$lon,
                 'cityName' => $cityName
             ];
         }
 
         //On regarde les valeurs en GET.
         if (!is_null($request->get('city'))) {
-            return $this->callApiCity((string) ($request->get('city')));
+            return $this->callApiCity((string)($request->get('city')));
         }
 
         //On regarde les valeurs en session
@@ -88,29 +107,29 @@ class GetLocationService
             $lon = $this->session->get('lon');
             $cityName = $this->session->get('cityName');
             return [
-                'lat' => (float) $lat,
-                'lon' => (float) $lon,
+                'lat' => (float)$lat,
+                'lon' => (float)$lon,
                 'cityName' => $cityName
             ];
         }
 
         //On regarde la latitude correspondant à l'addresse ip
-       if (isset($ipInformation->ip)) {
+        if (isset($ipInformation->ip)) {
             $lat = $this->ipInformation->lat;
             $lon = $this->ipInformation->lon;
             $cityName = $this->ipInformation->city . '-' . $this->ipInformation->region;
             $this->session->set('lat', $lat);
             $this->session->set('lon', $lon);
             $this->session->set('cityName', $cityName);
-           return [
-               'lat' => (float) $lat,
-               'lon' => (float) $lon,
-               'cityName' => $cityName
-           ];
+            return [
+                'lat' => (float)$lat,
+                'lon' => (float)$lon,
+                'cityName' => $cityName
+            ];
         }
 
         return [
-            'lat' => (float) 48,
+            'lat' => (float)48,
             'lon' => 2.33,
             'cityName' => "Paris"
         ];
@@ -125,20 +144,20 @@ class GetLocationService
     {
         $response = $this->client->request('GET', "https://nominatim.openstreetmap.org/search?format=json&q=" . $city);
 
-            if ($response->getStatusCode() !== 500 && count($response->toArray()) !== 0) {
-                $cityInfo = $response->toArray()[0];
-                $lat = $cityInfo['lat'];
-                $lon = $cityInfo['lon'];
-                $cityName = $cityInfo['display_name'];
+        if ($response->getStatusCode() !== 500 && count($response->toArray()) !== 0) {
+            $cityInfo = $response->toArray()[0];
+            $lat = $cityInfo['lat'];
+            $lon = $cityInfo['lon'];
+            $cityName = $cityInfo['display_name'];
 
-                $this->session->set('lat', $lat);
-                $this->session->set('lon', $lon);
-                $this->session->set('cityName', $cityName);
-            }
+            $this->session->set('lat', $lat);
+            $this->session->set('lon', $lon);
+            $this->session->set('cityName', $cityName);
+        }
 
         return [
-            'lat' => (float) $lat,
-            'lon' => (float) $lon,
+            'lat' => (float)$lat,
+            'lon' => (float)$lon,
             'cityName' => $cityName
         ];
 

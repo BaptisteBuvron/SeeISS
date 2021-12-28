@@ -13,6 +13,7 @@ class PasseDisplay extends Passe
     private string $dateEnd;
     private string $timeZone;
     private string $dateStartExact;
+    private ?Satellite $satellite;
 
 
     /**
@@ -24,7 +25,7 @@ class PasseDisplay extends Passe
      * @param string $dateStartExact
      * @param string $dateEndExact
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
+    public function __construct(string $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact, Satellite $satellite = null)
     {
         parent::__construct($index, $UTCstart, $UTCmax, $UTCend, $AzStartDegres, $AzMaxDegres, $AzEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse);
 
@@ -34,6 +35,7 @@ class PasseDisplay extends Passe
         $this->dateEnd = $dateEnd;
         $this->timeZone = $timeZone;
         $this->dateStartExact = $dateStartExact;
+        $this->satellite = $satellite;
     }
 
 
@@ -148,6 +150,24 @@ class PasseDisplay extends Passe
     {
         $this->dateEndExact = $dateEndExact;
     }
+
+    /**
+     * @return Satellite
+     */
+    public function getSatellite(): Satellite
+    {
+        return $this->satellite;
+    }
+
+    /**
+     * @param Satellite $satellite
+     */
+    public function setSatellite(Satellite $satellite): void
+    {
+        $this->satellite = $satellite;
+    }
+
+
 
 
 }

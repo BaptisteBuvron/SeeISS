@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\PasseDetails;
 use App\Entity\PasseDisplay;
+use App\Entity\Satellite;
 use App\Predict\Predict;
 use App\Predict\PredictException;
 use App\Predict\PredictQTH;
@@ -37,7 +38,6 @@ class SattelliteCalculation
         $this->request = $requestStack->getCurrentRequest();
         $this->params = $params;
     }
-
 
 
     /**
@@ -86,7 +86,6 @@ class SattelliteCalculation
         foreach ($filtered as $pass) {
 
 
-
             $date = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $formatDate);
 
             $dateStart = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $format);
@@ -114,15 +113,9 @@ class SattelliteCalculation
             $endEl = $pass->visible_los_el;
 
 
-
-
             $azStartDegres = floor($pass->visible_aos_az);
             $azMaxDegres = floor($pass->visible_max_el_az);
             $azEndDegres = floor($pass->visible_los_az);
-
-
-
-
 
 
             $duration = floor(($pass->visible_los - $pass->visible_aos) * 86400);
@@ -136,8 +129,7 @@ class SattelliteCalculation
             }
 
 
-
-            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection,  $startEl,  $maxEl,  $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
+            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
@@ -162,13 +154,126 @@ class SattelliteCalculation
         }
 
 
-
         return [
             'totalPasses' => $totalPasses,
             'passes' => $passes
         ];
     }
 
+    public function getArrayPassesForMap(array $passeDisplays)
+    {
+
+        $totalPasses = array();
+        foreach ($passeDisplays as $passeDisplay) {
+            $coord = array();
+            foreach ($passeDisplay->getPasseDetails() as $detail) {
+                $coord[] = new PasseDetails($detail->lat, $detail->lon);
+            }
+            $totalPasses[$passeDisplay->getIndex()] = [
+                'date' => $passeDisplay->getDate(),
+                'dateStart' => $passeDisplay->getDateStart(),
+                'dateMax' => $passeDisplay->getDateMax(),
+                'dateEnd' => $passeDisplay->getDateEnd(),
+                'azStartDirection' => $passeDisplay->getAzStartDirection(),
+                'azMaxDirection' => $passeDisplay->getAzMaxDirection(),
+                'azEndDirection' => $passeDisplay->getAzEndDirection(),
+                'azStartDegres' => $passeDisplay->getAzStartDegres(),
+                'azMaxDegres' => $passeDisplay->getAzMaxDegres(),
+                'azEndDegres' => $passeDisplay->getAzEndDegres(),
+                'duration' => $passeDisplay->getDuration(),
+                'magnitude' => $passeDisplay->getMagnitude(),
+                'coord' => $coord
+            ];
+
+        }
+        return $totalPasses;
+        }
+
+
+
+
+
+    public function getVisiblePassesStarlink(float $lat, float $lon, Satellite $satellite, int $maxdt = 5)
+    {
+        $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
+        date_default_timezone_set($timeZone);
+        $predict = new Predict();
+        $qth = new PredictQTH();
+        $qth->alt = 0;
+        $qth->lat = $lat;
+        $qth->lon = $lon;
+
+
+        $tle = new PredictTLE($satellite->getName(), $satellite->getLine1(), $satellite->getLine2());
+
+        $sat = new PredictSat($tle);
+        $now = PredictTime::get_current_daynum();
+        $results = $predict->get_passes($sat, $qth, $now, $maxdt);
+        $filtered = $predict->filterVisiblePasses($results);
+
+        $format = 'H:i:s';
+        $fomatExact = 'm/d/y H:i:s';
+        if ($this->request->getLocale() === "fr") {
+            $formatDate = 'fr';
+        } else {
+            $formatDate = 'l j F Y';
+        }
+
+        $passes = array();
+        $index = 0;
+        foreach ($filtered as $pass) {
+
+            $date = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $formatDate);
+
+            $dateStart = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $format);
+
+            $dateStartExact = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $fomatExact);
+
+            $dateMax = PredictTime::daynum2readable($pass->visible_tca, $timeZone, $format);
+            $dateEnd = PredictTime::daynum2readable($pass->visible_los, $timeZone, $format);
+
+
+            if ($this->request->getLocale() === "fr") {
+                $azStartDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_aos_az));
+                $azMaxDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_max_el_az));
+                $azEndDirection = str_replace('W', 'O', $predict->azDegreesToDirection($pass->visible_los_az));
+            } else {
+                $azStartDirection = $predict->azDegreesToDirection($pass->visible_aos_az);
+                $azMaxDirection = $predict->azDegreesToDirection($pass->visible_max_el_az);
+                $azEndDirection = $predict->azDegreesToDirection($pass->visible_los_az);
+            }
+
+
+            $startEl = $pass->visible_aos_el;
+            $maxEl = $pass->max_el;
+            $endEl = $pass->visible_los_el;
+
+
+            $azStartDegres = floor($pass->visible_aos_az);
+            $azMaxDegres = floor($pass->visible_max_el_az);
+            $azEndDegres = floor($pass->visible_los_az);
+
+
+            $duration = floor(($pass->visible_los - $pass->visible_aos) * 86400);
+
+            $mag = number_format($pass->max_apparent_magnitude, 1);
+
+            $detailsPasse = $pass->details;
+            $coord = array();
+            foreach ($detailsPasse as $detail) {
+                $coord[] = new PasseDetails($detail->lat, $detail->lon);
+            }
+
+            $passeDisplay = new PasseDisplay($satellite->getId() . "-" . $index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact, $satellite);
+
+            if ($duration > 0) {
+                $index++;
+                $passes[] = $passeDisplay;
+            }
+        }
+        return $passes;
+
+    }
 
     /**
      * @param float $lat
@@ -223,9 +328,6 @@ class SattelliteCalculation
         $rootPath = $this->params->get('kernel.project_dir');
         return file($rootPath . '/src/Predict/iss.tle');
     }
-
-
-
 
 
 }
