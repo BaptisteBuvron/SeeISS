@@ -1,0 +1,273 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Starlink{% endblock %}
+
+{% block javascriptsHead %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-lg">
+        <main>
+
+
+            <section class="px-1">
+
+                <h2>Passage des trains Starlink : </h2>
+
+
+                {{ form_start(form, {'attr' : {'id' : 'formLocation', 'placeholder' : info.city}}) }}
+
+                {# <input id="location" class="form-control" type="text" size="50"
+                       placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/> #}
+                {# <input type="hidden" id="name" name="city"/>
+                <input type="hidden" id="lat" name="lat"/>
+                <input type="hidden" id="lon" name="lon"/> #}
+                <div class="row">
+                    <div class="col-md">
+                        {{ form_widget(form.location, {'attr' : {'placeholder' : info.city, 'value' : ""}}) }}
+
+                        {{ form_row(form.city, { 'id': 'city', 'name' : 'city'}) }}
+                        {{ form_row(form.lat, { 'id': 'lat', 'name' : 'lat'}) }}
+                        {{ form_row(form.lon, { 'id': 'lon', 'name' : 'lon' }) }}
+                    </div>
+                    <div class="col-md">
+                        {{ form_widget(form.starlinkGroup) }}
+
+                    </div>
+                </div>
+                <button id="buttonSumbit" type="submit" class="btn btn-primary mt-2"
+                        style="margin-left: 5px">{% trans %}send{% endtrans %}</button>
+
+
+
+
+
+
+
+                {{ form_end(form) }}
+
+
+
+
+                {% if passes %}
+                    {% for key, passe in passes %}
+                        <h3>{{ key }}</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr class="head">
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2">{% trans %}start{% endtrans %}</th>
+                                    <th colspan="2">Max</th>
+                                    <th colspan="2">{% trans %}end{% endtrans %}</th>
+                                    <th colspan="2">Info</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">{% trans %}start{% endtrans %}</th>
+                                    <th scope="col">{% trans %}azimuth{% endtrans %}</th>
+                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
+                                    <th scope="col">Az</th>
+                                    <th scope="col">{% trans %}hour{% endtrans %}</th>
+                                    <th scope="col">Az</th>
+                                    <th scope="col">{% trans %}duration{% endtrans %} (s)</th>
+                                    <th scope="col">{% trans %}seeonmap{% endtrans %}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for value in passe %}
+                                    <tr>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ value.satellite.name }}</td>
+                                        <td>{{ value.dateStart }}</td>
+                                        <td>{{ value.azStartDirection }} ({{ value.azStartDegres }}°)</td>
+                                        <td>{{ value.dateMax }}</td>
+                                        <td>{{ value.azMaxDirection }} ({{ value.azMaxDegres }}°)</td>
+                                        <td>{{ value.dateEnd }}</td>
+                                        <td>{{ value.azEndDirection }} ({{ value.azEndDegres }}°)</td>
+                                        <td>{{ value.duration }}</td>
+                                        <td><a href="#" class="linkMap"
+                                               id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p id="noPassage">{% trans %}noPasse{% endtrans %}</p>
+                {% endif %}
+
+
+            </section>
+        </main>
+
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalMap">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button type="button" class="btn-close ms-auto p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title m-4"></h5>
+                <div class="modal-header">
+                    <div id="grid">
+                        <div>
+                            <p id="start"></p>
+                            <p id="max"></p>
+                            <p id="end"></p>
+                            <p id="duration"></p>
+                        </div>
+                        <div>
+                            <p id="startAz"></p>
+                            <p id="maxAz"></p>
+                            <p id="endAz"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div style="height: 500px" id="map"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            {% if info.city %}
+            window.history.pushState("", "", '/starlink?city={{ info.city }}');
+            {% else %}
+            window.history.pushState("", "", '/starlink');
+            {% endif %}
+
+
+        });
+        $('#buttonSumbit').on("click", function (e) {
+
+            e.preventDefault();
+            var value = $('#starlink_group_location').val();
+            if (value != '') {
+                var url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
+                var request = new XMLHttpRequest();
+                request.open('GET', url);
+                request.responseType = "text";
+                request.send();
+                request.onload = function () {
+                    if (request.status >= 200 && request.status < 300) {
+                        var result = eval(request.responseText);
+                        if (result.length == 0) {
+                            return;
+                        }
+                        var lon = result[0].lon;  // lon, lat
+                        var lat = result[0].lat;
+                        var city = result[0].display_name;
+                        $('#lon').val(lon);
+                        $('#lat').val(lat);
+                        $('#city').val(city);
+                        $('#formLocation').submit();
+
+
+                    }
+                };
+            }
+            else {
+                $('#formLocation').submit();
+            }
+
+
+
+        });
+
+        var map = L.map('map',
+            {'worldCopyJump': true}
+        ).setView([{{ info.lat }}, {{ info.lon }}], 4);
+        var homeIcon = L.icon({
+            iconUrl: 'images/home.svg',
+            iconSize: [25, 25]
+        });
+        L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoic2VlaXNzIiwiYSI6ImNrZ3o2ZXkyejBsNGMyc252cGpncWYzenoifQ.hGTn1d_CBTHKYaRMpGrIwg'
+        }).addTo(map);
+
+        var p = L.control({position: 'bottomleft'});
+        p.onAdd = function (map) {
+            var div = L.DomUtil.create('h1');
+            div.innerHTML = "www.seeiss.com";
+            div.style.color = "grey";
+            return div;
+        }
+        p.addTo(map);
+
+
+        var jsonPasses = {{ totalPasses | json_encode | raw }};
+        var arrayPasses;
+
+
+        $('.linkMap').click(function (e) {
+            e.preventDefault();
+            var idLink = $(this).attr('id');
+            var passes = jsonPasses[idLink];
+
+            var latLonpasse = [];
+            passes['coord'].forEach(function (value) {
+                latLonpasse.push([value.lat, value.lon]);
+            })
+            $('#modalMap h5.modal-title').text(passes['date']);
+            $('#modalMap p#start').text("{% trans %}start{% endtrans %} : " + passes['dateStart']);
+            $('#modalMap p#max').text("Max : " + passes['dateMax']);
+            $('#modalMap p#end').text("{% trans %}end{% endtrans %} : " + passes['dateEnd']);
+            $('#modalMap p#duration').text("{% trans %}duration{% endtrans %} : " + passes['duration'] + " s");
+
+
+            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStartDirection'] + " (" + passes['azStartDegres'] + "°)");
+            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMaxDirection'] + " (" + passes['azMaxDegres'] + "°)");
+            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEndDirection'] + " (" + passes['azEndDegres'] + "°)");
+
+            $('#modalMap').modal('show');
+
+
+            var polyline = L.polyline(latLonpasse, {color: 'blue'}).addTo(map);
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 1);
+
+            $('#modalMap').on('hide.bs.modal', function (e) {
+                map.removeLayer(polyline);
+            });
+
+        });
+
+
+
+
+    </script>
+
+{% endblock %}
