@@ -3,15 +3,16 @@
 namespace App\Entity;
 
 
-
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Predict\PredictVector;
+use JetBrains\PhpStorm\ArrayShape;
 
 
 #[ApiResource(
     description: "Return a list of all visible passes of the ISS",
-    collectionOperations: ['get'=> [
+    collectionOperations: ['get' => [
         "method" => "GET",
         "openapi_context" => [
             "parameters" => [
@@ -59,12 +60,12 @@ class Passe
 
     #[ApiProperty(identifier: true)]
     private int $index;
-    private float $UTCstart;
-    private float $UTCmax;
-    private float $UTCend;
-    private string $AzStartDegres;
-    private string $AzMaxDegres;
-    private string $AzEndDegres;
+    private float $utcStart;
+    private float $utcMax;
+    private float $utcEnd;
+    private string $azStartDegres;
+    private string $azMaxDegres;
+    private string $azEndDegres;
     private string $azStartDirection;
     private string $azMaxDirection;
     private string $azEndDirection;
@@ -73,16 +74,36 @@ class Passe
     private float $endEl;
     private float $magnitude;
     private int $duration;
-    private array $PasseDetails;
+
+    #[ArrayShape([
+            "time",
+            "pos" => PredictVector::class,
+            "vel" => PredictVector::class,
+            "velo",
+            "az",
+            "el",
+            "range",
+            "range_rate",
+            "lat",
+            "lon",
+            "alt",
+            "ma",
+            "phase",
+            "footprint",
+            "vis",
+            "orbit"
+        ]
+    )]
+    private array $passeDetails;
 
     /**
      * @param int $index
-     * @param float $UTCstart
-     * @param float $UTCmax
-     * @param float $UTCend
-     * @param string $AzStartDegres
-     * @param string $AzMaxDegres
-     * @param string $AzEndDegres
+     * @param float $utcStart
+     * @param float $utcMax
+     * @param float $utcEnd
+     * @param string $azStartDegres
+     * @param string $azMaxDegres
+     * @param string $azEndDegres
      * @param string $azStartDirection
      * @param string $azMaxDirection
      * @param string $azEndDirection
@@ -93,26 +114,25 @@ class Passe
      * @param int $duration
      * @param array $passeDetails
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres,string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
+    public function __construct(int $index, float $utcStart, float $utcMax, float $utcEnd, string $azStartDegres, string $azMaxDegres, string $azEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
     {
         $this->index = $index;
-        $this->UTCstart = $UTCstart;
-        $this->UTCmax = $UTCmax;
-        $this->UTCend = $UTCend;
-        $this->AzStartDegres = $AzStartDegres;
-        $this->AzMaxDegres = $AzMaxDegres;
-        $this->AzEndDegres = $AzEndDegres;
+        $this->utcStart = $utcStart;
+        $this->utcMax = $utcMax;
+        $this->utcEnd = $utcEnd;
+        $this->azStartDegres = $azStartDegres;
+        $this->azMaxDegres = $azMaxDegres;
+        $this->azEndDegres = $azEndDegres;
         $this->startEl = $startEl;
         $this->maxEl = $maxEl;
         $this->endEl = $endEl;
         $this->magnitude = $magnitude;
         $this->duration = $duration;
-        $this->PasseDetails = $passeDetails;
+        $this->passeDetails = $passeDetails;
         $this->azStartDirection = $azStartDirection;
         $this->azMaxDirection = $azMaxDirection;
         $this->azEndDirection = $azEndDirection;
     }
-
 
 
     /**
@@ -134,49 +154,49 @@ class Passe
     /**
      * @return float
      */
-    public function getUTCstart(): float
+    public function getUtcStart(): float
     {
-        return $this->UTCstart;
+        return $this->utcStart;
     }
 
     /**
-     * @param float $UTCstart
+     * @param float $utcStart
      */
-    public function setUTCstart(float $UTCstart): void
+    public function setUtcStart(float $utcStart): void
     {
-        $this->UTCstart = $UTCstart;
-    }
-
-    /**
-     * @return float
-     */
-    public function getUTCmax(): float
-    {
-        return $this->UTCmax;
-    }
-
-    /**
-     * @param float $UTCmax
-     */
-    public function setUTCmax(float $UTCmax): void
-    {
-        $this->UTCmax = $UTCmax;
+        $this->utcStart = $utcStart;
     }
 
     /**
      * @return float
      */
-    public function getUTCend(): float
+    public function getUtcMax(): float
     {
-        return $this->UTCend;
+        return $this->utcMax;
     }
 
     /**
-     * @param float $UTCend
+     * @param float $utcMax
      */
-    public function setUTCend(float $UTCend): void
+    public function setUtcMax(float $utcMax): void
     {
-        $this->UTCend = $UTCend;
+        $this->utcMax = $utcMax;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUtcEnd(): float
+    {
+        return $this->utcEnd;
+    }
+
+    /**
+     * @param float $utcEnd
+     */
+    public function setUtcEnd(float $utcEnd): void
+    {
+        $this->utcEnd = $utcEnd;
     }
 
     /**
@@ -184,15 +204,15 @@ class Passe
      */
     public function getAzStartDegres(): string
     {
-        return $this->AzStartDegres;
+        return $this->azStartDegres;
     }
 
     /**
-     * @param string $AzStartDegres
+     * @param string $azStartDegres
      */
-    public function setAzStartDegres(string $AzStartDegres): void
+    public function setAzStartDegres(string $azStartDegres): void
     {
-        $this->AzStartDegres = $AzStartDegres;
+        $this->azStartDegres = $azStartDegres;
     }
 
     /**
@@ -200,15 +220,15 @@ class Passe
      */
     public function getAzMaxDegres(): string
     {
-        return $this->AzMaxDegres;
+        return $this->azMaxDegres;
     }
 
     /**
-     * @param string $AzMaxDegres
+     * @param string $azMaxDegres
      */
-    public function setAzMaxDegres(string $AzMaxDegres): void
+    public function setAzMaxDegres(string $azMaxDegres): void
     {
-        $this->AzMaxDegres = $AzMaxDegres;
+        $this->azMaxDegres = $azMaxDegres;
     }
 
     /**
@@ -216,15 +236,15 @@ class Passe
      */
     public function getAzEndDegres(): string
     {
-        return $this->AzEndDegres;
+        return $this->azEndDegres;
     }
 
     /**
-     * @param string $AzEndDegres
+     * @param string $azEndDegres
      */
-    public function setAzEndDegres(string $AzEndDegres): void
+    public function setAzEndDegres(string $azEndDegres): void
     {
-        $this->AzEndDegres = $AzEndDegres;
+        $this->azEndDegres = $azEndDegres;
     }
 
     /**
@@ -264,15 +284,15 @@ class Passe
      */
     public function getPasseDetails(): array
     {
-        return $this->PasseDetails;
+        return $this->passeDetails;
     }
 
     /**
-     * @param array $PasseDetails
+     * @param array $passeDetails
      */
-    public function setPasseDetails(array $PasseDetails): void
+    public function setPasseDetails(array $passeDetails): void
     {
-        $this->PasseDetails = $PasseDetails;
+        $this->passeDetails = $passeDetails;
     }
 
     /**
@@ -370,16 +390,6 @@ class Passe
     {
         $this->endEl = $endEl;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }
