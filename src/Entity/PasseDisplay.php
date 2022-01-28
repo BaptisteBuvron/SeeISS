@@ -16,18 +16,32 @@ class PasseDisplay extends Passe
 
 
     /**
+     * @param int $index
+     * @param float $utcStart
+     * @param float $utcMax
+     * @param float $utcEnd
+     * @param string $azStartDegres
+     * @param string $azMaxDegres
+     * @param string $azEndDegres
+     * @param string $azStartDirection
+     * @param string $azMaxDirection
+     * @param string $azEndDirection
+     * @param float $startEl
+     * @param float $maxEl
+     * @param float $endEl
+     * @param float $magnitude
+     * @param int $duration
+     * @param array $detailsPasse
      * @param string $date
      * @param string $dateStart
      * @param string $dateMax
      * @param string $dateEnd
      * @param string $timeZone
      * @param string $dateStartExact
-     * @param string $dateEndExact
      */
-    public function __construct(int $index, float $UTCstart, float $UTCmax, float $UTCend, string $AzStartDegres, string $AzMaxDegres, string $AzEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
+    public function __construct(int $index, float $utcStart, float $utcMax, float $utcEnd, string $azStartDegres, string $azMaxDegres, string $azEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
     {
-        parent::__construct($index, $UTCstart, $UTCmax, $UTCend, $AzStartDegres, $AzMaxDegres, $AzEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse);
-
+        parent::__construct($index, $utcStart, $utcMax, $utcEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse);
         $this->date = $date;
         $this->dateStart = $dateStart;
         $this->dateMax = $dateMax;
