@@ -18,10 +18,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GetLocationService
 {
 
-    /**
-     * @var IpInformation
-     */
-    private IpInformation $ipInformation;
+
     /**
      * @var RequestStack
      */
@@ -35,13 +32,12 @@ class GetLocationService
      */
     private SessionInterface $session;
 
-    public function __construct(IpInformation $ipInformation,
+    public function __construct(
                                 RequestStack $requestStack,
                                 HttpClientInterface $client,
                                 SessionInterface $session
     )
     {
-        $this->ipInformation = $ipInformation;
         $this->requestStack = $requestStack;
         $this->client = $client;
         $this->session = $session;
@@ -93,22 +89,6 @@ class GetLocationService
                 'cityName' => $cityName
             ];
         }
-
-        //On regarde la latitude correspondant à l'addresse ip
-       if (isset($ipInformation->ip)) {
-            $lat = $this->ipInformation->lat;
-            $lon = $this->ipInformation->lon;
-            $cityName = $this->ipInformation->city . '-' . $this->ipInformation->region;
-            $this->session->set('lat', $lat);
-            $this->session->set('lon', $lon);
-            $this->session->set('cityName', $cityName);
-           return [
-               'lat' => (float) $lat,
-               'lon' => (float) $lon,
-               'cityName' => $cityName
-           ];
-        }
-
         return [
             'lat' => (float) 48,
             'lon' => 2.33,
