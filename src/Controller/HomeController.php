@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class HomeController extends AbstractController
 {
@@ -45,10 +46,10 @@ class HomeController extends AbstractController
     {
 
 
-        $coord = $this->locationService->getLatLonCity();
-        $lat = $coord['lat'];
-        $lon = $coord['lon'];
-        $cityName = $coord['cityName'];
+        $location = $this->locationService->getLatLonCity();
+        $lat = $location->getLatitude();
+        $lon = $location->getLongitude();
+        $cityName = $location->getAddress();
         $passes = null;
         $totalPasses = null;
         $info = [
@@ -57,7 +58,7 @@ class HomeController extends AbstractController
             'city' => $cityName
         ];
         if (!is_null($lat) && !is_null($lon)){
-            $res = $this->sattelliteCalculation->getVisiblePasses((float)$lat, (float)$lon);
+            $res = $this->sattelliteCalculation->getVisiblePasses($lat, $lon);
             $totalPasses = $res['totalPasses'];
             $passes = $res['passes'];
         }
@@ -77,9 +78,10 @@ class HomeController extends AbstractController
      */
     public function live(): Response
     {
-        $coord = $this->locationService->getLatLonCity();
-        $lat = $coord['lat'];
-        $lon = $coord['lon'];
+        $location = $this->locationService->getLatLonCity();
+        $lat = $location->getLatitude();
+        $lon = $location->getLongitude();
+
         // Only once per day
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
         date_default_timezone_set($timeZone);
@@ -113,14 +115,14 @@ class HomeController extends AbstractController
      * @Route("/pdf", name="pdf")
      * @return RedirectResponse|void
      * @throws PredictException
-     * @throws MpdfException
+     * @throws MpdfException|TransportExceptionInterface
      */
     public function pdf(){
         //Rechercher la latitude et longitude
-        $coord = $this->locationService->getLatLonCity();
-        $lat = $coord['lat'];
-        $lon = $coord['lon'];
-        $cityName = $coord['cityName'];
+        $location = $this->locationService->getLatLonCity();
+        $lat = $location->getLatitude();
+        $lon = $location->getLongitude();
+        $cityName = $location->getAddress();
 
         $info = [
             'lat' => $lat,
