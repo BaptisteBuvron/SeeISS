@@ -85,7 +85,6 @@ class GetLocationService
      * @param string $city
      * @throws TransportExceptionInterface
      */
-    #[ArrayShape(['lat' => "mixed", 'lon' => "mixed", 'cityName' => "mixed"])]
     public function callApiCity(string $city): Location
     {
         $response = $this->client->request('GET', "https://nominatim.openstreetmap.org/search?format=json&q=" . $city);
