@@ -40,8 +40,13 @@
                 <h2 class="h3">{% trans %}passesText{% endtrans %}</h2>
 
                 <form action="{{ path('home') }}" method="POST" id="formLocation">
-                    <input id="location" class="form-control" type="text" size="50"
+                    <div class="input-group">
+                        <input id="location" class="form-control" type="text" size="50"
                            placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><button type="button" class="btn btn-secondary" id="localisation">Localisation</button></span>
+                        </div>
+                    </div>
                     <input type="hidden" id="name" name="city"/>
                     <input type="hidden" id="lat" name="lat"/>
                     <input type="hidden" id="lon" name="lon"/>
@@ -184,28 +189,53 @@
 
 
         });
+
+        $('#localisation').on('click', function () {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    let url = "https://nominatim.openstreetmap.org/reverse.php?lat="+encodeURIComponent(lat)+"&lon="+encodeURIComponent(lon)+"&zoom=18&format=jsonv2";
+                    let request = new XMLHttpRequest();
+                    request.open('GET', url);
+                    request.send();
+                    request.onload = function () {
+                        if (request.status >= 200 && request.status < 300) {
+                            const data = JSON.parse(request.response);
+                            if (data.length === 0) {
+                                return;
+                            }
+                            const name = data.display_name;
+                            $('#lon').val(lon);
+                            $('#lat').val(lat);
+                            $('#name').val(name);
+                            $('#formLocation').submit();
+                        }
+                    };
+
+                });
+            }
+
+
+        });
         $('#buttonSumbit').on("click", function (e) {
 
             e.preventDefault();
-            var value = $('#location').val();
-            var url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
-            var request = new XMLHttpRequest();
+            const value = $('#location').val();
+            const url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
+            const request = new XMLHttpRequest();
             request.open('GET', url);
             request.responseType = "text";
             request.send();
             request.onload = function () {
                 if (request.status >= 200 && request.status < 300) {
-                    var result = eval(request.responseText);
-                    if (result.length == 0) {
+                    const result = eval(request.responseText);
+                    if (result.length === 0) {
                         return;
                     }
-                    var lon = result[0].lon;  // lon, lat auf 3 Nachkommastellen beschneiden!
-                    var lat = result[0].lat;
-                    var name = result[0].display_name;/*
-                var cIdx = name.indexOf(",");
-                if (cIdx >= 0){
-                    name = name.substring(0, cIdx);
-                }*/
+                    const lon = result[0].lon;
+                    const lat = result[0].lat;
+                    const name = result[0].display_name;
                     $('#lon').val(lon);
                     $('#lat').val(lat);
                     $('#name').val(name);
