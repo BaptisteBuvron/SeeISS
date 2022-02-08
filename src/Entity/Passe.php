@@ -74,6 +74,7 @@ class Passe
     private float $endEl;
     private float $magnitude;
     private int $duration;
+    private string $timeZone;
 
     #[ArrayShape([
             "time",
@@ -114,7 +115,7 @@ class Passe
      * @param int $duration
      * @param array $passeDetails
      */
-    public function __construct(int $index, float $utcStart, float $utcMax, float $utcEnd, string $azStartDegres, string $azMaxDegres, string $azEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails)
+    public function __construct(int $index, float $utcStart, float $utcMax, float $utcEnd, string $azStartDegres, string $azMaxDegres, string $azEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $passeDetails, string $timeZone)
     {
         $this->index = $index;
         $this->utcStart = $utcStart;
@@ -129,6 +130,7 @@ class Passe
         $this->magnitude = $magnitude;
         $this->duration = $duration;
         $this->passeDetails = $passeDetails;
+        $this->timeZone = $timeZone;
         $this->azStartDirection = $azStartDirection;
         $this->azMaxDirection = $azMaxDirection;
         $this->azEndDirection = $azEndDirection;
@@ -389,6 +391,22 @@ class Passe
     public function setEndEl(float $endEl): void
     {
         $this->endEl = $endEl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param string $timeZone
+     */
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
     }
 
 
