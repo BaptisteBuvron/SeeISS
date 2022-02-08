@@ -41,7 +41,7 @@ class PasseDisplay extends Passe
      */
     public function __construct(int $index, float $utcStart, float $utcMax, float $utcEnd, string $azStartDegres, string $azMaxDegres, string $azEndDegres, string $azStartDirection, string $azMaxDirection, string $azEndDirection, float $startEl, float $maxEl, float $endEl, float $magnitude, int $duration, array $detailsPasse, string $date, string $dateStart, string $dateMax, string $dateEnd, string $timeZone, string $dateStartExact)
     {
-        parent::__construct($index, $utcStart, $utcMax, $utcEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse);
+        parent::__construct($index, $utcStart, $utcMax, $utcEnd, $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $magnitude, $duration, $detailsPasse, $timeZone);
         $this->date = $date;
         $this->dateStart = $dateStart;
         $this->dateMax = $dateMax;
