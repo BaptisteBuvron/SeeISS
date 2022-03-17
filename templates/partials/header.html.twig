@@ -27,6 +27,7 @@
                 </ul>
 
 
+                {% if app.request.attributes.get('_route') is not null %}
                 <ul class="navbar-nav mb-2 mb-lg-0 ml-auto ms-2">
                     <li class="nav-item dropdown">
                         {% set url =  path(app.request.attributes.get('_route'),
@@ -54,6 +55,7 @@
                         </div>
                     </li>
                 </ul>
+                {% endif %}
 
 
             </div>
