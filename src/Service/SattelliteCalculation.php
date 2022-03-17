@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\PasseDetails;
 use App\Entity\PasseDisplay;
+use App\Entity\SatLocalisation;
 use App\Predict\Predict;
 use App\Predict\PredictException;
 use App\Predict\PredictQTH;
@@ -201,6 +202,7 @@ class SattelliteCalculation
         for ($i = 0; $i < 810; $i++) {
             $now = PredictTime::getCurrentDaynumFromUnix($date->format('U')); // get the current time as Julian Date (daynum)
             $predict->predict_calc($sat, $qth, $now);
+            dump($sat);
             $latLon[$i] = [
                 'lat' => $sat->ssplat,
                 'lon' => $sat->ssplon
@@ -213,6 +215,53 @@ class SattelliteCalculation
 
 
     }
+
+
+    /**
+     * @param float $lat
+     * @param float $lon
+     * @param array|null $tleFile
+     * @return array
+     * @throws PredictException
+     */
+    public
+    function realTimeAPI(float $lat, float $lon): array
+    {
+
+        $tleFile = $this->getIssTleFile();
+        $qth = new PredictQTH();
+        $qth->lat = $lat;
+        $qth->lon = $lon;
+
+        $tle = new PredictTLE($tleFile[0], $tleFile[1], $tleFile[2]); // Instantiate it
+        $sat = new PredictSat($tle); // Load up the satellite data
+        $date = new DateTime();
+        $interval = new DateInterval('PT10S');
+        $intervalHourAndHalf = new DateInterval('PT45M');
+        $date->sub($intervalHourAndHalf);
+        $predict = new Predict();
+        $satLocalisations = array();
+
+        for ($i = 0; $i < 810; $i++) {
+            $now = PredictTime::getCurrentDaynumFromUnix($date->format('U')); // get the current time as Julian Date (daynum)
+            $predict->predict_calc($sat, $qth, $now);
+            $satLocalisation = new SatLocalisation();
+            $satLocalisation->setName($sat->name);
+            $satLocalisation->setLatitude($sat->ssplat);
+            $satLocalisation->setLongitude($sat->ssplon);
+            $satLocalisation->setAltitude($sat->alt);
+            $satLocalisation->setAzimuth($sat->az);
+            $satLocalisation->setElevation($sat->el);
+            //kilometer per hour
+            $satLocalisation->setVelocity($sat->velo *60 * 60);
+            $satLocalisations[] = $satLocalisation;
+            $date->add($interval);
+        }
+        return $satLocalisations;
+
+
+    }
+
 
     /**
      * Get the ISS Tle File
