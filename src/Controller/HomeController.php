@@ -111,49 +111,6 @@ class HomeController extends AbstractController
     }
 
     /**
-     * Route that return the passes of the ISS in a PDF file.
-     * @Route("/pdf", name="pdf")
-     * @return RedirectResponse|void
-     * @throws PredictException
-     * @throws MpdfException|TransportExceptionInterface
-     */
-    public function pdf(){
-        //Rechercher la latitude et longitude
-        $location = $this->locationService->getLatLonCity();
-        $lat = $location->getLatitude();
-        $lon = $location->getLongitude();
-        $cityName = $location->getAddress();
-
-        $info = [
-            'lat' => $lat,
-            'lon' => $lon,
-            'city' => $cityName
-        ];
-
-
-
-
-        if (!is_null($lat) && !is_null($lon)){
-            $res = $this->sattelliteCalculation->getVisiblePasses((float)$lat, (float)$lon);
-            $passes = $res['passes'];
-        }
-        else{
-            //TODO ADD FLASHES
-            return $this->redirectToRoute('home');
-        }
-
-        $mpdf = new Mpdf();
-        $mpdf->WriteHTML($this->render('home/pdf.html.twig',[
-            'info' => $info,
-            'passes' => $passes
-        ]));
-        $mpdf->Output('seeiss-'.$info['city'], 'I');
-
-
-
-    }
-
-    /**
      * Route that return the privacy page.
      * @Route("/privacy", name="privacy")
      * @return Response
