@@ -202,7 +202,6 @@ class SattelliteCalculation
         for ($i = 0; $i < 810; $i++) {
             $now = PredictTime::getCurrentDaynumFromUnix($date->format('U')); // get the current time as Julian Date (daynum)
             $predict->predict_calc($sat, $qth, $now);
-            dump($sat);
             $latLon[$i] = [
                 'lat' => $sat->ssplat,
                 'lon' => $sat->ssplon
@@ -253,6 +252,7 @@ class SattelliteCalculation
             $satLocalisation->setAzimuth($sat->az);
             $satLocalisation->setElevation($sat->el);
             //kilometer per hour
+            $satLocalisation->setTimestamp(PredictTime::daynum2unix($sat->jul_utc));
             $satLocalisation->setVelocity($sat->velo *60 * 60);
             $satLocalisations[] = $satLocalisation;
             $date->add($interval);

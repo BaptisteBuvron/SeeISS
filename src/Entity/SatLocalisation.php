@@ -8,7 +8,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource(
-    description: "Liste of localisations of a satellite",
+    description: "Liste of localisations of a satellite from 1h30 before to 1h30 after the current time",
     collectionOperations: ['get' => [
         'method' => 'GET',
         "openapi_context" => [
@@ -45,15 +45,13 @@ class SatLocalisation
     private string $name;
     private float $latitude;
     private float $longitude;
+    #[ApiProperty(description: "Altitude of the satellite in km")]
     private float $altitude;
-
-    #[ApiProperty(swaggerContext: [
-        "description" => "The time of the pass",
-    ]
-
-    )]
+    #[ApiProperty(description: "Velocity of the satellite in km/h")]
     private float $velocity;
+    #[ApiProperty(description: "Time in timestamp of the data")]
     private float $timestamp;
+    #[ApiProperty(description: "Azimuth from the current position of the user")]
     private float $azimuth;
     private float $elevation;
 
