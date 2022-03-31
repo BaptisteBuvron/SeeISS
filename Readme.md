@@ -4,7 +4,11 @@
 ![PHPStorm](http://img.shields.io/badge/-PHPStorm-181717?style=for-the-badge&logo=phpstorm&logoColor=white)
 
 
-Site internet qui affiche les passages visibles de la Station Spatiale Internationale.
+SeeISS est un site internet qui affiche les passages visibles de la Station Spatiale Internationale.
+
+La station spatiale internationale est régulièrement visible à l'oeil nu.
+Elle apparaît comme un point plus ou moins lumineux.
+Ce site indique les horaires de passage de l'ISS ainsi que la direction d'arrivée et de fin.
 
 ## Etudiant
 
