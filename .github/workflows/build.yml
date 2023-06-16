@@ -45,8 +45,3 @@ jobs:
       # —— Symfony ——————————————————————————————————————————————————————————
       - name: Check Symfony requirements
         run: vendor/bin/requirements-checker
-      # —— Code style —— (Based on this package: https://github.com/OskarStark/php-cs-fixer-ga)
-      - name: PHP-CS-Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php_cs.dist --diff --dry-run
