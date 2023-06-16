@@ -46,7 +46,7 @@ jobs:
       - name: Check Symfony requirements
         run: vendor/bin/requirements-checker
       - name: Check the Symfony console
-        run: bin/console -V
+        run: sudo bin/console -V
       # —— Code style —— (Based on this package: https://github.com/OskarStark/php-cs-fixer-ga)
       - name: PHP-CS-Fixer
         uses: docker://oskarstark/php-cs-fixer-ga
