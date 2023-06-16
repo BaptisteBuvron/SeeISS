@@ -1,4 +1,5 @@
 # SeeISS
+[![Build result](https://github.com/BaptisteBuvron/SeeISS/actions/workflows/build.yml/badge.svg)](https://github.com/BaptisteBuvron/SeeISS/actions/workflows/build.yml)
 ![Symfony](https://img.shields.io/badge/symfony-%23000000.svg?style=for-the-badge&logo=symfony&logoColor=white)
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
 ![PHPStorm](http://img.shields.io/badge/-PHPStorm-181717?style=for-the-badge&logo=phpstorm&logoColor=white)
