@@ -11,6 +11,14 @@ Site internet qui affiche les passages visibles de la Station Spatiale Internati
 
 * [Baptiste Buvron](https://github.com/BaptisteBuvron)
 
+## Getting Started
+
+## Lancer le projet
+
+```bash
+php -S localhost:8000 -t public/
+```
+
 ## Site internet
 
 Voici les différentes fonctionnalités du site internet :
