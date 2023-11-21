@@ -6,12 +6,14 @@ namespace App\Service;
 
 use App\Entity\PasseDetails;
 use App\Entity\PasseDisplay;
+use App\Entity\TwoLineElement;
 use App\Predict\Predict;
 use App\Predict\PredictException;
 use App\Predict\PredictQTH;
 use App\Predict\PredictSat;
 use App\Predict\PredictTime;
 use App\Predict\PredictTLE;
+use App\Repository\TwoLineElementRepository;
 use App\TimezoneMapper;
 use DateInterval;
 use DateTime;
@@ -30,14 +32,18 @@ class SattelliteCalculation
 
     private Request|null $request;
     private ParameterBagInterface $params;
+    private TwoLineElementRepository $tleRepository;
+    private UpdateTLEService $updateTLEService;
 
-    public function __construct(RequestStack $requestStack, ParameterBagInterface $params)
+    public function __construct(RequestStack $requestStack, ParameterBagInterface $params, TwoLineElementRepository $tleRepository, UpdateTLEService $updateTLEService)
     {
 
         $this->request = $requestStack->getCurrentRequest();
         $this->params = $params;
-    }
+        $this->tleRepository = $tleRepository;
+        $this->updateTLEService = $updateTLEService;
 
+    }
 
 
     /**
@@ -49,11 +55,11 @@ class SattelliteCalculation
      * @return array[]
      * @throws PredictException
      */
-    #[ArrayShape(['totalPasses' => "array", 'passes' => "array"])] public function getVisiblePasses(float $lat, float $lon, int $maxdt = 15, array $tleFile = null): array
+    #[ArrayShape(['totalPasses' => "array", 'passes' => "array"])] public function getVisiblePasses(float $lat, float $lon, int $maxdt = 15, TwoLineElement $tleFile = null): array
     {
 
         if (is_null($tleFile)) {
-            $tleFile = $this->getIssTleFile();
+            $tleFile = $this->getIssTle();
         }
 
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
@@ -65,7 +71,7 @@ class SattelliteCalculation
         $qth->lon = $lon;
 
 
-        $tle = new PredictTLE($tleFile[0], $tleFile[1], $tleFile[2]);
+        $tle = new PredictTLE($tleFile->getTitle(), $tleFile->getLine1(), $tleFile->getLine2());
 
         $sat = new PredictSat($tle);
         $now = PredictTime::get_current_daynum();
@@ -84,7 +90,6 @@ class SattelliteCalculation
         $totalPasses = array();
         $index = 0;
         foreach ($filtered as $pass) {
-
 
 
             $date = PredictTime::daynum2readable($pass->visible_aos, $timeZone, $formatDate);
@@ -114,15 +119,9 @@ class SattelliteCalculation
             $endEl = $pass->visible_los_el;
 
 
-
-
             $azStartDegres = floor($pass->visible_aos_az);
             $azMaxDegres = floor($pass->visible_max_el_az);
             $azEndDegres = floor($pass->visible_los_az);
-
-
-
-
 
 
             $duration = floor(($pass->visible_los - $pass->visible_aos) * 86400);
@@ -136,8 +135,7 @@ class SattelliteCalculation
             }
 
 
-
-            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres,$azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection,  $startEl,  $maxEl,  $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
+            $passeDisplay = new PasseDisplay($index, PredictTime::daynum2unix($pass->visible_aos), PredictTime::daynum2unix($pass->visible_tca), PredictTime::daynum2unix($pass->visible_los), $azStartDegres, $azMaxDegres, $azEndDegres, $azStartDirection, $azMaxDirection, $azEndDirection, $startEl, $maxEl, $endEl, $mag, $duration, $detailsPasse, $date, $dateStart, $dateMax, $dateEnd, $timeZone, $dateStartExact);
 
             if ($duration > 0) {
                 $totalPasses[] = [
@@ -162,7 +160,6 @@ class SattelliteCalculation
         }
 
 
-
         return [
             'totalPasses' => $totalPasses,
             'passes' => $passes
@@ -173,16 +170,15 @@ class SattelliteCalculation
     /**
      * @param float $lat
      * @param float $lon
-     * @param array|null $tleFile
+     * @param TwoLineElement $tleFile
      * @return array
      * @throws PredictException
      */
     public
-    function realTime(float $lat, float $lon, array $tleFile = null): array
+    function realTime(float $lat, float $lon, TwoLineElement $tleFile = null): array
     {
         if (is_null($tleFile)) {
-            $tleFile = $this->getIssTleFile();
-
+            $tleFile = $this->getIssTle();
         }
 
         $latLon = array();
@@ -190,7 +186,7 @@ class SattelliteCalculation
         $qth->lat = $lat;
         $qth->lon = $lon;
 
-        $tle = new PredictTLE($tleFile[0], $tleFile[1], $tleFile[2]); // Instantiate it
+        $tle = new PredictTLE($tleFile->getTitle(), $tleFile->getLine1(), $tleFile->getLine2()); // Instantiate it
         $sat = new PredictSat($tle); // Load up the satellite data
         $date = new DateTime();
         $interval = new DateInterval('PT10S');
@@ -218,14 +214,14 @@ class SattelliteCalculation
      * Get the ISS Tle File
      * @return bool|array
      */
-    private function getIssTleFile(): bool|array
+    private function getIssTle(): TwoLineElement
     {
-        $rootPath = $this->params->get('kernel.project_dir');
-        return file($rootPath . '/src/Predict/iss.tle');
+        $tle = $this->tleRepository->findOneBy(['title' => 'ISS (ZARYA)']);
+        if (!$tle) {
+            $tle = $this->updateTLEService->updateIssTleFile();
+        }
+        return $tle;
     }
-
-
-
 
 
 }
