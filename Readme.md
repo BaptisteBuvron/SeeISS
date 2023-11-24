@@ -15,6 +15,31 @@ Site internet qui affiche les passages visibles de la Station Spatiale Internati
 
 ## Lancer le projet
 
+Installer les dépendances :
+
+```bash
+composer install
+npm install
+```
+
+Créer la base de données si elle n'existe pas :
+
+```bash
+php bin/console doctrine:database:create
+```
+
+Mettre à jour la base de données :
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+Lancer le serveur webpack :
+
+```bash
+npm run dev-server
+```
+
 ```bash
 php -S localhost:8000 -t public/
 ```
