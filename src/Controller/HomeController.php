@@ -66,8 +66,6 @@ class HomeController extends AbstractController
 
         $request = $requestStack->getCurrentRequest();
         $isPostRequest = $request->isMethod('POST');
-        dump($isPostRequest);
-
 
         return $this->render('home/index.html.twig', [
             'passes' => $passes,
