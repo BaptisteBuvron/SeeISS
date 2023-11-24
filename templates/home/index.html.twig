@@ -180,7 +180,12 @@
             window.history.pushState("", "", '/');
             {% endif %}
             {% if info.city %}
-            $('#location').placeholder("{{ info.city }}");
+            //set placeholder value of input
+
+
+
+
+            $('#location').attr('placeholder', "{{ info.city }}");
             {% endif %}
         });
 
