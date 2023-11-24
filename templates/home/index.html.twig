@@ -1,20 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}SeeISS{% endblock %}
 
-{% block javascriptsHead %}
-    {{ parent() }}
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin=""></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-          crossorigin=""/>
-{% endblock %}
-
 {% block body %}
 
 
@@ -263,7 +249,7 @@
             {'worldCopyJump': true}
         ).setView([{{ info.lat }}, {{ info.lon }}], 4);
         var homeIcon = L.icon({
-            iconUrl: 'images/home.svg',
+            iconUrl: '/images/home.svg',
             iconSize: [25, 25]
         });
         L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
