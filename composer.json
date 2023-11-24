@@ -42,8 +42,10 @@
         "symfony/string": "5.3.*",
         "symfony/translation": "5.3.*",
         "symfony/twig-bundle": "^5.3",
+        "symfony/ux-turbo": "^2.13",
         "symfony/validator": "5.3.*",
         "symfony/web-link": "5.3.*",
+        "symfony/webpack-encore-bundle": "^1.17",
         "symfony/yaml": "5.3.*",
         "twig/extra-bundle": "^3.3",
         "twig/string-extra": "^3.3",
@@ -97,7 +99,8 @@
             "@auto-scripts"
         ],
          "compile": [
-            "php bin/console doctrine:migrations:migrate"
+            "php bin/console doctrine:migrations:migrate",
+             "npm install && npm run build"
         ]
     },
     "conflict": {
