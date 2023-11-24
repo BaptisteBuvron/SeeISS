@@ -4,21 +4,6 @@
     SeeIss Live
 {% endblock %}
 
-{% block javascriptsHead %}
-    {{ parent() }}
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin="" data-turbo-track="reload"></script>
-    <script src="https://unpkg.com/@joergdietrich/leaflet.terminator" data-turbo-track="reload"></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-          crossorigin=""/>
-{% endblock %}
-
 {% block body %}
     <div class="container-lg">
 
