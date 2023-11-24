@@ -10,6 +10,7 @@ use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -42,7 +43,7 @@ class HomeController extends AbstractController
      * @return Response
      * @throws PredictException
      */
-    public function index(): Response
+    public function index(RequestStack $requestStack): Response
     {
 
 
@@ -63,11 +64,16 @@ class HomeController extends AbstractController
             $passes = $res['passes'];
         }
 
+        $request = $requestStack->getCurrentRequest();
+        $isPostRequest = $request->isMethod('POST');
+        dump($isPostRequest);
+
 
         return $this->render('home/index.html.twig', [
             'passes' => $passes,
             'totalPasses' => $totalPasses,
-            'info' => $info
+            'info' => $info,
+            'isPostRequest' => $isPostRequest
         ]);
     }
 

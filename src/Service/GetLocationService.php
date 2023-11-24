@@ -56,8 +56,8 @@ class GetLocationService
 
         //On regarde les valeurs en post
         if ($request->isMethod('POST') && !is_null($request->get('lat')) && !is_null($request->get('lon')) && !is_null($request->get('city'))) {
-            $lat = $request->get('lat');
-            $lon = $request->get('lon');
+            $lat = (float) $request->get('lat');
+            $lon = (float) $request->get('lon');
             $cityName = $request->get('city');
 
             $location = new Location($lat, $lon, $cityName);
@@ -77,7 +77,7 @@ class GetLocationService
         if (!is_null($this->session->get('location'))) {
             return $this->session->get('location');
         }
-        return new Location((float)48, 2.33, "Paris");
+        return new Location(48.0, 2.33, "Paris");
     }
 
     /**
@@ -91,10 +91,10 @@ class GetLocationService
         $location = null;
         if ($response->getStatusCode() !== 500 && count($response->toArray()) !== 0) {
             $cityInfo = $response->toArray()[0];
-            $lat = $cityInfo['lat'];
-            $lon = $cityInfo['lon'];
+            $lat = (float) $cityInfo['lat'];
+            $lon = (float) $cityInfo['lon'];
             $cityName = $cityInfo['display_name'];
-            $location = new Location($lat, $lon, $cityName);
+            $location = new Location($lat,$lon, $cityName);
             $this->session->set('location', $location);
         }
         return $location;

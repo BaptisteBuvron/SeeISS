@@ -7,6 +7,7 @@ language: French
 realtime : Position en direct
 theSpaceStation: La station Spatiale Internationale
 
+city: Ville
 #tableInformation
 
 hour: Heure

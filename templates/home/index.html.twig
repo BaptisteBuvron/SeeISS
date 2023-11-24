@@ -19,7 +19,7 @@
 
 
     <div class="container-lg">
-       <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
+        <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
                 <use xlink:href="#info-fill"/>
             </svg>
@@ -28,7 +28,8 @@
                     utilisateur optimale.</p>
                 <p>Si vous le souhaitez, vous pouvez participer à cette cagnotte afin de me soutenir financièrement
                     dans ce projet.</p>
-                <a class="leetchi-widget-btn" href="https://www.leetchi.com/fr/c/soutien-financement-site-seeiss-com"><img
+                <a class="leetchi-widget-btn"
+                   href="https://www.leetchi.com/fr/c/soutien-financement-site-seeiss-com"><img
                             src="https://asset.leetchi.com/Content/Quenette/img/culture/fr/view/wizard/embed-btn.png?v=c329012b596c40ec8c480af43a4f7b7f"></a>
 
             </div>
@@ -39,13 +40,13 @@
 
             <img id="iss" src="{{ asset('/images/iss.webp') }}" alt="">
 
-            <section class="px-3">
+            <section class="px-3" id="passages">
                 <h2 class="h3">{% trans %}passesText{% endtrans %}</h2>
 
                 <form action="{{ path('home') }}" method="POST" id="formLocation">
                     <div class="input-group">
                         <input id="location" class="form-control" type="text" size="50"
-                               placeholder="{% if info.city %}{{ info.city }} {% else %} Location{% endif %}"/>
+                               placeholder="{% if info.city %}{{ info.city }} {% else %} {% trans %}city{% endtrans %}{% endif %}" value=""/>
                         <div class="input-group-append">
                             <span class="input-group-text"><button type="button" class="btn btn-secondary"
                                                                    id="localisation">Localisation</button></span>
@@ -171,15 +172,33 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+
         $(document).ready(function () {
             {% if info.city %}
             window.history.pushState("", "", '/?city={{ info.city }}');
             {% else %}
             window.history.pushState("", "", '/');
             {% endif %}
+            {% if info.city %}
+            //set placeholder value of input
 
 
+
+
+            $('#location').attr('placeholder', "{{ info.city }}");
+            {% endif %}
         });
+
+
+
+        window.onload = function () {
+            {% if isPostRequest %}
+            let anchor = document.querySelector('#passages');
+            anchor.scrollIntoView({behavior: 'smooth'});
+            {% endif %}
+        }
+
+
 
         $('#localisation').on('click', function () {
             if ("geolocation" in navigator) {
