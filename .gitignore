@@ -16,3 +16,6 @@
 ###< symfony/phpunit-bridge ###
 
 /docker
+
+### fichiers php storm idea
+.idea

@@ -1,7 +1,7 @@
 {% set route_name = app.request.attributes.get('_route') %}
 <header>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container-lg">
             <a class="navbar-brand ms-1" href="{{ path('home') }}"> <img
                         src="{{ asset('images/international-space-station-ico.png') }}" alt="" width="30" height="24"
@@ -62,7 +62,7 @@
         </div>
     </nav>
 
-    <div class="logo mt-5">
+    <div class="logo mt-3">
         <h1>See ISS</h1>
         <p>{% trans %}by {% endtrans %} Baptiste BUVRON</p>
     </div>
