@@ -83,9 +83,7 @@ class HomeController extends AbstractController
     public function live(): Response
     {
         $location = $this->locationService->getLatLonCity();
-        $lat = $location->getLatitude();
-        $lon = $location->getLongitude();
-
+        $lat = $location->getLatitude
         // Only once per day
         $timeZone = TimezoneMapper::latLngToTimezoneString($lat, $lon);
         date_default_timezone_set($timeZone);
