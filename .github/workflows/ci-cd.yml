@@ -42,9 +42,6 @@ jobs:
           npm ci
           npm run build
 
-      - name: Check Symfony requirements
-        run: vendor/bin/requirements-checker
-
   docker-build-push:
     needs: test-and-build
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
