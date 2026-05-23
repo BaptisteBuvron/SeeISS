@@ -34,3 +34,80 @@ messageRealTime2: During "loss of signal" periods, viewers will see a blue scree
 issVisible: The International Space Station is regularly visible to the naked eye.
 visiblePoint: It appears as a more or less luminous point.
 timeIss: This website indicates the ISS passages and their direction of arrival and ending.
+siteDescription: Track the ISS live and predict its visible passes from your location.
+heroTitle: Track <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-400 dark:via-purple-400 dark:to-indigo-300">the ISS live</span> and spot it from your home
+heroSubtitle: Accurately predict the timing, brightness, and path of visible passes over your location in real time.
+livePromoTitle: Live ISS Tracker
+livePromoDesc: Watch Earth live from the space station and track its trajectory in real time.
+livePromoBtn: Launch Live Tracker
+
+# Wiki Pages
+spaceWiki: Space Wiki
+astroNationality: "Astronaut nationality:"
+astroExplore: Explore their flight history, professional biography, and affiliate agency details.
+biography: Biography
+associatedLaunches: Associated Launches
+launchInfo: Launch Info
+noLaunches: No associated launches found.
+personalFile: Personal File
+nationality: Nationality
+status: Status
+dateOfBirth: Date of Birth
+dateOfDeath: Date of Death
+parentAgency: Parent Agency
+webResources: Web Resources
+readWikipedia: Read Wikipedia Article
+followTwitter: Follow on Twitter
+followInstagram: Follow on Instagram
+
+# Agency Page
+spaceAgency: Space Agency
+agencyOverview: Agency Overview
+rocketFleet: Rocket Fleet
+spacecraftStages: Spacecraft Stages
+agencyProfile: Agency Profile
+administrator: Administrator
+countryCode: Country Code
+foundingYear: Founding Year
+launcherModels: Launcher Models
+spacecraftConfigs: Spacecraft Configurations
+officialLinks: Official Links
+officialWebsite: Official Agency Website
+abbreviatedAs: "Commonly abbreviated as"
+officialProfile: Official exploration & aerospace profile.
+
+# Launch Page
+missionLaunch: Mission Launch
+launcherLabel: "Launcher:"
+windowScheduled: Launch window scheduled for
+launchServiceProvider: Launch Service Provider
+viewProviderAgency: View Provider Agency
+spacecraftPayload: Spacecraft Payload
+missionCrew: Mission Crew
+crewMember: Crew Member
+profile: Profile
+launchManifest: Launch Manifest
+payloadStage: Payload Stage
+windowStart: Window Start
+launcherSpecs: Launcher Specifications
+length: Length
+diameter: Diameter
+maxStages: Max Stages
+successfulFlights: Successful Flights
+
+# Spacestation Page
+missionDescription: Mission Description
+dockedVehicles: Docked Vehicles
+specifications: Specifications
+orbit: Orbit
+mass: Mass
+dimensions: Dimensions
+volume: Volume
+onboardCrew: Onboard Crew
+founded: Founded
+partners: Partners
+activeCrew: Active Crew
+noVehiclesDocked: No vehicles are currently docked.
+noAstronautsOnboard: No astronauts currently onboard.
+port: Port
+docked: Docked

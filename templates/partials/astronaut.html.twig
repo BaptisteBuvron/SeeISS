@@ -1,82 +1,71 @@
-<div class="card" style="margin:1em; width:100%">
-    <div class="row">
-        <div class="col-md-4">
-
-            <div class=""
-                 style="overflow: hidden; text-align: center;">
-                <img src="{{ astronaut.profileImg }}"
-                     style="width: 70%">
-            </div>
+<div class="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800/80 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-indigo-500/30 dark:hover:border-indigo-400/30 transition-all duration-300 flex flex-col h-full group">
+    <!-- Image Header with gradient overlay -->
+    <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-950">
+        <img src="{{ astronaut.profileImg }}" 
+             alt="{{ astronaut.name }}" 
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        
+        <!-- Status Indicator Badge -->
+        <div class="absolute top-3 right-3 z-10">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {% if astronaut.status == 'Active' %} bg-emerald-500/90 text-white {% else %} bg-slate-500/90 text-white {% endif %} shadow-sm">
+                {{ astronaut.status }}
+            </span>
         </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h3 class="card-title"
-                    style="text-align:center;">{{ astronaut.name }}</h3>
-                <div class="card-text" style="text-align:left;">
-                    <div class="row">
-                        <h6 class="text-center w-100">{{ astronaut.role }}</h6>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md label-value">
-                            <p>
-                                Nationality
-                                <span> {{ astronaut.nationality }}</span>
-                            </p>
-                            <p>
-                                Date Of Birth
-                                <span>{{ astronaut.dateOfBirth | date }}</span>
-                            </p>
+        
+        <!-- Role overlay at the bottom -->
+        {% if astronaut.role %}
+            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-4 pt-12 z-10">
+                <span class="text-[10px] font-bold text-indigo-300 dark:text-indigo-400 uppercase tracking-widest block">
+                    {{ astronaut.role }}
+                </span>
+            </div>
+        {% endif %}
+    </div>
 
-                        </div>
-                        <div class="col-md label-value">
-                            <p>
-                                Status
-                                <span>{{ astronaut.status }}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="d-flex flex-row flex-wrap"
-                         style="margin-top: 1.25rem;">
+    <!-- Content Details -->
+    <div class="p-4 flex-grow flex flex-col justify-between space-y-4 text-slate-800 dark:text-gray-100">
+        <div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-650 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
+                {{ astronaut.name }}
+            </h4>
+            <span class="text-xs text-slate-500 dark:text-gray-400 mt-1 block">
+                <i class="fas fa-flag mr-1 text-xs opacity-70"></i>{{ astronaut.nationality }}
+            </span>
+        </div>
 
-                        {% if astronaut.twitter %}
-
-                            <a class="btn btn-secondary me-3 mt-1" style="background-color: #55acee;" href="{{ astronaut.twitter }}" role="button"
-                            ><i class="fab fa-twitter me-2"></i>Twitter</a
-                            >
-
-
-
-
-                        {% endif %}
-                        {% if astronaut.instagram %}
-
-                            <a class="btn btn-secondary me-3 mt-1" style="background-color: #ac2bac;" href="{{ astronaut.instagram }}" role="button"
-                            ><i class="fab fa-instagram me-2"></i
-                                >Instagram</a>
-
-
-
-                        {% endif %}
-                        {% if astronaut.wiki %}
-
-                            <a class="btn btn-secondary me-3 mt-1" style="background-color: #565e64;" href="{{ astronaut.wiki }}" role="button"
-                            ><i class="fab fa-wikipedia-w me-2"></i
-                                >Wikipedia</a>
-
-                        {% endif %}
-                        <a href="{{ path('agency', {'nameSlug' : astronaut.agency.name | slug | lower, 'idApi': astronaut.agency.idApi }) }}}"
-                           class="btn btn-primary me-3 mt-1" role="button">
-                            <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
+        <div class="space-y-3">
+            <hr class="border-slate-100 dark:border-gray-800/80">
+            
+            <!-- Quick Actions -->
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center space-x-2">
+                    {% if astronaut.twitter %}
+                        <a href="{{ astronaut.twitter }}" target="_blank" rel="noopener" class="text-slate-400 hover:text-[#1DA1F2] transition-colors" title="Twitter">
+                            <i class="fab fa-twitter text-sm"></i>
                         </a>
-
-                        <a href="{{ path('astronaut', {'nameAstro' : astronaut.name | slug | lower ,'idApi': astronaut.idApi}) }}"
-                           class="btn btn-primary me-3 mt-1" role="button">
-                            <i class="fas fa-info-circle me-2"></i><span class="ms-1">More info</span>
+                    {% endif %}
+                    {% if astronaut.instagram %}
+                        <a href="{{ astronaut.instagram }}" target="_blank" rel="noopener" class="text-slate-400 hover:text-[#E1306C] transition-colors" title="Instagram">
+                            <i class="fab fa-instagram text-sm"></i>
                         </a>
-
-                    </div>
+                    {% endif %}
+                    {% if astronaut.wiki %}
+                        <a href="{{ astronaut.wiki }}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-650 dark:hover:text-white transition-colors" title="Wikipedia">
+                            <i class="fab fa-wikipedia-w text-xs"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="flex items-center space-x-1.5">
+                    <a href="{{ path('agency', {'nameSlug' : astronaut.agency.name | slug | lower, 'idApi': astronaut.agency.idApi }) }}" 
+                       class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 dark:bg-gray-800 text-slate-600 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-650 dark:hover:text-indigo-400 transition-all border border-slate-200/50 dark:border-gray-700/50" 
+                       title="{{ astronaut.agency.name }}">
+                        Agency
+                    </a>
+                    <a href="{{ path('astronaut', {'nameAstro' : astronaut.name | slug | lower ,'idApi': astronaut.idApi}) }}" 
+                       class="text-[10px] font-bold px-2 py-1 rounded bg-indigo-650 hover:bg-indigo-500 text-white transition-all shadow-sm">
+                        Bio
+                    </a>
                 </div>
             </div>
         </div>

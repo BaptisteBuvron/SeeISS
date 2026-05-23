@@ -28,20 +28,13 @@ class GetLocationService
      * @var HttpClientInterface
      */
     private HttpClientInterface $client;
-    /**
-     * @var SessionInterface
-     */
-    private SessionInterface $session;
 
     public function __construct(
         RequestStack        $requestStack,
-        HttpClientInterface $client,
-        SessionInterface    $session
-    )
-    {
+        HttpClientInterface $client
+    ) {
         $this->requestStack = $requestStack;
         $this->client = $client;
-        $this->session = $session;
     }
 
 
@@ -53,6 +46,7 @@ class GetLocationService
     public function getLatLonCity(): Location
     {
         $request = $this->requestStack->getCurrentRequest();
+        $session = $this->requestStack->getSession();
 
         //On regarde les valeurs en post
         if ($request->isMethod('POST') && !is_null($request->get('lat')) && !is_null($request->get('lon')) && !is_null($request->get('city'))) {
@@ -61,11 +55,21 @@ class GetLocationService
             $cityName = $request->get('city');
 
             $location = new Location($lat, $lon, $cityName);
-            $this->session->set('location', $location);
+            $session->set('location', $location);
             return $location;
         }
 
         //On regarde les valeurs en GET.
+        if (!is_null($request->get('lat')) && !is_null($request->get('lon')) && !is_null($request->get('city'))) {
+            $lat = (float) $request->get('lat');
+            $lon = (float) $request->get('lon');
+            $cityName = $request->get('city');
+
+            $location = new Location($lat, $lon, $cityName);
+            $session->set('location', $location);
+            return $location;
+        }
+
         if (!is_null($request->get('city'))) {
             $location = $this->callApiCity((string)($request->get('city')));
             if (!is_null($location)) {
@@ -74,8 +78,8 @@ class GetLocationService
         }
 
         //On regarde les valeurs en session
-        if (!is_null($this->session->get('location'))) {
-            return $this->session->get('location');
+        if (!is_null($session->get('location'))) {
+            return $session->get('location');
         }
         return new Location(48.0, 2.33, "Paris");
     }
@@ -95,7 +99,7 @@ class GetLocationService
             $lon = (float) $cityInfo['lon'];
             $cityName = $cityInfo['display_name'];
             $location = new Location($lat,$lon, $cityName);
-            $this->session->set('location', $location);
+            $this->requestStack->getSession()->set('location', $location);
         }
         return $location;
 

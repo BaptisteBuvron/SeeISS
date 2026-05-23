@@ -1,140 +1,205 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    SeeIss Live
-{% endblock %}
+{% block title %}SeeISS - Live ISS Tracker{% endblock %}
 
 {% block body %}
-    <div class="container-lg">
-
-
-        <main class="p-4">
-            <h2 class="text-align">{% trans %}positionIss{% endtrans %}</h2>
-            <div style="height: 500px" id="map"></div>
-
-            <h2>{% trans %}cameraIss{% endtrans %}</h2>
-            <div class="row">
-                <div class="col-xl mb-4">
-                    <div class="ratio ratio-16x9">
-                        <iframe src="//www.ustream.tv/embed/9408562?html5ui" scrolling="no" allowfullscreen=""
-                                webkitallowfullscreen="" style="border: 0 none transparent;" width="480" height="270"
-                                frameborder="0"></iframe>
-                    </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="space-y-6">
+        
+        <!-- Live HUD Status / Tracker Panel -->
+        <div class="bg-white/80 dark:bg-gray-900/60 backdrop-blur-md border border-slate-250 dark:border-gray-800/80 rounded-2xl p-6 shadow-xl space-y-4 text-slate-800 dark:text-gray-100">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 dark:border-gray-800 pb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        <span>{% trans %}positionIss{% endtrans %}</span>
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-gray-400 mt-1">Real-time coordinates and trajectory of the space station</p>
                 </div>
-                <div class="col-xl align-self-center">
-                    <p class="mt-3" style="text-align: justify">{% trans %}messageRealTime{% endtrans %}</p>
-
-                    <p class="mt-3" style="text-align: justify">{% trans %}messageRealTime2{% endtrans %}</p>
-                    <figcaption class="blockquote-footer">
-                        From <a href="https://www.nasa.gov/multimedia/nasatv/iss_ustream.html">Nasa</a>
-                    </figcaption>
-
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <span class="px-2.5 py-1 rounded bg-red-550/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 font-semibold tracking-wide">
+                        ● Past Orbit (45m)
+                    </span>
+                    <span class="px-2.5 py-1 rounded bg-blue-550/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 font-semibold tracking-wide">
+                        ● Future Orbit (90m)
+                    </span>
                 </div>
-
             </div>
 
+            <!-- Stats HUD Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-4 rounded-xl border border-slate-200 dark:border-gray-800/50">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-400 mb-1">Latitude</span>
+                    <span id="hud-lat" class="text-xl font-bold text-slate-800 dark:text-white font-mono">--</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-4 rounded-xl border border-slate-200 dark:border-gray-800/50">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-400 mb-1">Longitude</span>
+                    <span id="hud-lon" class="text-xl font-bold text-slate-800 dark:text-white font-mono">--</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-4 rounded-xl border border-slate-200 dark:border-gray-800/50">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-400 mb-1">Altitude</span>
+                    <span class="text-xl font-bold text-slate-800 dark:text-white font-mono">~420 km</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-4 rounded-xl border border-slate-200 dark:border-gray-800/50">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-400 mb-1">Velocity</span>
+                    <span class="text-xl font-bold text-slate-800 dark:text-white font-mono">~27,600 km/h</span>
+                </div>
+            </div>
 
-        </main>
+            <!-- Map Container -->
+            <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-gray-850 shadow-inner">
+                <div style="height: 500px" id="map" class="w-full z-10"></div>
+            </div>
+        </div>
+
+        <!-- Video & Context Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- ISS HD Livestream -->
+            <div class="lg:col-span-8 bg-white/80 dark:bg-gray-900/60 backdrop-blur-md border border-slate-250 dark:border-gray-800/80 rounded-2xl p-6 shadow-xl space-y-4">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-gray-800 pb-3">
+                    {% trans %}cameraIss{% endtrans %}
+                </h2>
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-250 dark:border-gray-800/80 bg-black">
+                    <iframe src="//www.ustream.tv/embed/9408562?html5ui" 
+                            scrolling="no" 
+                            allowfullscreen="" 
+                            webkitallowfullscreen="" 
+                            style="border: 0;"
+                            class="absolute inset-0 w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Context Info Card -->
+            <div class="lg:col-span-4 bg-slate-100/60 dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800/40 rounded-2xl p-6 text-sm text-slate-650 dark:text-gray-350 space-y-4 leading-relaxed">
+                <h3 class="font-semibold text-indigo-650 dark:text-indigo-400 text-sm">
+                    Live Video Info
+                </h3>
+                <p class="text-sm text-slate-600 dark:text-gray-400">
+                    {% trans %}messageRealTime{% endtrans %}
+                </p>
+                <p class="text-sm text-slate-600 dark:text-gray-400">
+                    {% trans %}messageRealTime2{% endtrans %}
+                </p>
+                
+                <div class="pt-2 border-t border-slate-200 dark:border-gray-850">
+                    <figcaption class="text-xs text-slate-450 dark:text-gray-500">
+                        Provided by <a href="https://www.nasa.gov/multimedia/nasatv/iss_ustream.html" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">NASA</a>
+                    </figcaption>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
 {% endblock %}
-
-
 
 {% block javascripts %}
     {{ parent() }}
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const issLatLon = {{ latLon | json_encode | raw }};
+            
+            // Current position index (around 1/3 of the array corresponds to "now")
+            let indexLatLon = Math.trunc(issLatLon.length / 3);
 
-        var issLatLon = {{ latLon | json_encode | raw }};
+            const updateHud = (lat, lon) => {
+                document.getElementById('hud-lat').textContent = `${lat.toFixed(4)}°`;
+                document.getElementById('hud-lon').textContent = `${lon.toFixed(4)}°`;
+            };
 
-        //Get the index of the next location of the ISS, were is the iss now.
-        var indexLatLon = Math.trunc(issLatLon.length / 3);
+            const currentPoint = issLatLon[indexLatLon];
+            updateHud(currentPoint.lat, currentPoint.lon);
 
-        //Create the map
-        var map = L.map('map',
-            {
-                'worldCopyJump': true
-            }
-        ).setView([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], 2);
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            minZoom: 1,
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'pk.eyJ1Ijoic2VlaXNzIiwiYSI6ImNrZ3o2ZXkyejBsNGMyc252cGpncWYzenoifQ.hGTn1d_CBTHKYaRMpGrIwg'
-        }).addTo(map);
-        L.terminator().addTo(map)
+            // Create Map (Dynamic theme-based tile layer)
+            const map = L.map('map', {
+                'worldCopyJump': true,
+                'minZoom': 1,
+                'maxZoom': 10
+            }).setView([currentPoint.lat, currentPoint.lon], 3);
 
-        //Set the seeiss mark
-        var p = L.control({position: 'bottomleft'});
-        p.onAdd = function (map) {
-            var div = L.DomUtil.create('h1');
-            div.innerHTML = "www.seeiss.com";
-            div.style.color = "grey";
-            return div;
-        }
-        p.addTo(map);
+            const isDarkTheme = () => document.documentElement.classList.contains('dark');
+            const getTileUrl = () => {
+                return isDarkTheme() 
+                    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+            };
 
+            let tileLayer = L.tileLayer(getTileUrl(), {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd'
+            }).addTo(map);
 
+            // Listen for theme changes dynamically
+            const observer = new MutationObserver(() => {
+                tileLayer.setUrl(getTileUrl());
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-        var indexLatLonPrint = 0;
-        var issLatLonMap = [];
-        var lastLon = null;
-        var color;
+            // Add Day/Night Terminator
+            L.terminator().addTo(map);
 
-        //Print the line of the location of the iss. Blue line are the next passes.
-        issLatLon.forEach(function (e) {
-            //for the past passages, set the color in red, else in blue
-            if (indexLatLonPrint != null && indexLatLonPrint <= indexLatLon) {
-                color = 'red';
-            } else {
-                color = 'blue';
-            }
+            // Drawing path lines
+            let indexLatLonPrint = 0;
+            let issLatLonMap = [];
+            let lastLon = null;
+            let color;
 
-            //Check we have to change the side of the map, so if the last lon is > of the actual lon
-            if ((lastLon != null && lastLon > e['lon']) || (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon)) {
-                L.polyline(issLatLonMap, {color: color}).addTo(map);
-                issLatLonMap = [];
-                if (indexLatLonPrint != null && indexLatLonPrint >= indexLatLon) {
-                    indexLatLonPrint = null;
+            issLatLon.forEach((e) => {
+                if (indexLatLonPrint !== null && indexLatLonPrint <= indexLatLon) {
+                    color = '#f87171'; // red-400 (past)
+                } else {
+                    color = '#60a5fa'; // blue-400 (future)
                 }
-            }
 
-            issLatLonMap.push([e['lat'], e['lon']]);
-            lastLon = e['lon'];
-            if (indexLatLonPrint != null) {
-                indexLatLonPrint++;
-            }
+                if ((lastLon !== null && lastLon > e.lon) || (indexLatLonPrint !== null && indexLatLonPrint >= indexLatLon)) {
+                    L.polyline(issLatLonMap, {color: color, weight: 3, opacity: 0.75}).addTo(map);
+                    issLatLonMap = [];
+                    if (indexLatLonPrint !== null && indexLatLonPrint >= indexLatLon) {
+                        indexLatLonPrint = null;
+                    }
+                }
+
+                issLatLonMap.push([e.lat, e.lon]);
+                lastLon = e.lon;
+                if (indexLatLonPrint !== null) {
+                    indexLatLonPrint++;
+                }
+            });
+
+            L.polyline(issLatLonMap, {color: '#60a5fa', weight: 3, opacity: 0.75}).addTo(map);
+
+            // Add ISS Marker Icon
+            const issIcon = L.icon({
+                iconUrl: '{{ asset('/images/international-space-station.webp') }}',
+                iconSize: [80, 32],
+                iconAnchor: [40, 16]
+            });
+
+            let marker = L.marker([currentPoint.lat, currentPoint.lon], {icon: issIcon}).addTo(map);
+
+            // Update ISS marker and HUD stats every 10 seconds
+            setInterval(() => {
+                if ((indexLatLon + 1) >= issLatLon.length) {
+                    document.location.reload();
+                    return;
+                }
+                indexLatLon++;
+                const newPoint = issLatLon[indexLatLon];
+                
+                // Move marker
+                map.removeLayer(marker);
+                marker = L.marker([newPoint.lat, newPoint.lon], {icon: issIcon}).addTo(map);
+                
+                // Smooth pan to new position
+                map.panTo([newPoint.lat, newPoint.lon]);
+                
+                // Update coordinates
+                updateHud(newPoint.lat, newPoint.lon);
+            }, 10000);
         });
-
-        L.polyline(issLatLonMap, {color: 'blue'}).addTo(map);
-
-
-
-        var homeIcon = L.icon({
-            iconUrl: '{{ asset('/images/international-space-station.webp') }}',
-            iconSize: [100, 40]
-        });
-
-        //Add the marker with the picture of the iss
-        var marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
-        map.addLayer(marker);
-
-
-        //Each 10 seconds update the marker of the iss
-        setInterval(function () {
-            if ((indexLatLon -1) >= issLatLon.length){
-                document.location.reload();
-            }
-            indexLatLon++;
-            map.removeLayer(marker);
-            marker = L.marker([issLatLon[indexLatLon]['lat'], issLatLon[indexLatLon]['lon']], {icon: homeIcon});
-            map.addLayer(marker);
-
-        }, 10000);
-
-
     </script>
-
 {% endblock %}

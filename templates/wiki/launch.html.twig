@@ -1,253 +1,247 @@
 {% extends 'base.html.twig' %}
+{% block title %}SeeISS - Launch: {{ launch.name }}{% endblock %}
 
 {% block body %}
-    <div class="container-lg">
-        <div class="main">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-slate-800 dark:text-gray-250 wiki-passage-container">
+    
+    <!-- Page Header (Airy & Unboxed) -->
+    <div class="space-y-4 mb-8">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest">
+                <i class="fas fa-rocket mr-1.5"></i>{% trans %}missionLaunch{% endtrans %}
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 text-slate-600 dark:text-gray-400">
+                {{ launch.status }}
+            </span>
+            <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' : launch.launchServiceProvider.idApi}) }}"
+               class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-400">
+                {{ launch.launchServiceProvider.name }}
+            </a>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
+            <div class="space-y-2">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    {{ launch.name }}
+                </h1>
+                <p class="text-slate-500 dark:text-gray-400 text-sm sm:text-base leading-relaxed">
+                    {% trans %}launcherLabel{% endtrans %} <strong class="text-slate-700 dark:text-gray-300 font-semibold">{{ launch.launcher.name }}</strong>. {% trans %}windowScheduled{% endtrans %} <span class="font-mono text-indigo-600 dark:text-indigo-400">{{ launch.windowStart | date('Y-m-d H:i') }} UTC</span>.
+                </p>
+            </div>
+        </div>
+    </div>
 
-            <div class="row">
+    <!-- Main Hero Block (Image or Video) -->
+    <div class="w-full mb-12">
+        {% if launch.video and launch.video.url %}
+            <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-slate-250 dark:border-gray-800 shadow-sm">
+                <iframe src="{{ launch.video.url | iframe }}" 
+                        title="YouTube Webcast" 
+                        style="border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                        class="absolute inset-0 w-full h-full">
+                </iframe>
+            </div>
+        {% else %}
+            <div class="aspect-[21/9] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-200/60 dark:border-gray-800/80 shadow-sm">
+                <img src="{{ launch.image }}" 
+                     alt="{{ launch.name }}" 
+                     class="w-full h-full object-cover">
+            </div>
+        {% endif %}
+    </div>
 
-
-                <div class="col-md">
-
-                    <div class="card" style="margin-bottom:1em;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="d-md-block" style="height:100%;width:100%;">
-
-
-                                    <div style="overflow: hidden; text-align: center;">
-                                        <img src="{{ launch.image }}" style="width: 100%;">
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <h3 class="card-title"
-                                            style="text-align:center;margin:0;">{{ launch.name }}</h3>
-                                        <p class="btn bg-success ms-3">{{ launch.status }}</p>
-
-
-                                    </div>
-                                    <div class="card-text"
-                                         style="text-align:left;margin-top:1.25rem;max-height:10rem;overflow-y:auto;">
-                                        <p>{{ launch.launcher.description }}</p>
-                                    </div>
-                                    <div class="row d-flex justify-content-center"
-                                         style="text-align:center;margin-bottom:1em;">
-                                        <h5>{{ launch.windowStart | date }}</h5>
-                                    </div>
-                                </div>
-                            </div>
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left: Service Provider, Spacecraft/Payload & Crew -->
+        <div class="lg:col-span-8 space-y-12">
+            
+            <!-- Launch Service Provider details -->
+            <div class="space-y-4 wiki-passage-container">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}launchServiceProvider{% endtrans %}
+                </h2>
+                
+                <div class="flex flex-col sm:flex-row gap-6 items-start">
+                    {% if launch.launchServiceProvider.logoUrl %}
+                        <div class="w-16 h-16 bg-white dark:bg-gray-950 p-2 rounded-xl border border-slate-200 dark:border-gray-800 flex items-center justify-center flex-shrink-0">
+                            <img src="{{ launch.launchServiceProvider.logoUrl }}" 
+                                 alt="" 
+                                 class="max-w-full max-h-full object-contain filter dark:brightness-110">
                         </div>
-                    </div>
-
-                    <div class="ratio ratio-16x9">
-                        <iframe width="560" height="315" src="{{ launch.video.url | iframe }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-
-                    <div class="card" style="margin-bottom:1em;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="d-md-flex"
-                                     style="height:100%;width:100%;align-items: center;justify-content: center;">
-                                    {# <div class="d-none d-md-block" style="height:100%;width:100%;background-image: url(https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/media/logo/spacex_logo_20191121063502.png);background-size: contain;background-position: center;background-repeat:no-repeat;">
-                                </div> #}
-                                    <div style="overflow: hidden; padding: 2%; text-align: center;">
-                                        <img src="{{ launch.launchServiceProvider.logoUrl }}" style="width: 80%;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12" style="text-align: center;">
-                                            <h3 class="card-title"
-                                                style="text-align:center;margin:0;">{{ launch.launchServiceProvider.name }}</h3>
-                                        </div>
-                                    </div>
-                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
-                                        <p>{{ launch.launchServiceProvider.description }}</p>
-                                    </div>
-                                    <div class="d-flex flex-row">
-                                        {% if launch.launchServiceProvider.wikiUrl %}
-
-                                            <a class="btn btn-secondary ms-3" style="background-color: #565e64;"
-                                               href="{{ launch.launchServiceProvider.wikiUrl }}" role="button"
-                                            ><i class="fab fa-wikipedia-w me-2"></i
-                                                >Wikipedia</a>
-
-                                        {% endif %}
-                                        <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' : launch.launchServiceProvider.idApi}) }}"
-                                           class="btn btn-primary ms-3" role="button">
-                                            <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-bottom:1em;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="d-md-block" style="height:100%;width:100%;">
-
-                                    <div style="overflow: hidden; text-align: center;">
-                                        <img src="{{ launch.spaceCraft.spaceCraftConfig.imageUrl }}"
-                                             style="width: 100%;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <div class="row" style="margin-bottom:1.25rem;">
-                                        <h3 class="card-title text-center w-100"
-                                            style="margin:0;">{{ launch.spaceCraft.name }}</h3>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md label-value">
-
-                                            <p>
-                                                Launch Crew Count :
-                                                <span>
-                                {{ launch.launchCrew.count }}
-                            </span>
-                                            </p>
-                                        </div>
-                                        <div class="col-md label-value">
-                                            <p>
-                                                Status :
-                                                <span>
-                                {{ launch.status }}
-                            </span>
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    {% if launch.spaceCraft.spaceCraftConfig.wikiLink %}
-
-                                        <a class="btn btn-secondary ms-3" style="background-color: #565e64;"
-                                           href="{{ launch.spaceCraft.spaceCraftConfig.wikiLink }}" role="button"
-                                        ><i class="fab fa-wikipedia-w me-2"></i
-                                            >Wikipedia</a>
-
-                                    {% endif %}
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if launch.launchCrew.count > 0 %}
-
-                    <div class="row">
-                        <div class="card w-100" style="margin-bottom:1em;">
-                            <div class="card-body">
-                                <h3 class="card-title" style="text-align:center;margin:0;">Crew</h3>
-                                <div class="row crew-card-deck" style="justify-content: center">
-
-                                    {% for astronaut in launch.launchCrew %}
-                                        {% include 'partials/astronaut.html.twig' %}
-                                    {% endfor %}
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     {% endif %}
-                    <div class="card" style="margin-bottom:1em;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="d-md-block" style="height:100%;width:100%;">
-
-                                    <div style="overflow: hidden; text-align: center;">
-                                        <img src="{{ launch.launcher.imageUrl }}" style="width: 100%;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <div class="row" style="margin-bottom:1.25rem;">
-                                        <h3 class="card-title text-center w-100"
-                                            style="margin:0;">{{ launch.launcher.name }}</h3>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md label-value">
-                                            <p>
-                                                Height :
-                                                <span>
-                                 {{ launch.launcher.length }} Meters
-                            </span>
-                                            </p>
-                                            <p>
-                                                Max Stages :
-                                                <span>
-                                {{ launch.launcher.maxStage }}
-                            </span>
-                                            </p>
-                                        </div>
-                                        <div class="col-md label-value">
-                                            <p>
-                                                Diameter :
-                                                <span>
-                                  {{ launch.launcher.diameter }} Meters
-                            </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md label-value">
-                                            <p>
-                                                Launch Success :
-                                                <span>
-                                {{ launch.launcher.successfulLaunches }}
-                            </span>
-                                            </p>
-                                            <p>
-                                                Consecutive Success :
-                                                <span>
-                                {{ launch.launcher.consecutiveSuccessfulLaunches }}
-                            </span>
-                                            </p>
-                                        </div>
-                                        <div class="col-md label-value">
-
-                                            <p>
-                                                Launch Failures :
-                                                <span>
-                                {{ launch.launcher.failedLaunch }}
-                            </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    {% if launch.launchServiceProvider.wikiUrl %}
-
-                                        <a class="btn btn-secondary ms-3" style="background-color: #565e64;"
-                                           href="{{ launch.launchServiceProvider.wikiUrl }}" role="button"
-                                        ><i class="fab fa-wikipedia-w me-2"></i
-                                            >Wikipedia</a>
-
-                                    {% endif %}
-                                </div>
-                            </div>
+                    
+                    <div class="space-y-3 flex-grow">
+                        <div class="text-slate-700 dark:text-gray-300 leading-relaxed text-base font-medium">
+                            {{ launch.launchServiceProvider.description | translate_db(app.request.locale) }}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' : launch.launchServiceProvider.idApi}) }}"
+                               class="inline-flex items-center text-xs font-bold text-indigo-650 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                <span>{% trans %}viewProviderAgency{% endtrans %}</span>
+                                <i class="fas fa-arrow-right text-[10px] ml-1.5"></i>
+                            </a>
+                            {% if launch.launchServiceProvider.wikiUrl %}
+                                <a href="{{ launch.launchServiceProvider.wikiUrl }}" target="_blank" rel="noopener"
+                                   class="inline-flex items-center text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-850/80 border border-slate-200 dark:border-gray-800 px-2.5 py-1.5 rounded-lg">
+                                    <i class="fab fa-wikipedia-w mr-1 text-[10px]"></i>
+                                    <span>Wikipedia</span>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
-
-
                 </div>
+            </div>
 
+            <!-- Spacecraft payload details -->
+            <div class="space-y-4 wiki-passage-container">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}spacecraftPayload{% endtrans %}
+                </h2>
+                
+                <div class="flex flex-col sm:flex-row gap-6 items-start">
+                    {% if launch.spaceCraft.spaceCraftConfig.imageUrl %}
+                        <div class="w-full sm:w-40 aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-gray-800 flex-shrink-0">
+                            <img src="{{ launch.spaceCraft.spaceCraftConfig.imageUrl }}" 
+                                 alt="" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="space-y-3 flex-grow">
+                        <div class="space-y-1">
+                            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+                                {{ launch.spaceCraft.name }}
+                            </h4>
+                            <span class="text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-wide">
+                                {{ launch.spaceCraft.spaceCraftConfig.name }}
+                            </span>
+                        </div>
+                        
+                        <div class="text-slate-700 dark:text-gray-300 leading-relaxed text-base font-medium">
+                            {{ launch.spaceCraft.description | translate_db(app.request.locale) }}
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-gray-400 font-mono pt-1">
+                            <span>Crew: <strong class="text-slate-700 dark:text-gray-300">{{ launch.spaceCraft.spaceCraftConfig.crewCapacity ?: '0' }}</strong></span>
+                            <span>&bull;</span>
+                            <span>{% trans %}status{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300">{{ launch.spaceCraft.status }}</strong></span>
+                        </div>
+
+                        {% if launch.spaceCraft.spaceCraftConfig.wikiLink %}
+                            <div class="pt-1">
+                                <a href="{{ launch.spaceCraft.spaceCraftConfig.wikiLink }}" target="_blank" rel="noopener"
+                                   class="inline-flex items-center text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-850/80 border border-slate-200 dark:border-gray-800 px-2.5 py-1.5 rounded-lg">
+                                    <i class="fab fa-wikipedia-w mr-1 text-[10px]"></i>
+                                    <span>Wikipedia</span>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission Crew List -->
+            {% if launch.launchCrew.count > 0 %}
+                <div class="space-y-6">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                        {% trans %}missionCrew{% endtrans %}
+                    </h2>
+                    
+                    <div class="divide-y divide-slate-150 dark:divide-gray-850">
+                        {% for crewMember in launch.launchCrew %}
+                            <div class="py-4 first:pt-0 last:pb-0 flex items-center justify-between group">
+                                <a href="{{ path('astronaut', {'nameAstro' : crewMember.name | slug | lower ,'idApi': crewMember.idApi}) }}" 
+                                   class="flex items-center space-x-4 text-slate-850 dark:text-gray-200 hover:text-indigo-650 dark:hover:text-indigo-400 transition-colors">
+                                    <div class="w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-gray-800 bg-slate-100 dark:bg-gray-950 flex-shrink-0">
+                                        <img src="{{ crewMember.profileImg }}" alt="" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-base block group-hover:underline text-slate-900 dark:text-white leading-tight">
+                                            {{ crewMember.name }}
+                                        </span>
+                                        <span class="text-[10px] text-slate-500 dark:text-gray-400 uppercase font-semibold tracking-wider block mt-0.5">
+                                            {{ crewMember.role ?: ('crewMember'|trans) }} &bull; {{ crewMember.nationality }}
+                                        </span>
+                                    </div>
+                                </a>
+                                
+                                <a href="{{ path('astronaut', {'nameAstro' : crewMember.name | slug | lower ,'idApi': crewMember.idApi}) }}"
+                                   class="inline-flex items-center text-xs font-bold text-slate-650 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-800/80 border border-slate-200 dark:border-gray-800 px-3 py-1.5 rounded-xl">
+                                    <span>{% trans %}profile{% endtrans %}</span>
+                                    <i class="fas fa-arrow-right text-[9px] ml-1.5 opacity-70"></i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Right Column: Manifest & Launcher Specs -->
+        <div class="lg:col-span-4 space-y-10 lg:sticky lg:top-20">
+            
+            <!-- Launch Manifest -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}launchManifest{% endtrans %}
+                </h3>
+                <div class="divide-y divide-slate-100 dark:divide-gray-850 text-sm">
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}status{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white">{{ launch.status }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}launcherLabel{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.launcher.name }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}payloadStage{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.spaceCraft.name }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}windowStart{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.windowStart | date('Y-m-d H:i') }} UTC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Launcher specs -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}launcherSpecs{% endtrans %}
+                </h3>
+                
+                {% if launch.launcher.imageUrl %}
+                    <div class="aspect-[16/10] rounded-xl overflow-hidden border border-slate-200/60 dark:border-gray-800/80 bg-slate-950">
+                        <img src="{{ launch.launcher.imageUrl }}" alt="" class="w-full h-full object-cover">
+                    </div>
+                {% endif %}
+                
+                <div class="divide-y divide-slate-100 dark:divide-gray-850 text-sm">
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}length{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.launcher.length ? launch.launcher.length ~ ' m' : 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}diameter{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.launcher.diameter ? launch.launcher.diameter ~ ' m' : 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}maxStages{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ launch.launcher.maxStage ?: 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}successfulFlights{% endtrans %}</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-450 font-mono">{{ launch.launcher.successfulLaunches }}</span>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
-
+</div>
 {% endblock %}

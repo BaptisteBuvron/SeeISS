@@ -6,8 +6,13 @@
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
         "@symfony/webpack-encore": "^1.7.0",
+        "@tailwindcss/postcss": "^4.3.0",
+        "autoprefixer": "^10.5.0",
         "core-js": "^3.0.0",
+        "postcss": "^8.5.15",
+        "postcss-loader": "^8.2.1",
         "regenerator-runtime": "^0.13.2",
+        "tailwindcss": "^4.3.0",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",

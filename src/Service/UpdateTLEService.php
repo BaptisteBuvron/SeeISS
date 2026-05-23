@@ -19,7 +19,7 @@ class UpdateTLEService
     }
 
     public function updateIssTleFile() : TwoLineElement{
-        $url = 'http://celestrak.com/NORAD/elements/stations.txt';
+        $url = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle';
         $contents = file_get_contents($url) or die('Could not updated tle get file');
         $contents = explode("\n", $contents);
         $name = trim($contents[0]);

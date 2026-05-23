@@ -1,175 +1,189 @@
 {% extends 'base.html.twig' %}
+{% block title %}SeeISS - Astronaut: {{ astronaut.name }}{% endblock %}
 
 {% block body %}
-
-    <div class="container-lg">
-        <div class="main">
-            <div class="row">
-                <div class="col-md">
-
-                    <div class="card" style="margin-bottom:1em;;">
-                        <div class="row">
-                            <div class="col-md-4">
-
-                                <div style="overflow: hidden; text-align: center;">
-                                    <img src="{{ astronaut.profileImg }}" style="width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h3 class="card-title" style="text-align:center;">{{ astronaut.name }}</h3>
-                                    <div class="card-text" style="text-align:left;">
-                                        <div class="row">
-                                            <h6 class="text-center w-100">{{ astronaut.agency.name }}</h6>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-md">
-                                                <p>
-                                                    Nationality :
-                                                    <span>
-                                    {{ astronaut.nationality }}
-                                </span>
-                                                </p>
-                                                <p>
-                                                    Date Of Birth :
-                                                    <span>
-                                    {{ astronaut.dateOfBirth | date }}
-                                </span>
-                                                </p>
-
-                                            </div>
-                                            <div class="col-md">
-                                                <p>
-                                                    Status :
-                                                    <span>
-                                    {{ astronaut.status }}
-                                </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex flex-row flex-wrap"
-                                             style="margin-top: 1.25rem;">
-
-                                            {% if astronaut.twitter %}
-
-                                                <a class="btn btn-secondary mt-1" style="background-color: #55acee;" href="{{ astronaut.twitter }}" role="button"
-                                                ><i class="fab fa-twitter me-2"></i>Twitter</a
-                                                >
-
-
-
-
-                                            {% endif %}
-                                            {% if astronaut.instagram %}
-
-                                                <a class="btn btn-secondary ms-3 mt-1" style="background-color: #ac2bac;" href="{{ astronaut.instagram }}" role="button"
-                                                ><i class="fab fa-instagram me-2"></i
-                                                    >Instagram</a>
-
-
-
-                                            {% endif %}
-                                            {% if astronaut.wiki %}
-
-                                                <a class="btn btn-secondary ms-3 mt-1" style="background-color: #565e64;" href="{{ astronaut.wiki }}" role="button"
-                                                ><i class="fab fa-wikipedia-w me-2"></i
-                                                    >Wikipedia</a>
-
-                                            {% endif %}
-                                            <a href="{{ path('agency', {'nameSlug' : astronaut.agency.name | slug | lower, 'idApi' : astronaut.agency.idApi}) }}"
-                                               class="btn btn-primary ms-3 mt-1" role="button">
-                                                <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-bottom:1em;;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card-body">
-                                    <h3 class="card-title" style="text-align:center;margin:0">Astronaut Biography</h3>
-                                    <div class="card-text">
-                                        <p class="mt-1" style="text-align: justify">{{ astronaut.bio }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-bottom:1em;;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card-body">
-                                    <h3 class="card-title" style="text-align:center;margin:0">{{ astronaut.name }}'s Launches</h3>
-                                    <div class="card-text" style="text-align:left;margin-top:1.25rem;">
-
-                                        <div class="card" style="">
-                                            {% for launch in astronaut.launches %}
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="d-md-block" style="height:100%;width:100%;">
-
-
-                                                        <div style="overflow: hidden; text-align: center;">
-                                                            <img src="{{ launch.image  }}" style="width: 100%;">
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <div class="card-body">
-                                                        <div class="d-flex">
-                                                                <h3 class="card-title" style="text-align:center;margin:0;">{{ launch.name }}</h3>
-
-                                                        </div>
-                                                        <div class="card-text" style="text-align:center;margin-top:1.25rem;">
-                                                            <h6>{{ launch.launchServiceProvider.name }}<br></h6>
-                                                        </div>
-
-                                                        <div class="row d-flex justify-content-center" style="text-align:center;margin-bottom:1em;;">
-                                                            <h5>{{ launch.windowStart | date }}</h5>
-                                                        </div>
-
-
-                                                        <div class="d-flex flex-row"
-                                                             style="margin-top: 1.25rem">
-
-                                                            <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' :  launch.launchServiceProvider.idApi}) }}"
-                                                               class="btn btn-primary ms-3" role="button">
-                                                                <i class="fas fa-building me-2"></i><span class="ms-1">Agency</span>
-                                                            </a>
-
-
-                                                            <a class="btn btn-primary ms-3"
-                                                               href="/launch/{{ launch.slug }}/{{ launch.idApi }}">
-                                                                <i class="fas fa-rocket me-2"></i><span class="ms-1">Launch</span>
-                                                            </a>
-
-                                                        </div>
-
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-slate-800 dark:text-gray-250 wiki-passage-container">
+    
+    <!-- Page Header (Airy & Unboxed) -->
+    <div class="space-y-4 mb-10">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest">
+                <i class="fas fa-user-astronaut mr-1.5"></i>{{ astronaut.role ?: 'Astronaut' }}
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {% if astronaut.status == 'Active' %} bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 border border-emerald-500/20 {% else %} bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20 {% endif %}">
+                {{ astronaut.status }}
+            </span>
+        </div>
+        
+        <!-- Compact header with inline photo -->
+        <div class="flex flex-col sm:flex-row gap-6 items-start">
+            <!-- Small profile image -->
+            <div class="astronaut-profile-photo rounded-2xl overflow-hidden bg-slate-950 border border-slate-200/60 dark:border-gray-800/80 shadow-sm flex-shrink-0">
+                <img src="{{ astronaut.profileImg }}" 
+                     alt="{{ astronaut.name }}" 
+                     class="w-full h-full object-cover">
+            </div>
+            
+            <div class="space-y-2">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    {{ astronaut.name }}
+                </h1>
+                <p class="text-slate-500 dark:text-gray-400 text-sm sm:text-base max-w-2xl leading-relaxed">
+                    {% trans %}astroNationality{% endtrans %} <strong class="text-slate-700 dark:text-gray-300 font-semibold">{{ astronaut.nationality }}</strong>. {% trans %}astroExplore{% endtrans %}
+                </p>
             </div>
         </div>
     </div>
+
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left: Biography & Flight Log (Editorial Flow) -->
+        <div class="lg:col-span-8 space-y-12">
+            
+            <!-- Biography -->
+            <div class="space-y-4 wiki-passage-container">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}biography{% endtrans %}
+                </h2>
+                <div class="text-slate-700 dark:text-gray-300 leading-relaxed text-base sm:text-lg text-justify whitespace-pre-line font-medium">
+                    {{ astronaut.bio | translate_db(app.request.locale) }}
+                </div>
+            </div>
+
+            <!-- Associated Launches (Line separated list) -->
+            <div class="space-y-6">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}associatedLaunches{% endtrans %}
+                </h2>
+                <div class="divide-y divide-slate-150 dark:divide-gray-850">
+                    {% for launch in astronaut.launches %}
+                        <div class="py-6 first:pt-0 last:pb-0 flex flex-col sm:flex-row gap-6 items-start justify-between group">
+                            <div class="flex gap-4 items-start">
+                                <!-- Launch image thumbnail -->
+                                <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-gray-900 border border-slate-200/60 dark:border-gray-800 flex-shrink-0">
+                                    <img src="{{ launch.image }}" 
+                                         alt="" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-650 dark:group-hover:text-indigo-400 transition-colors">
+                                        {{ launch.name }}
+                                    </h4>
+                                    <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-gray-400">
+                                        <a href="{{ path('agency', {'nameSlug' : launch.launchServiceProvider.name | slug | lower, 'idApi' : launch.launchServiceProvider.idApi}) }}"
+                                           class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+                                            {{ launch.launchServiceProvider.name }}
+                                        </a>
+                                        <span>&bull;</span>
+                                        <span class="font-mono">{{ launch.windowStart | date('Y-m-d H:i') }} UTC</span>
+                                        <span>&bull;</span>
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide bg-slate-100 dark:bg-gray-900 border border-slate-200 dark:border-gray-800">
+                                            {{ launch.status }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action button Link -->
+                            <a href="{{ path('launch', {'slug' : launch.slug, 'idApi': launch.idApi}) }}"
+                               class="inline-flex items-center text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-100 hover:bg-slate-200 dark:bg-gray-900 dark:hover:bg-gray-800/80 border border-slate-200 dark:border-gray-800 px-3.5 py-2 rounded-xl">
+                                <span>{% trans %}launchInfo{% endtrans %}</span>
+                                <i class="fas fa-arrow-right text-[10px] ml-1.5 opacity-70"></i>
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-slate-500 dark:text-gray-500 py-4">{% trans %}noLaunches{% endtrans %}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right: Personal File, Parent Agency & Web Resources (Clean Editorial Lists) -->
+        <div class="lg:col-span-4 space-y-10 lg:sticky lg:top-20">
+            
+            <!-- Personal File -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}personalFile{% endtrans %}
+                </h3>
+                <div class="divide-y divide-slate-100 dark:divide-gray-850 text-sm">
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}nationality{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white">{{ astronaut.nationality }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}status{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white">{{ astronaut.status }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}dateOfBirth{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ astronaut.dateOfBirth | date('Y-m-d') }}</span>
+                    </div>
+                    {% if astronaut.dateOfDeath %}
+                        <div class="flex justify-between py-3">
+                            <span class="text-red-500 dark:text-red-400">{% trans %}dateOfDeath{% endtrans %}</span>
+                            <span class="font-bold text-red-650 dark:text-red-400 font-mono">{{ astronaut.dateOfDeath | date('Y-m-d') }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Parent Agency Info -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}parentAgency{% endtrans %}
+                </h3>
+                <div class="flex items-center gap-3 py-1">
+                    {% if astronaut.agency.logoUrl %}
+                        <div class="w-10 h-10 bg-slate-50 dark:bg-gray-950 p-1.5 rounded-xl border border-slate-200 dark:border-gray-800 flex items-center justify-center flex-shrink-0">
+                            <img src="{{ astronaut.agency.logoUrl }}" alt="" class="max-w-full max-h-full object-contain filter dark:brightness-110">
+                        </div>
+                    {% endif %}
+                    <div>
+                        <a href="{{ path('agency', {'nameSlug' : astronaut.agency.name | slug | lower, 'idApi' : astronaut.agency.idApi }) }}" 
+                           class="text-sm font-bold text-slate-900 dark:text-white block hover:underline leading-snug">
+                            {{ astronaut.agency.name }}
+                        </a>
+                        <span class="text-[10px] font-bold text-slate-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 block">
+                            {{ astronaut.agency.type }} &bull; {{ astronaut.agency.countryCode }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- External Resources -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}webResources{% endtrans %}
+                </h3>
+                <div class="flex flex-col gap-2.5">
+                    {% if astronaut.wiki %}
+                        <a href="{{ astronaut.wiki }}" target="_blank" rel="noopener" 
+                           class="inline-flex items-center space-x-2 bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-850/80 border border-slate-200 dark:border-gray-800 px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold text-slate-700 dark:text-gray-300">
+                            <i class="fab fa-wikipedia-w text-indigo-600 dark:text-indigo-400 text-sm"></i>
+                            <span>{% trans %}readWikipedia{% endtrans %}</span>
+                        </a>
+                    {% endif %}
+                    {% if astronaut.twitter %}
+                        <a href="{{ astronaut.twitter }}" target="_blank" rel="noopener" 
+                           class="inline-flex items-center space-x-2 bg-slate-50 hover:bg-[#1DA1F2]/10 dark:bg-gray-900 dark:hover:bg-[#1DA1F2]/10 border border-slate-200 dark:border-gray-800 px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold text-slate-700 dark:text-[#1DA1F2]">
+                            <i class="fab fa-twitter text-sm"></i>
+                            <span>{% trans %}followTwitter{% endtrans %}</span>
+                        </a>
+                    {% endif %}
+                    {% if astronaut.instagram %}
+                        <a href="{{ astronaut.instagram }}" target="_blank" rel="noopener" 
+                           class="inline-flex items-center space-x-2 bg-slate-50 hover:bg-[#E1306C]/10 dark:bg-gray-900 dark:hover:bg-[#E1306C]/10 border border-slate-200 dark:border-gray-800 px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold text-slate-700 dark:text-[#E1306C]">
+                            <i class="fab fa-instagram text-sm"></i>
+                            <span>{% trans %}followInstagram{% endtrans %}</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

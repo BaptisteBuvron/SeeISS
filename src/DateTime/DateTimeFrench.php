@@ -3,7 +3,8 @@
 namespace App\DateTime;
 
 class DateTimeFrench extends \DateTime{
-    public function format($format='j M Y'): array|string
+    #[\ReturnTypeWillChange]
+    public function format(string $format = 'j M Y'): string
     {
         $days_full = array(
             'Monday'    => 'Lundi',

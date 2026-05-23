@@ -35,3 +35,80 @@ messageRealTime2: Pendant les périodes de « perte de signal », les téléspec
 issVisible: La station spatiale internationale est régulièrement visible à l'oeil nu.
 visiblePoint: Elle apparaît comme un point plus ou moins lumineux.
 timeIss: Ce site indique les horaires de passage de l'ISS ainsi que la direction d'arrivée et de fin.
+siteDescription: Suivez l'ISS en direct et prévoyez ses passages visibles depuis chez vous.
+heroTitle: Suivez <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-400 dark:via-purple-400 dark:to-indigo-300">l'ISS en direct</span> et observez-la depuis chez vous
+heroSubtitle: Calculez précisément les horaires, la luminosité et la trajectoire des passages de la Station Spatiale au-dessus de votre position.
+livePromoTitle: Suivi en direct de l'ISS
+livePromoDesc: Regardez la Terre en direct depuis la station et suivez sa trajectoire en temps réel.
+livePromoBtn: Lancer le Live Tracker
+
+# Wiki Pages
+spaceWiki: Wiki de l'Espace
+astroNationality: "Nationalité de l'astronaute :"
+astroExplore: Découvrez son historique de vols, sa biographie professionnelle et les détails de son agence.
+biography: Biographie
+associatedLaunches: Lancements associés
+launchInfo: Infos lancement
+noLaunches: Aucun lancement associé trouvé.
+personalFile: Fiche personnelle
+nationality: Nationalité
+status: Statut
+dateOfBirth: Date de naissance
+dateOfDeath: Date de décès
+parentAgency: Agence affiliée
+webResources: Ressources web
+readWikipedia: Lire l'article Wikipédia
+followTwitter: Suivre sur Twitter
+followInstagram: Suivre sur Instagram
+
+# Agency Page
+spaceAgency: Agence spatiale
+agencyOverview: Présentation de l'agence
+rocketFleet: Flotte de lanceurs
+spacecraftStages: Véhicules spatiaux
+agencyProfile: Profil de l'agence
+administrator: Administrateur
+countryCode: Code pays
+foundingYear: Année de fondation
+launcherModels: Modèles de lanceurs
+spacecraftConfigs: Configurations de véhicules
+officialLinks: Liens officiels
+officialWebsite: Site officiel de l'agence
+abbreviatedAs: "Communément abrégé en"
+officialProfile: Profil officiel d'exploration et d'aérospatiale.
+
+# Launch Page
+missionLaunch: Lancement de mission
+launcherLabel: "Lanceur :"
+windowScheduled: Fenêtre de lancement prévue le
+launchServiceProvider: Fournisseur de lancement
+viewProviderAgency: Voir l'agence fournisseur
+spacecraftPayload: Charge utile
+missionCrew: Équipage de la mission
+crewMember: Membre d'équipage
+profile: Profil
+launchManifest: Manifeste de lancement
+payloadStage: Étage de charge utile
+windowStart: Début de fenêtre
+launcherSpecs: Spécifications du lanceur
+length: Longueur
+diameter: Diamètre
+maxStages: Étages max
+successfulFlights: Vols réussis
+
+# Spacestation Page
+missionDescription: Description de la mission
+dockedVehicles: Véhicules arrimés
+specifications: Spécifications
+orbit: Orbite
+mass: Masse
+dimensions: Dimensions
+volume: Volume
+onboardCrew: Équipage à bord
+founded: Fondation
+partners: Partenaires
+activeCrew: Équipage actif
+noVehiclesDocked: Aucun véhicule n'est actuellement arrimé.
+noAstronautsOnboard: Aucun astronaute actuellement à bord.
+port: Port
+docked: Arrimé

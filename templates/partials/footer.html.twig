@@ -1,14 +1,40 @@
-<footer>
-    <div class="container">
+<footer class="bg-slate-100/80 dark:bg-gray-950/40 border-t border-slate-200 dark:border-gray-900/80 py-10 mt-16 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <!-- Social & Contact Links -->
+        <div class="flex items-center justify-center space-x-6">
+            <a href="https://twitter.com/seeissfrance" 
+               target="_blank" 
+               rel="noopener"
+               class="text-slate-500 dark:text-gray-400 hover:text-indigo-650 dark:hover:text-indigo-400 text-xl transition-colors duration-300 hover:scale-110 transform"
+               aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="mailto:contact@seeiss.com" 
+               class="text-slate-500 dark:text-gray-400 hover:text-indigo-650 dark:hover:text-indigo-400 text-xl transition-colors duration-300 hover:scale-110 transform"
+               aria-label="Email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
 
-        <a href="https://twitter.com/seeissfrance" class="icon fab fa-twitter"><span class="label"> Twitter</span></a>
-        <a href="mailto:contact@seeiss.com" class="icon fas fa-envelope ms-2"><span
-                    class="label"> Email</span></a>
-
-    </div>
-    <div class="copyright">
-        &copy; SeeIss. All rights reserved. 2020- Developped by : <a href="https://twitter.com/baptiste_buvron">Baptiste
-            BUVRON</a>
-        <a href="/privacy">Privacy-policy</a>
+        <!-- Copyright & Credits -->
+        <div class="text-xs text-slate-500 dark:text-gray-500 max-w-md mx-auto space-y-2">
+            <p class="font-light tracking-wide">
+                &copy; {{ "now"|date("Y") }} <span class="text-slate-700 dark:text-gray-400 font-semibold">SeeISS</span>. All rights reserved.
+            </p>
+            <p>
+                Developed with 💙 by 
+                <a href="https://twitter.com/baptiste_buvron" 
+                   target="_blank" 
+                   class="text-indigo-650 dark:text-indigo-400 hover:underline hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+                    Baptiste Buvron
+                </a>
+            </p>
+            <p class="pt-2">
+                <a href="{{ path('privacy') }}" 
+                   class="text-slate-500 dark:text-gray-400 hover:text-indigo-650 dark:hover:text-indigo-400 hover:underline transition-colors text-xs tracking-wider font-medium">
+                    Privacy Policy
+                </a>
+            </p>
+        </div>
     </div>
 </footer>
