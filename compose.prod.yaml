@@ -27,6 +27,35 @@ services:
       db:
         condition: service_healthy
 
+  cron:
+    image: ${REGISTRY:-ghcr.io}/${REPOSITORY:-baptistebuvron/seeiss}:latest
+    restart: unless-stopped
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+      APP_SECRET: ${APP_SECRET:-5e3e2b2c8a14e9f743c3a4f15d2a9a4b}
+      DATABASE_URL: mysql://db_user:db_password@db:3306/db_name?serverVersion=5.7
+    entrypoint: [ "sh", "-c" ]
+    command:
+      - |
+        echo "Running database and TLE updates on container startup..."
+        su -s /bin/sh www-data -c "php bin/console db:update --env=prod --no-interaction"
+        su -s /bin/sh www-data -c "php bin/console tle:iss:update --env=prod --no-interaction"
+
+        echo "Configuring daily cron jobs..."
+        # Run db:update at 3:00 AM every day
+        echo "0 3 * * * su -s /bin/sh www-data -c 'cd /app && php bin/console db:update --env=prod --no-interaction' >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+        # Run tle:iss:update at 4:00 AM every day
+        echo "0 4 * * * su -s /bin/sh www-data -c 'cd /app && php bin/console tle:iss:update --env=prod --no-interaction' >> /var/log/cron.log 2>&1" >> /etc/crontabs/root
+
+        echo "Starting crond..."
+        exec crond -f -l 2
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
   db:
     image: mysql:5.7
     restart: unless-stopped
