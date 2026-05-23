@@ -2,58 +2,62 @@
 
 namespace App\Entity;
 
-
-use ApiPlatform\Core\Action\NotFoundAction;
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use App\State\PasseProvider;
 use App\Predict\PredictVector;
 use JetBrains\PhpStorm\ArrayShape;
 
-
 #[ApiResource(
-    description: "Return a list of all visible passes of the ISS",
-    collectionOperations: ['get' => [
-        "method" => "GET",
-        "openapi_context" => [
-            "parameters" => [
-                [
-                    "name" => "lat",
-                    "in" => "query",
-                    "description" => "Choose the latitude of passes. If incorrect value is given, it will be converted to 0. ",
-                    "required" => true,
-                    "type" => "float"
-                ],
-                [
-                    "name" => "lon",
-                    "in" => "query",
-                    "description" => "Choose the longitude of passes  If incorrect value is given, it will be converted to 0.",
-                    "required" => true,
-                    "type" => "float"
-                ],
-                [
-                    "name" => "day",
-                    "in" => "query",
-                    "description" => "How many day will be calculated ?",
-                    "required" => false,
-                    "type" => "integer"
-                ],
-                [
-                    "name" => "lang",
-                    "in" => "query",
-                    "description" => "Choose the lang of the date",
-                    "required" => false,
-                    "type" => "string"
+    operations: [
+        new GetCollection(
+            uriTemplate: '/passes',
+            provider: PasseProvider::class,
+            openapiContext: [
+                "summary" => "Return a list of all visible passes of the ISS",
+                "parameters" => [
+                    [
+                        "name" => "lat",
+                        "in" => "query",
+                        "description" => "Choose the latitude of passes. If incorrect value is given, it will be converted to 0. ",
+                        "required" => true,
+                        "schema" => [
+                            "type" => "number"
+                        ]
+                    ],
+                    [
+                        "name" => "lon",
+                        "in" => "query",
+                        "description" => "Choose the longitude of passes. If incorrect value is given, it will be converted to 0.",
+                        "required" => true,
+                        "schema" => [
+                            "type" => "number"
+                        ]
+                    ],
+                    [
+                        "name" => "day",
+                        "in" => "query",
+                        "description" => "How many days will be calculated ?",
+                        "required" => false,
+                        "schema" => [
+                            "type" => "integer"
+                        ]
+                    ],
+                    [
+                        "name" => "lang",
+                        "in" => "query",
+                        "description" => "Choose the lang of the date",
+                        "required" => false,
+                        "schema" => [
+                            "type" => "string"
+                        ]
+                    ]
                 ]
             ]
-        ]
-    ]],
-    itemOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-        ],
-    ], paginationEnabled: false
+        )
+    ],
+    paginationEnabled: false
 )]
 class Passe
 {

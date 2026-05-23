@@ -1,244 +1,229 @@
 {% extends 'base.html.twig' %}
+{% block title %}SeeISS - Agency: {{ agency.name }}{% endblock %}
 
 {% block body %}
-    <div class="container-lg">
-    <div class="main">
-        <div class="row">
-
-
-            <div class="col-md">
-
-
-                <div class="card" style="margin-bottom:1em;;">
-                    <div class="row">
-                        <div class="col-md-4 d-flex">
-                            <div class="d-md-flex" style="height:100%;width:100%;align-items: center;justify-content: center;">
-                                <div  style="overflow: hidden; padding: 2%; text-align: center;">
-                                    <img src="{{ agency.logoUrl }}" style="width: 80%;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h3 class="card-title" style="text-align:center;margin:0">{{ agency.name }}</h3>
-                                <div class="card-text" style="text-align:left;">
-                                    <div class="row">
-                                        <h6 class="text-center w-100">{{ agency.type }}</h6>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="label-value col">
-                                            <p>
-                                                CEO: {{ agency.administrator }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md label-value">
-                                            <p>
-                                                Founding years :
-                                                <span>
-                                    {{ agency.foundingYear }}
-                                </span>
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-slate-800 dark:text-gray-250 wiki-passage-container">
+    
+    <!-- Page Header (Airy & Unboxed) -->
+    <div class="space-y-4 mb-10">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center text-xs font-bold text-indigo-650 dark:text-indigo-400 uppercase tracking-widest">
+                <i class="fas fa-building mr-1.5"></i>{% trans %}spaceAgency{% endtrans %}
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 text-slate-600 dark:text-gray-400">
+                {{ agency.type }}
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-gray-900 border border-slate-200 dark:border-gray-800 text-slate-600 dark:text-gray-400">
+                <i class="fas fa-flag mr-1 text-[10px] opacity-70"></i>{{ agency.countryCode }}
+            </span>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-6 items-start justify-between">
+            <div class="space-y-2">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    {{ agency.name }}
+                </h1>
+                <p class="text-slate-500 dark:text-gray-400 text-sm sm:text-base leading-relaxed">
+                    {{ agency.abbrev ? (('abbreviatedAs'|trans) ~ ' ' ~ agency.abbrev ~ '.') : ('officialProfile'|trans) }}
+                </p>
+            </div>
+            
+            {% if agency.logoUrl %}
+                <div class="w-20 h-20 bg-white dark:bg-gray-950 p-2.5 rounded-2xl border border-slate-200/60 dark:border-gray-800/80 shadow-sm flex items-center justify-center flex-shrink-0">
+                    <img src="{{ agency.logoUrl }}" alt="{{ agency.name }} Logo" class="max-w-full max-h-full object-contain filter dark:brightness-110">
                 </div>
+            {% endif %}
+        </div>
+    </div>
 
-                <div class="card" style="margin-bottom:1em;;">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card-body">
-                                <h3 class="card-title" style="text-align:center;margin: 0 0 1.25rem;">Agency Description</h3>
-                                <div class="card-text">
-                                    <p style="text-align: justify">{{ agency.description }}</p>
-
-                            </div>
-                        </div>
-                    </div>
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left Column: Description & Fleets (Editorial Flow) -->
+        <div class="lg:col-span-8 space-y-12">
+            
+            <!-- Description -->
+            <div class="space-y-4 wiki-passage-container">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}agencyOverview{% endtrans %}
+                </h2>
+                <div class="text-slate-700 dark:text-gray-300 leading-relaxed text-base sm:text-lg text-justify whitespace-pre-line font-medium">
+                    {{ agency.description | translate_db(app.request.locale) }}
                 </div>
+            </div>
 
-
-
-
-
-                {% if agency.launchers.count > 0 %}
-                <div class="card" style="margin-bottom:1em;;">
-                    <div class="card-body">
-                        <h3 class="card-title" style="text-align:center;margin-bottom: 1.25rem;">Rocket Configs</h3>
-
+            <!-- Rocket Fleet (Launchers as list items) -->
+            {% if agency.launchers.count > 0 %}
+                <div class="space-y-6">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                        {% trans %}rocketFleet{% endtrans %}
+                    </h2>
+                    <div class="divide-y divide-slate-150 dark:divide-gray-850">
                         {% for launcher in agency.launchers %}
-                            <div class="card" style="margin-bottom:1em;">
-                                <div class="row no-gutters">
-                                    <div class="col-md-4">
-                                        <div class="d-md-block" style="height:100%;width:100%;">
-
-                                            <div style="overflow: hidden; text-align: center;">
-                                                <img src="{{ launcher.imageUrl }}" style="width: 100%;">
-                                            </div>
-                                        </div>
+                            <div class="py-6 first:pt-0 last:pb-0 flex flex-col sm:flex-row gap-6 items-start justify-between group">
+                                <div class="flex flex-col sm:flex-row gap-4 items-start flex-grow">
+                                    <!-- Image -->
+                                    <div class="w-full sm:w-28 aspect-video sm:aspect-[4/3] rounded-xl overflow-hidden bg-slate-950 border border-slate-200/60 dark:border-gray-800 flex-shrink-0">
+                                        <img src="{{ launcher.imageUrl }}" 
+                                             alt="{{ launcher.name }}" 
+                                             class="w-full h-full object-cover">
                                     </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <div class="row" style="margin-bottom:1.25rem;">
-                                                <h3 class="card-title text-center w-100" style="margin:0;">{{ launcher.name }}</h3>
-                                            </div>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="col-md label-value">
-                                                    <p>
-                                                        Height :
-                                                        <span>
-                                         {{ launcher.length}} Meters
-                                    </span>
-                                                    </p>
-                                                    <p>
-                                                        Max Stages :
-                                                        <span>
-                                        {{ launcher.maxStage }}
-                                    </span>
-                                                    </p>
+                                    
+                                    <div class="space-y-2 flex-grow">
+                                        <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-650 dark:group-hover:text-indigo-400 transition-colors">
+                                            {{ launcher.name }}
+                                        </h4>
+                                        <p class="text-xs text-slate-500 dark:text-gray-400 font-semibold">
+                                            {{ launcher.fullName ?: launcher.family ?: 'Active launcher' }}
+                                        </p>
+                                        
+                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-gray-400 font-mono">
+                                            <span>{% trans %}length{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300">{{ launcher.length ? launcher.length ~ 'm' : 'N/A' }}</strong></span>
+                                            <span>&bull;</span>
+                                            <span>{% trans %}diameter{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300">{{ launcher.diameter ? launcher.diameter ~ 'm' : 'N/A' }}</strong></span>
+                                            <span>&bull;</span>
+                                            <span>{% trans %}maxStages{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300">{{ launcher.maxStage ?: 'N/A' }}</strong></span>
+                                        </div>
 
-
-                                                </div>
-                                                <div class="col-md label-value">
-                                                    <p>
-                                                        Diameter :
-                                                        <span>
-                                          {{ launcher.diameter}} Meters
-                                    </span>
-                                                    </p>
-
-
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="col-md label-value">
-                                                    <p>
-                                                        Launch Success :
-                                                        <span>
-                                        {{ launcher.successfulLaunches }}
-                                    </span>
-                                                    </p>
-                                                    <p>
-                                                        Consecutive Success :
-                                                        <span>
-                                        {{ launcher.consecutiveSuccessfulLaunches }}
-                                    </span>
-                                                    </p>
-                                                </div>
-                                                <div class="col-md">
-                                                    <p>
-                                                        Launch Failures :
-                                                        <span>
-                                        {{ launcher.failedLaunch }}
-                                    </span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="row" style="margin-top: 1.25rem;">
-                                                <div>
-                                                    <a class="btn btn-secondary ms-3" style="background-color: #565e64;" href="{{ launcher.wikiUrl }}" role="button"
-                                                    ><i class="fab fa-wikipedia-w me-2"></i
-                                                        >Wikipedia</a>
-                                                </div>
-                                            </div>
+                                        <div class="flex flex-wrap items-center gap-3 text-[11px] font-semibold mt-1">
+                                            <span class="text-emerald-600 dark:text-emerald-450"><i class="fas fa-check-circle mr-1 text-[10px]"></i>{{ launcher.successfulLaunches }} OK</span>
+                                            <span class="text-red-650 dark:text-red-400"><i class="fas fa-times-circle mr-1 text-[10px]"></i>{{ launcher.failedLaunch }} KO</span>
+                                            <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 text-[10px] border border-emerald-500/15">
+                                                Streak: {{ launcher.consecutiveSuccessfulLaunches }} OK
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="flex sm:flex-col items-center sm:items-end gap-2 flex-shrink-0 self-stretch sm:justify-between py-1">
+                                    {% if launcher.wikiUrl %}
+                                        <a href="{{ launcher.wikiUrl }}" target="_blank" rel="noopener"
+                                           class="inline-flex items-center text-xs font-bold text-slate-650 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-800/80 border border-slate-200 dark:border-gray-800 px-3 py-1.5 rounded-xl">
+                                            <i class="fab fa-wikipedia-w mr-1 text-[10px]"></i>
+                                            <span>Wiki</span>
+                                        </a>
+                                    {% endif %}
+                                    {% if launcher.infoUrl %}
+                                        <a href="{{ launcher.infoUrl }}" target="_blank" rel="noopener"
+                                           class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                                            <span>Specs</span>
+                                            <i class="fas fa-external-link-alt text-[9px] ml-1 opacity-70"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
-
                         {% endfor %}
-
-
-
                     </div>
                 </div>
-                {% endif %}
+            {% endif %}
 
-                {% if agency.spaceCraftConfigs.count > 0 %}
-                <div class="card" style="margin-bottom:1em;;">
-                    <div class="card-body">
-                        <h3 class="card-title" style="text-align:center;margin-bottom: 1.25rem;">Spacecraft Configs</h3>
-
+            <!-- Spacecraft Configurations -->
+            {% if agency.spaceCraftConfigs.count > 0 %}
+                <div class="space-y-6">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                        {% trans %}spacecraftStages{% endtrans %}
+                    </h2>
+                    <div class="divide-y divide-slate-150 dark:divide-gray-850">
                         {% for spacecraft in agency.spaceCraftConfigs %}
-                        <div class="card" style="">
-                            <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    <div class="d-md-block" style="height:100%;width:100%;">
-
-                                        <div class="" style="overflow: hidden; text-align: center;">
-                                            <img src="{{ spacecraft.imageUrl }}" style="width: 100%;">
+                            <div class="py-6 first:pt-0 last:pb-0 flex flex-col sm:flex-row gap-6 items-start justify-between group">
+                                <div class="flex flex-col sm:flex-row gap-4 items-start flex-grow">
+                                    <div class="w-full sm:w-28 aspect-video sm:aspect-[4/3] rounded-xl overflow-hidden bg-slate-950 border border-slate-200/60 dark:border-gray-800 flex-shrink-0">
+                                        <img src="{{ spacecraft.imageUrl }}" 
+                                             alt="{{ spacecraft.name }}" 
+                                             class="w-full h-full object-cover">
+                                    </div>
+                                    
+                                    <div class="space-y-2 flex-grow">
+                                        <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-650 dark:group-hover:text-indigo-400 transition-colors">
+                                            {{ spacecraft.name }}
+                                        </h4>
+                                        <p class="text-sm text-slate-650 dark:text-gray-300 font-medium">
+                                            {{ spacecraft.capability | translate_db(app.request.locale) ?: 'N/A' }}
+                                        </p>
+                                        
+                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-gray-400 font-mono">
+                                            <span>Crew: <strong class="text-slate-700 dark:text-gray-300 font-bold"><i class="fas fa-users mr-1 opacity-70"></i>{{ spacecraft.crewCapacity ?: '0' }}</strong></span>
+                                            <span>&bull;</span>
+                                            <span>{% trans %}length{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300 font-bold">{{ spacecraft.height ? spacecraft.height ~ 'm' : 'N/A' }}</strong></span>
+                                            <span>&bull;</span>
+                                            <span>{% trans %}diameter{% endtrans %}: <strong class="text-slate-700 dark:text-gray-300 font-bold">{{ spacecraft.diameter ? spacecraft.diameter ~ 'm' : 'N/A' }}</strong></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <div class="row" style="margin-bottom:1.25rem;">
-                                            <h3 class="card-title text-center w-100" style="margin:0;">{{ spacecraft.name }}</h3>
-                                            <p>{{ spacecraft.capability }}</p>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-md label-value">
-
-
-                                                <p>
-                                                    Human Rated :
-                                                    <span>
-                                        {% if spacecraft.crewCapacity > 0 %}
-                                                        Yes
-                                                        {% else %}
-                                                            No
-                                                            {% endif %}
-                                    </span>
-                                                </p>
-                                            </div>
-                                            <div class="col-md label-value">
-                                                <p>
-                                                    Height :
-                                                    <span>
-                                         {{ spacecraft.height}} Metres
-                                    </span>
-                                                </p>
-                                                <p>
-                                                    Diameter :
-                                                    <span>
-                                          {{ spacecraft.diameter}} Metres
-                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <hr>
-
-
-
-                                        {% if spacecraft.wikiLink %}
-
-                                            <a class="btn btn-secondary ms-3" style="background-color: #565e64;" href="{{ spacecraft.wikiLink }}" role="button"
-                                            ><i class="fab fa-wikipedia-w me-2"></i
-                                                >Wikipedia</a>
-
-                                        {% endif %}
-
+                                
+                                {% if spacecraft.wikiLink %}
+                                    <div class="flex-shrink-0 self-center py-1">
+                                        <a href="{{ spacecraft.wikiLink }}" target="_blank" rel="noopener"
+                                           class="inline-flex items-center text-xs font-bold text-slate-650 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white transition-colors bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-800/80 border border-slate-200 dark:border-gray-800 px-3 py-1.5 rounded-xl">
+                                            <i class="fab fa-wikipedia-w mr-1 text-[10px]"></i>
+                                            <span>Wiki</span>
+                                        </a>
                                     </div>
-                                </div>
+                                {% endif %}
                             </div>
-                        </div>
                         {% endfor %}
-
                     </div>
                 </div>
-                {% endif %}
+            {% endif %}
 
+        </div>
+
+        <!-- Right Column: Corporate Profile & Official Links -->
+        <div class="lg:col-span-4 space-y-10 lg:sticky lg:top-20">
+            
+            <!-- Agency Profile -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}agencyProfile{% endtrans %}
+                </h3>
+                <div class="divide-y divide-slate-100 dark:divide-gray-850 text-sm">
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}administrator{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white">{{ agency.administrator ?: 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}countryCode{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono uppercase">{{ agency.countryCode }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}foundingYear{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ agency.foundingYear }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}launcherModels{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ agency.launchers.count }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-slate-500 dark:text-gray-400">{% trans %}spacecraftConfigs{% endtrans %}</span>
+                        <span class="font-bold text-slate-800 dark:text-white font-mono">{{ agency.spaceCraftConfigs.count }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Official Links -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                    {% trans %}officialLinks{% endtrans %}
+                </h3>
+                <div class="flex flex-col gap-2.5">
+                    {% if agency.infoUrl %}
+                        <a href="{{ agency.infoUrl }}" target="_blank" rel="noopener" 
+                           class="inline-flex items-center space-x-2 bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-850/80 border border-slate-200 dark:border-gray-800 px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold text-slate-700 dark:text-gray-300">
+                            <i class="fas fa-link text-indigo-650 dark:text-indigo-400 text-sm"></i>
+                            <span>{% trans %}officialWebsite{% endtrans %}</span>
+                        </a>
+                    {% endif %}
+                    {% if agency.wikiUrl %}
+                        <a href="{{ agency.wikiUrl }}" target="_blank" rel="noopener" 
+                           class="inline-flex items-center space-x-2 bg-slate-50 hover:bg-slate-100 dark:bg-gray-900 dark:hover:bg-gray-850/80 border border-slate-200 dark:border-gray-800 px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold text-slate-700 dark:text-gray-300">
+                            <i class="fab fa-wikipedia-w text-sm text-slate-500"></i>
+                            <span>{% trans %}readWikipedia{% endtrans %}</span>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
         </div>
+    </div>
+</div>
 {% endblock %}

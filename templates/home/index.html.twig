@@ -1,140 +1,221 @@
 {% extends 'base.html.twig' %}
-{% block title %}SeeISS{% endblock %}
+{% block title %}SeeISS - Visible ISS Passes{% endblock %}
 
 {% block body %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Search and Info Panel -->
+        <div class="lg:col-span-4 space-y-6">
 
 
-    <div class="container-lg">
-        <main>
-
-
-            <img id="iss" src="{{ asset('/images/iss.webp') }}" alt="">
-
-            <section class="px-3" id="passages">
-                <h2 class="h3">{% trans %}passesText{% endtrans %}</h2>
-
-                <form action="{{ path('home') }}" method="POST" id="formLocation">
-                    <div class="input-group">
-                        <input id="location" class="form-control" type="text" size="50"
-                               placeholder="{% if info.city %}{{ info.city }} {% else %} {% trans %}city{% endtrans %}{% endif %}" value=""/>
-                        <div class="input-group-append">
-                            <span class="input-group-text"><button type="button" class="btn btn-secondary"
-                                                                   id="localisation">Localisation</button></span>
-                        </div>
+            <!-- Live Tracker Promo card -->
+            <div class="relative overflow-hidden bg-gradient-to-br from-indigo-650 to-purple-700 rounded-2xl p-6 shadow-lg text-white group hover:shadow-indigo-500/10 transition-all duration-305">
+                <!-- Background decorative elements -->
+                <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="absolute -left-6 -top-6 w-20 h-20 bg-indigo-500/20 rounded-full blur-xl"></div>
+                
+                <div class="relative z-10 space-y-4">
+                    <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase border border-white/20">
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <span>{% trans %}realtime{% endtrans %}</span>
                     </div>
-                    <input type="hidden" id="name" name="city"/>
-                    <input type="hidden" id="lat" name="lat"/>
-                    <input type="hidden" id="lon" name="lon"/>
-                    <button id="buttonSumbit" type="submit" class="btn btn-primary"
-                            style="margin-left: 5px">{% trans %}send{% endtrans %}</button>
-                </form>
+                    
+                    <h3 class="text-lg sm:text-xl font-bold tracking-tight leading-tight">
+                        {{ 'livePromoTitle'|trans }}
+                    </h3>
+                    
+                    <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed font-medium">
+                        {{ 'livePromoDesc'|trans }}
+                    </p>
+                    
+                    <a href="{{ path('live') }}" 
+                       class="inline-flex items-center justify-center w-full bg-white text-indigo-700 hover:bg-indigo-50 font-semibold py-3 px-4 rounded-xl shadow-md transition-all text-sm group-hover:translate-x-0.5">
+                        {{ 'livePromoBtn'|trans }}
+                        <i class="fas fa-arrow-right ml-2 text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
 
-                <div id="info">
-                    <p>{% trans %}issVisible{% endtrans %}</p>
-                    <p>{% trans %}visiblePoint{% endtrans %}</p>
-                    <p>{% trans %}timeIss{% endtrans %}</p>
+            <!-- Explanations card -->
+            <div class="bg-slate-100/60 dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800/40 rounded-2xl p-6 text-sm text-slate-600 dark:text-gray-400 space-y-3 leading-relaxed">
+                <h3 class="font-semibold text-indigo-600 dark:text-indigo-400 text-sm mb-2">
+                    How it works
+                </h3>
+                <p><i class="fas fa-eye mr-2 text-indigo-600/80 dark:text-indigo-400/80"></i>{% trans %}issVisible{% endtrans %}</p>
+                <p><i class="fas fa-compass mr-2 text-indigo-600/80 dark:text-indigo-400/80"></i>{% trans %}visiblePoint{% endtrans %}</p>
+                <p><i class="fas fa-clock mr-2 text-indigo-600/80 dark:text-indigo-400/80"></i>{% trans %}timeIss{% endtrans %}</p>
+            </div>
+        </div>
+
+        <!-- Passes List Panel -->
+        <div class="lg:col-span-8 space-y-6" id="passages">
+            <!-- Visibility legend -->
+            {% if passes %}
+                <div class="bg-white/80 dark:bg-gray-900/40 border border-slate-200 dark:border-gray-800/50 rounded-2xl p-4 flex items-center justify-between flex-wrap gap-4 shadow-sm dark:shadow-none">
+                    <span class="text-sm font-medium text-slate-650 dark:text-gray-400">Visibility guide:</span>
+                    <div class="flex items-center space-x-4">
+                        <span class="flex items-center text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 dark:border-emerald-500/30 px-2.5 py-1 rounded-full font-medium">
+                            <span class="w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full mr-1.5"></span>
+                            Excellent (Mag &le; -3)
+                        </span>
+                        <span class="flex items-center text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 dark:border-amber-500/30 px-2.5 py-1 rounded-full font-medium">
+                            <span class="w-1.5 h-1.5 bg-amber-500 dark:bg-amber-400 rounded-full mr-1.5"></span>
+                            Good (Mag &le; -2)
+                        </span>
+                    </div>
                 </div>
 
-
-                <section class="px-1">
-
-                    {% if passes %}
-                        <div id="visibilty">
-                            <p class="bg-success">{% trans %}goodVisibility{% endtrans %}</p>
-                            <p class="bg-warning">{% trans %}mediumVisibility{% endtrans %}</p>
-                        </div>
-
-                        {% for key, passe in passes %}
-                            <h3>{{ key }}</h3>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
+                <!-- Passes Dates -->
+                <div class="space-y-8">
+                    {% for key, passe in passes %}
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-l-4 border-indigo-500 pl-3">
+                                {{ key }}
+                            </h3>
+                            
+                            <div class="overflow-x-auto border border-slate-250 dark:border-gray-800/60 rounded-xl bg-white/60 dark:bg-gray-900/20 backdrop-blur-sm">
+                                <table class="w-full text-left border-collapse text-xs sm:text-sm">
                                     <thead>
-                                    <tr class="head">
-                                        <th></th>
-                                        <th colspan="2">{% trans %}start{% endtrans %}</th>
-                                        <th colspan="2">Max</th>
-                                        <th colspan="2">{% trans %}end{% endtrans %}</th>
-                                        <th colspan="2">Info</th>
-                                        <th colspan="1"></th>
-                                    </tr>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">{% trans %}hour{% endtrans %}</th>
-                                        <th scope="col">{% trans %}azimuth{% endtrans %}</th>
-                                        <th scope="col">{% trans %}hour{% endtrans %}</th>
-                                        <th scope="col">Az</th>
-                                        <th scope="col">{% trans %}hour{% endtrans %}</th>
-                                        <th scope="col">Az</th>
-                                        <th scope="col">{% trans %}duration{% endtrans %} (s)</th>
-                                        <th scope="col">Magnitude</th>
-                                        <th scope="col">{% trans %}seeonmap{% endtrans %}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for value in passe %}
-                                        <tr {% if value.magnitude <= -3 %} class="table-success" {% elseif value.magnitude <= -2 %} class="table-warning" {% endif %}>
-                                            <th scope="row">{{ loop.index }}</th>
-                                            <td>{{ value.dateStart }}</td>
-                                            <td>{{ value.azStartDirection }} ({{ value.azStartDegres }}°)</td>
-                                            <td>{{ value.dateMax }}</td>
-                                            <td>{{ value.azMaxDirection }} ({{ value.azMaxDegres }}°)</td>
-                                            <td>{{ value.dateEnd }}</td>
-                                            <td>{{ value.azEndDirection }} ({{ value.azEndDegres }}°)</td>
-                                            <td>{{ value.duration }}</td>
-                                            <td>{{ value.magnitude }}</td>
-                                            <td><a href="#" class="linkMap"
-                                                   id="{{ value.index }}">{% trans %}map{% endtrans %}</a></td>
+                                        <tr class="bg-slate-100 dark:bg-gray-950/60 text-slate-550 dark:text-gray-400 border-b border-slate-250 dark:border-gray-800 uppercase tracking-wider text-xs font-semibold">
+                                            <th class="py-3.5 px-4 text-center">#</th>
+                                            <th class="py-3.5 px-4">Start Time</th>
+                                            <th class="py-3.5 px-4">Max (Elevation)</th>
+                                            <th class="py-3.5 px-4">End Time</th>
+                                            <th class="py-3.5 px-4 text-center">Duration</th>
+                                            <th class="py-3.5 px-4 text-center">Magnitude</th>
+                                            <th class="py-3.5 px-4 text-center">Actions</th>
                                         </tr>
-                                    {% endfor %}
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200 dark:divide-gray-800/50">
+                                        {% for value in passe %}
+                                            {% set isExcellent = value.magnitude <= -3 %}
+                                            {% set isGood = value.magnitude > -3 and value.magnitude <= -2 %}
+                                            
+                                            <tr id="pass-{{ value.index }}" class="hover:bg-slate-50/80 dark:hover:bg-gray-800/30 transition-all duration-150 {% if isExcellent %} bg-emerald-500/5 {% elseif isGood %} bg-amber-500/5 {% endif %}">
+                                                <td class="py-3.5 px-4 text-center font-bold text-slate-400 dark:text-gray-500">{{ loop.index }}</td>
+                                                <td class="py-3.5 px-4 font-medium text-slate-800 dark:text-gray-200">
+                                                    {{ value.dateStart }}
+                                                    <span class="block text-xs text-slate-500 dark:text-gray-500 mt-0.5">{{ value.azStartDirection }} ({{ value.azStartDegres }}&deg;)</span>
+                                                </td>
+                                                <td class="py-3.5 px-4 text-slate-700 dark:text-gray-300">
+                                                    {{ value.dateMax }}
+                                                    <span class="block text-xs text-slate-500 dark:text-gray-500 mt-0.5">{{ value.azMaxDirection }} ({{ value.azMaxDegres }}&deg;) &bull; Max El: {{ value.maxEl | round }}&deg;</span>
+                                                </td>
+                                                <td class="py-3.5 px-4 text-slate-700 dark:text-gray-300">
+                                                    {{ value.dateEnd }}
+                                                    <span class="block text-xs text-slate-500 dark:text-gray-500 mt-0.5">{{ value.azEndDirection }} ({{ value.azEndDegres }}&deg;)</span>
+                                                </td>
+                                                <td class="py-3.5 px-4 text-center text-slate-700 dark:text-gray-300 font-mono">{{ value.duration }}s</td>
+                                                <td class="py-3.5 px-4 text-center">
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono 
+                                                                 {% if isExcellent %} text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/30 
+                                                                 {% elseif isGood %} text-amber-600 bg-amber-500/10 border border-amber-500/20 dark:text-amber-400 dark:bg-amber-500/10 dark:border-amber-500/30 
+                                                                 {% else %} text-slate-600 bg-slate-200 border border-slate-300 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 
+                                                                 {% endif %}">
+                                                        {{ value.magnitude }}
+                                                    </span>
+                                                </td>
+                                                <td class="py-3.5 px-4 text-center">
+                                                    <div class="inline-flex items-center gap-1.5">
+                                                        <a href="#" 
+                                                           class="linkMap inline-flex items-center justify-center p-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-250 dark:bg-gray-900 dark:border-gray-800 text-indigo-650 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-gray-800 dark:hover:border-gray-700 transition-all"
+                                                           data-id="{{ value.index }}"
+                                                           aria-label="See on map"
+                                                           title="See on map">
+                                                            <i class="fas fa-map-marked-alt text-sm"></i>
+                                                        </a>
+                                                        <button type="button"
+                                                                class="sharePassBtn inline-flex items-center justify-center p-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-250 dark:bg-gray-900 dark:border-gray-800 text-indigo-650 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-gray-800 dark:hover:border-gray-700 transition-all cursor-pointer"
+                                                                data-date="{{ key }}"
+                                                                data-start="{{ value.dateStart }}"
+                                                                data-duration="{{ value.duration }}"
+                                                                data-mag="{{ value.magnitude }}"
+                                                                data-maxel="{{ value.maxEl | round }}"
+                                                                data-id="{{ value.index }}"
+                                                                aria-label="Share pass"
+                                                                title="Share pass">
+                                                            <i class="fas fa-share-alt text-sm"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        <p id="noPassage">{% trans %}noPasse{% endtrans %}</p>
-                    {% endif %}
-
-
-                </section>
-                <!-- ShareThis BEGIN -->
-                <div class="sharethis-inline-share-buttons share"></div><!-- ShareThis END -->
-
-            </section>
-        </main>
-
-    </div>
-
-    <div class="modal" tabindex="-1" id="modalMap">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <button type="button" class="btn-close ms-auto p-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                <h5 class="modal-title m-4"></h5>
-                <div class="modal-header">
-                    <div id="grid">
-                        <div>
-                            <p id="start"></p>
-                            <p id="max"></p>
-                            <p id="end"></p>
-                            <p id="duration"></p>
                         </div>
-                        <div>
-                            <p id="startAz"></p>
-                            <p id="maxAz"></p>
-                            <p id="endAz"></p>
-                            <p id="mag"></p>
-                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="bg-white/80 dark:bg-gray-900/40 border border-slate-250 dark:border-gray-800/80 rounded-2xl p-8 text-center" id="noPassage">
+                    <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-gray-950 flex items-center justify-center mx-auto mb-4 border border-slate-250 dark:border-gray-800">
+                        <i class="fas fa-satellite text-slate-400 dark:text-gray-500 text-lg"></i>
                     </div>
+                    <p class="text-slate-600 dark:text-gray-400 text-sm font-medium">{% trans %}noPasse{% endtrans %}</p>
                 </div>
-                <div class="modal-body">
-                    <div style="height: 500px" id="map"></div>
+            {% endif %}
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
+            <!-- Share Buttons -->
+            <div class="sharethis-inline-share-buttons py-4"></div>
         </div>
     </div>
+</div>
+
+<!-- Modern CSS/JS Trajectory Modal -->
+<div id="modalMap" class="fixed inset-0 bg-slate-900/60 dark:bg-gray-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white dark:bg-gray-900 border border-slate-250 dark:border-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl transform scale-95 transition-all duration-300">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-gray-800 flex items-center justify-between bg-slate-50 dark:bg-gray-950/40">
+            <h5 class="modal-title text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                ISS Pass Details
+            </h5>
+            <button type="button" class="close-modal p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:text-gray-450 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-all">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body (Grid Details + Leaflet Map) -->
+        <div class="flex-grow overflow-y-auto p-6 space-y-6">
+            <!-- Grid info details -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-gray-800/60">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-450 mb-1">Start Time</span>
+                    <span id="modal-start" class="text-sm sm:text-base font-semibold text-slate-800 dark:text-white font-mono"></span>
+                    <span id="modal-start-az" class="block text-xs text-slate-500 dark:text-gray-400 mt-1 font-medium"></span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-gray-800/60">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-450 mb-1">Max Elevation</span>
+                    <span id="modal-max" class="text-sm sm:text-base font-semibold text-slate-800 dark:text-white font-mono"></span>
+                    <span id="modal-max-az" class="block text-xs text-slate-500 dark:text-gray-400 mt-1 font-medium"></span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-gray-800/60">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-450 mb-1">End Time</span>
+                    <span id="modal-end" class="text-sm sm:text-base font-semibold text-slate-800 dark:text-white font-mono"></span>
+                    <span id="modal-end-az" class="block text-xs text-slate-500 dark:text-gray-400 mt-1 font-medium"></span>
+                </div>
+                <div class="bg-slate-50 dark:bg-gray-950/40 p-3.5 rounded-xl border border-slate-200 dark:border-gray-800/60">
+                    <span class="block text-xs font-semibold text-slate-500 dark:text-gray-450 mb-1">Visibility (Mag)</span>
+                    <span id="modal-mag" class="text-sm sm:text-base font-bold text-slate-800 dark:text-white font-mono"></span>
+                    <span id="modal-duration" class="block text-xs text-slate-500 dark:text-gray-400 mt-1 font-medium"></span>
+                </div>
+            </div>
+
+            <!-- Leaflet map container -->
+            <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-gray-800 shadow-inner">
+                <div style="height: 400px" id="map" class="w-full z-10"></div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-gray-800 flex justify-end bg-slate-50 dark:bg-gray-950/40">
+            <button type="button" class="close-modal bg-slate-100 hover:bg-slate-200 dark:bg-gray-800 dark:hover:bg-gray-700 border border-slate-250 dark:border-gray-700 text-slate-700 dark:text-gray-300 font-semibold py-2 px-4 rounded-xl transition-all text-sm">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -142,161 +223,256 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Adjust address bar state without reload preserving lat/lon coordinates and hash
             {% if info.city %}
-            window.history.pushState("", "", '/?city={{ info.city }}');
+                {% if info.lat and info.lon %}
+                window.history.pushState("", "", '/?city=' + encodeURIComponent("{{ info.city }}") + '&lat={{ info.lat }}&lon={{ info.lon }}' + window.location.hash);
+                {% else %}
+                window.history.pushState("", "", '/?city=' + encodeURIComponent("{{ info.city }}") + window.location.hash);
+                {% endif %}
             {% else %}
-            window.history.pushState("", "", '/');
+            window.history.pushState("", "", '/' + window.location.hash);
             {% endif %}
-            {% if info.city %}
-            //set placeholder value of input
 
-
-
-
-            $('#location').attr('placeholder', "{{ info.city }}");
-            {% endif %}
-        });
-
-
-
-        window.onload = function () {
+            // Scroll into view if request was a post
             {% if isPostRequest %}
-            let anchor = document.querySelector('#passages');
-            anchor.scrollIntoView({behavior: 'smooth'});
+            const passagesSection = document.getElementById('passages');
+            if (passagesSection) {
+                passagesSection.scrollIntoView({ behavior: 'smooth' });
+            }
             {% endif %}
-        }
 
+            // Search Submission
+            const submitButton = document.getElementById('buttonSubmit');
+            const locationInput = document.getElementById('location');
+            const form = document.getElementById('formLocation');
 
+            if (submitButton && locationInput && form) {
+                submitButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const val = locationInput.value || locationInput.placeholder;
+                    if (!val) return;
 
-        $('#localisation').on('click', function () {
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    let url = "https://nominatim.openstreetmap.org/reverse.php?lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon) + "&zoom=18&format=jsonv2";
-                    let request = new XMLHttpRequest();
-                    request.open('GET', url);
-                    request.send();
-                    request.onload = function () {
-                        if (request.status >= 200 && request.status < 300) {
-                            const data = JSON.parse(request.response);
-                            if (data.length === 0) {
-                                return;
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i>Searching...';
+
+                    const url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(val);
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                document.getElementById('lon').value = data[0].lon;
+                                document.getElementById('lat').value = data[0].lat;
+                                document.getElementById('name').value = data[0].display_name;
+                                form.submit();
+                            } else {
+                                alert("City not found.");
+                                submitButton.disabled = false;
+                                submitButton.innerText = "{% trans %}send{% endtrans %}";
                             }
-                            const name = data.display_name;
-                            $('#lon').val(lon);
-                            $('#lat').val(lat);
-                            $('#name').val(name);
-                            $('#formLocation').submit();
-                        }
-                    };
-
+                        })
+                        .catch(() => {
+                            alert("API Error, please try again.");
+                            submitButton.disabled = false;
+                            submitButton.innerText = "{% trans %}send{% endtrans %}";
+                        });
                 });
             }
 
+            // GPS Localisation
+            const gpsBtn = document.getElementById('localisation');
+            if (gpsBtn) {
+                gpsBtn.addEventListener('click', () => {
+                    if ("geolocation" in navigator) {
+                        gpsBtn.disabled = true;
+                        gpsBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-1"></i>...';
 
-        });
-        $('#buttonSumbit').on("click", function (e) {
-
-            e.preventDefault();
-            const value = $('#location').val();
-            const url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(value);
-            const request = new XMLHttpRequest();
-            request.open('GET', url);
-            request.responseType = "text";
-            request.send();
-            request.onload = function () {
-                if (request.status >= 200 && request.status < 300) {
-                    const result = eval(request.responseText);
-                    if (result.length === 0) {
-                        return;
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                const url = `https://nominatim.openstreetmap.org/reverse.php?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&format=jsonv2`;
+                                
+                                fetch(url)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        const name = data.display_name || `GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                                        document.getElementById('lon').value = lon;
+                                        document.getElementById('lat').value = lat;
+                                        document.getElementById('name').value = name;
+                                        form.submit();
+                                    })
+                                    .catch(() => {
+                                        document.getElementById('lon').value = lon;
+                                        document.getElementById('lat').value = lat;
+                                        document.getElementById('name').value = `GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                                        form.submit();
+                                    });
+                            },
+                            () => {
+                                alert("Failed to retrieve location.");
+                                gpsBtn.disabled = false;
+                                gpsBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span class="hidden sm:inline">GPS</span>';
+                            }
+                        );
                     }
-                    const lon = result[0].lon;
-                    const lat = result[0].lat;
-                    const name = result[0].display_name;
-                    $('#lon').val(lon);
-                    $('#lat').val(lat);
-                    $('#name').val(name);
-                    $('#formLocation').submit();
+                });
+            }
 
+            // Leaflet Map Init (Dynamic theme-based tile layer)
+            var map = L.map('map', {
+                'worldCopyJump': true
+            }).setView([{{ info.lat }}, {{ info.lon }}], 4);
 
+            var homeIcon = L.icon({
+                iconUrl: '/images/home.svg',
+                iconSize: [25, 25]
+            });
+            L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
+
+            const isDarkTheme = () => document.documentElement.classList.contains('dark');
+            const getTileUrl = () => {
+                return isDarkTheme() 
+                    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+            };
+
+            var tileLayer = L.tileLayer(getTileUrl(), {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Listen for theme changes dynamically
+            const observer = new MutationObserver(() => {
+                tileLayer.setUrl(getTileUrl());
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+            // Modal Handlers
+            const modal = document.getElementById('modalMap');
+            const closeBtns = document.querySelectorAll('.close-modal');
+            const jsonPasses = {{ totalPasses | json_encode | raw }};
+            let polyline = null;
+
+            const openModal = (passes) => {
+                const latLonpasse = [];
+                passes['coord'].forEach((v) => {
+                    latLonpasse.push([v.lat, v.lon]);
+                });
+
+                document.getElementById('modal-start').textContent = passes['dateStart'];
+                document.getElementById('modal-start-az').textContent = `${passes['azStartDirection']} (${passes['azStartDegres']}°)`;
+                
+                document.getElementById('modal-max').textContent = passes['dateMax'];
+                document.getElementById('modal-max-az').textContent = `${passes['azMaxDirection']} (${passes['azMaxDegres']}°)`;
+                
+                document.getElementById('modal-end').textContent = passes['dateEnd'];
+                document.getElementById('modal-end-az').textContent = `${passes['azEndDirection']} (${passes['azEndDegres']}°)`;
+                
+                document.getElementById('modal-mag').textContent = passes['magnitude'];
+                document.getElementById('modal-duration').textContent = `${passes['duration']} seconds`;
+
+                // Add Polyline
+                if (polyline) map.removeLayer(polyline);
+                polyline = L.polyline(latLonpasse, {color: '#6366f1', weight: 4, opacity: 0.85}).addTo(map);
+                
+                // Show modal animations
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('.transform').classList.remove('scale-95');
+                modal.querySelector('.transform').classList.add('scale-100');
+
+                // Invalidate size to load map correctly in hidden container
+                setTimeout(() => {
+                    map.invalidateSize();
+                    if (latLonpasse.length > 0) {
+                        map.fitBounds(polyline.getBounds(), {padding: [40, 40]});
+                    }
+                }, 100);
+            };
+
+            const closeModal = () => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.querySelector('.transform').classList.remove('scale-100');
+                modal.querySelector('.transform').classList.add('scale-95');
+                if (polyline) {
+                    map.removeLayer(polyline);
+                    polyline = null;
                 }
             };
 
-
-        });
-
-
-        var map = L.map('map',
-            {'worldCopyJump': true}
-        ).setView([{{ info.lat }}, {{ info.lon }}], 4);
-        var homeIcon = L.icon({
-            iconUrl: '/images/home.svg',
-            iconSize: [25, 25]
-        });
-        L.marker([{{ info.lat }}, {{ info.lon }}], {icon: homeIcon}).addTo(map);
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'pk.eyJ1Ijoic2VlaXNzIiwiYSI6ImNrZ3o2ZXkyejBsNGMyc252cGpncWYzenoifQ.hGTn1d_CBTHKYaRMpGrIwg'
-        }).addTo(map);
-
-        var p = L.control({position: 'bottomleft'});
-        p.onAdd = function (map) {
-            var div = L.DomUtil.create('h1');
-            div.innerHTML = "www.seeiss.com";
-            div.style.color = "grey";
-            return div;
-        }
-        p.addTo(map);
-
-
-        var jsonPasses = {{ totalPasses | json_encode | raw }};
-        var arrayPasses;
-
-
-        $('.linkMap').click(function (e) {
-            e.preventDefault();
-            var idLink = parseInt($(this).attr('id'));
-            var passes = jsonPasses[idLink];
-            var latLonpasse = [];
-            passes['coord'].forEach(function (value) {
-                latLonpasse.push([value.lat, value.lon]);
-            })
-            $('#modalMap h5.modal-title').text(passes['date']);
-            $('#modalMap p#start').text("{% trans %}start{% endtrans %} : " + passes['dateStart']);
-            $('#modalMap p#max').text("Max : " + passes['dateMax']);
-            $('#modalMap p#end').text("{% trans %}end{% endtrans %} : " + passes['dateEnd']);
-            $('#modalMap p#duration').text("{% trans %}duration{% endtrans %} : " + passes['duration'] + " s");
-
-
-            $('#modalMap p#startAz').text("{% trans %}start{% endtrans %} AZ : " + passes['azStartDirection'] + " (" + passes['azStartDegres'] + "°)");
-            $('#modalMap p#maxAz').text("Max AZ : " + passes['azMaxDirection'] + " (" + passes['azMaxDegres'] + "°)");
-            $('#modalMap p#endAz').text("{% trans %}end{% endtrans %} AZ : " + passes['azEndDirection'] + " (" + passes['azEndDegres'] + "°)");
-            $('#modalMap p#mag').text("Mag : " + passes['magnitude']);
-
-
-            $('#modalMap').modal('show');
-
-            var latlngs = latLonpasse;
-
-            var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
-            setTimeout(function () {
-                map.invalidateSize();
-            }, 1);
-
-            $('#modalMap').on('hide.bs.modal', function (e) {
-                map.removeLayer(polyline);
+            document.querySelectorAll('.linkMap').forEach((link) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = parseInt(link.getAttribute('data-id'));
+                    openModal(jsonPasses[id]);
+                });
             });
 
+            // Pass Share Handlers
+            const shareCity = "{{ info.city | escape('js') }}";
+            const shareLat = "{{ info.lat | escape('js') }}";
+            const shareLon = "{{ info.lon | escape('js') }}";
+            document.querySelectorAll('.sharePassBtn').forEach((btn) => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const date = btn.getAttribute('data-date');
+                    const start = btn.getAttribute('data-start');
+                    const duration = btn.getAttribute('data-duration');
+                    const mag = btn.getAttribute('data-mag');
+                    const maxel = btn.getAttribute('data-maxel');
+                    const id = btn.getAttribute('data-id');
+                    
+                    const shareUrl = `${window.location.origin}${window.location.pathname}?city=${encodeURIComponent(shareCity)}&lat=${shareLat}&lon=${shareLon}#pass-${id}`;
+                    
+                    // French vs English translation
+                    const isFrench = document.documentElement.lang === 'fr';
+                    
+                    if (navigator.share) {
+                        try {
+                            await navigator.share({
+                                title: isFrench ? "Passage ISS" : "ISS Pass",
+                                url: shareUrl
+                            });
+                        } catch (err) {
+                            // User cancelled or share failed silently
+                        }
+                    } else {
+                        // Desktop fallback: copy URL to clipboard
+                        try {
+                            await navigator.clipboard.writeText(shareUrl);
+                            if (window.showToast) {
+                                window.showToast(isFrench ? 'Lien du passage copié !' : 'Pass link copied!');
+                            }
+                        } catch (err) {
+                            // Fallback for older browsers
+                            const textArea = document.createElement('textarea');
+                            textArea.value = shareUrl;
+                            textArea.style.position = 'fixed';
+                            textArea.style.opacity = '0';
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            document.execCommand('copy');
+                            textArea.remove();
+                            if (window.showToast) {
+                                window.showToast(isFrench ? 'Lien du passage copié !' : 'Pass link copied!');
+                            }
+                        }
+                    }
+                });
+            });
+
+            closeBtns.forEach((btn) => {
+                btn.addEventListener('click', closeModal);
+            });
+
+            // Close on overlay click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
         });
-
-
     </script>
-
 {% endblock %}

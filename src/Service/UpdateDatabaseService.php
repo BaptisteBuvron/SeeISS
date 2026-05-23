@@ -44,18 +44,20 @@ class UpdateDatabaseService
 
     public function updateDatabaseISS()
     {
-
+        $this->log("Starting ISS Database Update...");
         $data = $this->requestTo('https://ll.thespacedevs.com/2.2.0/spacestation/4/?format=json');
 
+        $this->log("Processing main SpaceStation data...");
         $this->setSpaceStation($data);
 
         //Astronauts
         if (isset($data["active_expeditions"]) && count($data["active_expeditions"]) > 0) {
             foreach ($data["active_expeditions"] as $expedition) {
+                $this->log(sprintf("Processing crew for expedition: %s", $expedition["name"] ?? 'Active Expedition'));
                 $this->setAstronauts($expedition["crew"]);
             }
         }
-
+        $this->log("ISS Database Update Completed.");
     }
 
     public function setAstronauts(array $astronauts)
@@ -73,6 +75,7 @@ class UpdateDatabaseService
         $astronaut = $astronautRepository->findOneBy(array('idApi' => $astronautData["id"]));
         $agency = $this->setAgency($astronautData["agency"]);
         if (is_null($astronaut)) {
+            $this->log(sprintf("Adding new Astronaut to database: %s (API ID: %d)", $astronautData["name"], $astronautData["id"]));
             $astronautData = $this->requestTo($astronautData["url"]);
             $astronaut = new Astronaut();
             $astronaut->setIdApi($astronautData["id"])
@@ -92,6 +95,8 @@ class UpdateDatabaseService
                 ->setProfileImg($astronautData["profile_image"])
                 ->setProfileImageThumbnail($astronautData["profile_image_thumbnail"])
                 ->setWiki($astronautData["wiki"]);
+        } else {
+            $this->log(sprintf("Astronaut already exists in database: %s (API ID: %d)", $astronaut->getName(), $astronaut->getIdApi()));
         }
 		if (!is_null($role)){
 			$astronaut->setRole($role);
@@ -107,6 +112,7 @@ class UpdateDatabaseService
         $spaceStationRepo = $this->manager->getRepository(SpaceStation::class);
         $spaceStation = $spaceStationRepo->findOneBy(array('idApi' => $spaceStationData["id"]));
         if (is_null($spaceStation)) {
+            $this->log(sprintf("Adding new SpaceStation to database: %s (API ID: %d)", $spaceStationData["name"], $spaceStationData["id"]));
             $spaceStation = new SpaceStation();
             $spaceStation->setIdApi($spaceStationData["id"])
                 ->setName($spaceStationData["name"])
@@ -122,11 +128,14 @@ class UpdateDatabaseService
                 ->setOrbit($spaceStationData["orbit"])
                 ->setOnboardCrew($spaceStationData["onboard_crew"])
                 ->setImageUrl($spaceStationData["image_url"]);
+        } else {
+            $this->log(sprintf("SpaceStation already exists in database: %s (API ID: %d)", $spaceStation->getName(), $spaceStation->getIdApi()));
         }
 		$this->spaceStation = $spaceStation;
 		
 
         foreach ($spaceStationData["owners"] as $agency) {
+            $this->log(sprintf("Linking owner agency ID %d to SpaceStation", $agency["id"]));
             $spaceStation->addOwner($this->setAgency($agency));
         }
 		
@@ -151,6 +160,7 @@ class UpdateDatabaseService
         //TODO CHange this method
 
         //Delete all the docking location :
+        $this->log("Resetting docking locations on SpaceStation for fresh sync...");
         foreach ($spaceStation->getDockingLocation() as $docking){
                 $spaceStation->removeDockingLocation($docking);
         }
@@ -159,12 +169,14 @@ class UpdateDatabaseService
 
         //Set all the docking location
         foreach ($spaceStationData["docking_location"] as $dock){
+            $this->log(sprintf("Processing docking port: %s", $dock["name"]));
             $this->setDock($dock);
         }
 
         $astronautInISS = array();
         foreach ($spaceStationData["active_expeditions"] as $expedition){
             foreach ($expedition["crew"] as $crew){
+                $this->log(sprintf("Syncing crew member: %s (Role: %s)", $crew["astronaut"]["name"], $crew["role"]["role"]));
                 $spaceStation->addCrew($this->setAstronaut($crew["astronaut"], $crew["role"]["role"]));
                 $astronautInISS[] = $crew["astronaut"]['id'];
             }
@@ -173,6 +185,7 @@ class UpdateDatabaseService
         //Remove Astronaut not in the ISS.
         foreach ($spaceStation->getCrew() as $astronaut){
             if (!in_array($astronaut->getIdApi(), $astronautInISS, true)){
+                $this->log(sprintf("Removing inactive crew member from SpaceStation: %s (API ID: %d)", $astronaut->getName(), $astronaut->getIdApi()));
                 $spaceStation->removeCrew($astronaut);
             }
         }
@@ -187,6 +200,7 @@ class UpdateDatabaseService
         $agencyRepo = $this->manager->getRepository(Agency::class);
         $agency = $agencyRepo->findOneBy(array('idApi' => $agencyData["id"]));
         if (is_null($agency)) {
+            $this->log(sprintf("Adding new Agency to database: %s (API ID: %d)", $agencyData["name"] ?? 'Unknown Agency', $agencyData["id"]));
             $agencyData = $this->requestTo($agencyData["url"]);
             $agency = new Agency();
             $agency->setUrl($agencyData["url"])
@@ -218,6 +232,7 @@ class UpdateDatabaseService
         if (!is_null($dock["docked"])) {
             $dockingObject = $this->manager->getRepository(Docking::class)->findOneBy(array('idApi' => $dock["docked"]["id"]));
             if (is_null($dockingObject)) {
+                $this->log(sprintf("Adding new Docking to database: %s (API ID: %d)", $dock["name"], $dock["docked"]["id"]));
                 $dockingObject = new Docking();
             }
             $dockingObject->setIdApi($dock["docked"]["id"])
@@ -239,6 +254,7 @@ class UpdateDatabaseService
         $spaceCraftRepo = $this->manager->getRepository(SpaceCraft::class);
         $spaceCraft = $spaceCraftRepo->findOneBy(array('idApi' => $spaceCraftData['id']));
         if (is_null($spaceCraft)) {
+            $this->log(sprintf("Adding new SpaceCraft to database: %s (API ID: %d)", $spaceCraftData["name"], $spaceCraftData["id"]));
             $spaceCraft = new SpaceCraft();
             $spaceCraft->setIdApi($spaceCraftData['id'])
                 ->setUrl($spaceCraftData["url"])
@@ -259,6 +275,7 @@ class UpdateDatabaseService
         $launchRepo = $this->manager->getRepository(Launch::class);
         $launch = $launchRepo->findOneBy(array('idApi' => $launchData['id']));
         if (is_null($launch)){
+            $this->log(sprintf("Adding new Launch to database: %s (API ID: %s)", $launchData["name"] ?? 'Unknown Launch', $launchData["id"]));
             $launchData = $this->requestTo($launchData["url"]);
             $launch = new Launch();
             $launch->setIdApi($launchData["id"])
@@ -289,6 +306,7 @@ class UpdateDatabaseService
         $videoRepo = $this->manager->getRepository(Video::class);
         $video = $videoRepo->findOneBy(array('url' => $videoData['url']));
         if (is_null($video)){
+            $this->log(sprintf("Adding new Video to database: %s", $videoData["title"] ?? 'Untitled Video'));
             $video = new Video();
             $video->setUrl($videoData["url"])
                 ->setFeatureImage($videoData["feature_image"])
@@ -305,6 +323,7 @@ class UpdateDatabaseService
         $launcherRepo = $this->manager->getRepository(Launcher::class);
         $launcher = $launcherRepo->findOneBy(array('idApi' => $launcherData['id']));
         if (is_null($launcher)){
+            $this->log(sprintf("Adding new Launcher configuration to database: %s (API ID: %d)", $launcherData["name"], $launcherData["id"]));
             //$launcherData = $this->requestTo($launcherData["url"]);
             $launcher = new Launcher();
             $launcher->setIdApi($launcherData["id"])
@@ -336,6 +355,7 @@ class UpdateDatabaseService
         $spaceCraftConfigRepo = $this->manager->getRepository(SpaceCraftConfig::class);
         $spaceCraftConfig = $spaceCraftConfigRepo->findOneBy(array('idApi' => $spaceCraftConfigData['id']));
         if (is_null($spaceCraftConfig)) {
+            $this->log(sprintf("Adding new SpaceCraftConfig to database: %s (API ID: %d)", $spaceCraftConfigData["name"], $spaceCraftConfigData["id"]));
             $spaceCraftConfig = new SpaceCraftConfig();
             $spaceCraftConfig->setIdApi($spaceCraftConfigData["id"])
                 ->setUrl($spaceCraftConfigData["url"])
@@ -367,14 +387,20 @@ class UpdateDatabaseService
      */
     public function requestTo(string $url): array
     {
+        $this->log(sprintf("Fetching API Endpoint: %s", $url));
         $request = $this->client->request('GET', $url);
         if ($request->getStatusCode() === 429) {
+            $this->log(sprintf("Rate limit reached (429) on %s. Pausing database update execution for 900 seconds (15 minutes)...", $url));
             ini_set('max_execution_time', 920);
             sleep(900);
+            $this->log(sprintf("Pause finished. Retrying request to %s...", $url));
             return $this->requestTo($url);
         }
         return $request->toArray();
     }
 
-
+    private function log(string $message): void
+    {
+        echo sprintf("[%s] %s\n", (new \DateTime())->format('Y-m-d H:i:s'), $message);
+    }
 }

@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class HomeController extends AbstractController
@@ -38,11 +38,7 @@ class HomeController extends AbstractController
     }
 
 
-    /**
-     * @Route("/", name="home")
-     * @return Response
-     * @throws PredictException
-     */
+    #[Route('/', name: 'home')]
     public function index(RequestStack $requestStack): Response
     {
 
@@ -75,11 +71,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/live", name="live")
-     * @return Response
-     * @throws PredictException
-     */
+    #[Route('/live', name: 'live')]
     public function live(): Response
     {
         $location = $this->locationService->getLatLonCity();
@@ -114,11 +106,7 @@ class HomeController extends AbstractController
         return $this->render('home/live.html.twig',['latLon' => $latLonArray]);
     }
 
-    /**
-     * Route that return the privacy page.
-     * @Route("/privacy", name="privacy")
-     * @return Response
-     */
+    #[Route('/privacy', name: 'privacy')]
     public function privacy(): Response
     {
         return $this->render('home/privacy.html.twig');

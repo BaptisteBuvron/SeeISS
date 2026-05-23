@@ -12,13 +12,11 @@ use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class WikiController extends AbstractController
 {
-    /**
-     * @Route("/spacestation/{idApi}", name="spacestation")
-     */
+    #[Route('/spacestation/{idApi}', name: 'spacestation')]
     public function spaceStation(SpaceStation $spaceStation): Response
     {
         return $this->render('wiki/spacestation.html.twig',[
@@ -26,12 +24,7 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Agency $agency
-     * @param $nameSlug
-     * @return RedirectResponse|Response
-     * @Route("/agency/{nameSlug}/{idApi}", name="agency")
-     */
+    #[Route('/agency/{nameSlug}/{idApi}', name: 'agency')]
     public function agency(Agency $agency, $nameSlug): RedirectResponse|Response
     {
 
@@ -44,11 +37,7 @@ class WikiController extends AbstractController
     }
 
 
-    /**
-     * @param Launch $launch
-     * @return Response
-     * @Route("/launch/{slug}/{idApi}", name="launch")
-     */
+    #[Route('/launch/{slug}/{idApi}', name: 'launch')]
     public function launch(Launch $launch): Response
     {
         return $this->render('wiki/launch.html.twig', [
@@ -56,12 +45,7 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Astronaut $astronaut
-     * @param $nameAstro
-     * @return RedirectResponse|Response
-     * @Route("/astronaut/{nameAstro}/{idApi}", name="astronaut")
-     */
+    #[Route('/astronaut/{nameAstro}/{idApi}', name: 'astronaut')]
     public function astronaut(Astronaut $astronaut, $nameAstro): RedirectResponse|Response
     {
         $slugify = new Slugify();
